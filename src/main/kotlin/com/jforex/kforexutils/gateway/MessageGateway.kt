@@ -6,6 +6,6 @@ object MessageGateway
 {
     fun onMessage(message: IMessage)
     {
-        println("New message received $message")
+        println("Message received $message")
     }
 }
