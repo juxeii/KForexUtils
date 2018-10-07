@@ -17,8 +17,8 @@ class HotPublisherTest : FreeSpec()
     init
     {
         val firstItem = 1
-        hotPublisher.onNext(firstItem)
         "No item is observed when subscribed after item has been published" {
+            hotPublisher.onNext(firstItem)
             subscribe().assertNoValues()
         }
 
@@ -27,8 +27,8 @@ class HotPublisherTest : FreeSpec()
             hotPublisher.onNext(firstItem)
 
             "First item is observed" - {
-                val secondItem = 2
                 testObserver.assertValue(firstItem)
+                val secondItem = 2
 
                 "Second Item is observed" {
                     hotPublisher.onNext(secondItem)
