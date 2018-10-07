@@ -3,21 +3,17 @@ language: java
 jdk:
 - oraclejdk8
 
-#sudo: false
+sudo: false
 
 before_cache:
 - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-#- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 
 cache:
   directories:
   - $HOME/.gradle/caches/
   - $HOME/.gradle/wrapper/
-  # - $HOME/.m2/repository/
-
-#install: /bin/true
-
-#script: ./gradlew check
+  - $HOME/.m2/repository/
 
 after_success:
 - bash <(curl -s https://codecov.io/bash)
