@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.2.71"
+    jacoco
 }
 
 group = "com.jforex"
@@ -10,6 +11,21 @@ version = "0.1.0"
 repositories {
     jcenter()
     maven(url = "https://www.dukascopy.com/client/jforexlib/publicrepo")
+}
+
+jacoco {
+    toolVersion = "0.8.2"
+}
+
+tasks.withType<JacocoReport> {
+    //executionData = fileTree("$buildDir/jacoco")
+    reports {
+        xml.isEnabled = true
+
+        //xml.destination= file("$buildDir/reports/jacoco/report.xml")
+        html.isEnabled = false
+        //csv.isEnabled =  false
+    }
 }
 
 tasks.withType<Test> {
