@@ -1,12 +1,11 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+group = "com.jforex"
+
 plugins {
     kotlin("jvm") version "1.2.71"
     jacoco
 }
-
-group = "com.jforex"
-version = "0.1.0"
 
 repositories {
     jcenter()
