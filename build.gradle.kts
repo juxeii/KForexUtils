@@ -28,8 +28,8 @@ tasks.withType<JacocoReport> {
     }
 }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
+tasks.getByName("check") {
+    dependsOn("jacocoTestReport")
 }
 
 dependencies {
