@@ -18,13 +18,9 @@ jacoco {
 }
 
 tasks.withType<JacocoReport> {
-    //executionData = fileTree("$buildDir/jacoco")
     reports {
         xml.isEnabled = true
-
-        //xml.destination= file("$buildDir/reports/jacoco/report.xml")
         html.isEnabled = false
-        //csv.isEnabled =  false
     }
 }
 
