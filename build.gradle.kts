@@ -28,6 +28,10 @@ tasks.getByName("check") {
     dependsOn("jacocoTestReport")
 }
 
+tasks.withType<Test> {
+    useJUnitPlatform()
+}
+
 dependencies {
     compile(kotlin("stdlib-jdk8"))
     compile("com.dukascopy.api:JForex-API:2.13.56")
