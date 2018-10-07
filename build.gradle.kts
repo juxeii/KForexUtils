@@ -19,8 +19,8 @@ tasks.withType<Test> {
 dependencies {
     compile(kotlin("stdlib-jdk8"))
     compile("com.dukascopy.api:JForex-API:2.13.56")
+    compile("io.reactivex.rxjava2:rxkotlin:2.3.0")
 
-    testCompile(kotlin("stdlib-jdk8"))
     testCompile("io.kotlintest:kotlintest-runner-junit5:3.1.10")
     testCompile("io.mockk:mockk:1.8.9")
     testCompile("org.slf4j:slf4j-simple:1.7.25")
