@@ -18,6 +18,8 @@ dependencies {
     compile(kotlin("stdlib-jdk8"))
     compile("com.dukascopy.api:JForex-API:2.13.56")
     compile("io.reactivex.rxjava2:rxkotlin:2.3.0")
+    compile("org.apache.logging.log4j:log4j-api:2.11.1")
+    compile("org.apache.logging.log4j:log4j-core:2.11.1")
 
     testCompile("io.kotlintest:kotlintest-runner-junit5:3.1.10")
     testCompile("io.mockk:mockk:1.8.9")
