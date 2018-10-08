@@ -1,4 +1,5 @@
 rootProject.name = "KForexUtils"
+enableFeaturePreview("STABLE_PUBLISHING")
 
 buildscript {
     repositories {

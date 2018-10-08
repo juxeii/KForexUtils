@@ -5,6 +5,8 @@ group = "com.jforex"
 plugins {
     kotlin("jvm") version "1.2.71"
     jacoco
+    `maven-publish`
+    id("com.github.johnrengelman.shadow") version "4.0.1"
 }
 
 repositories {
@@ -29,7 +31,7 @@ jacoco {
 tasks.withType<JacocoReport> {
     reports {
         xml.isEnabled = true
-        html.isEnabled = false
+        html.isEnabled = true
     }
 }
 
@@ -43,4 +45,15 @@ tasks.withType<Test> {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+publishing {
+    repositories {
+        mavenLocal()
+    }
+    publications {
+        register("mavenJava", MavenPublication::class) {
+            from(components["java"])
+        }
+    }
 }
