@@ -1,0 +1,28 @@
+package com.jforex.kforexutils.order.event
+
+enum class OrderEventType
+{
+    NOTIFICATION,
+    SUBMIT_OK,
+    PARTIALLY_FILLED,
+    FULLY_FILLED,
+    MERGE_OK,
+    MERGE_CLOSE_OK,
+    CLOSE_OK,
+    PARTIAL_CLOSE_OK,
+    CLOSED_BY_MERGE,
+    CLOSED_BY_SL,
+    CLOSED_BY_TP,
+    CHANGED_SL,
+    CHANGED_TP,
+    CHANGED_LABEL,
+    CHANGED_AMOUNT,
+    CHANGED_PRICE,
+    CHANGED_GTT,
+    CHANGED_TYPE,
+    CHANGE_REJECTED,
+    SUBMIT_REJECTED,
+    FILL_REJECTED,
+    MERGE_REJECTED,
+    CLOSE_REJECTED,
+}
