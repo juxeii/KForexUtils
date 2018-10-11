@@ -3,7 +3,7 @@ package com.jforex.kforexutils.message
 import com.dukascopy.api.IMessage
 import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.order.event.OrderEventType
-import com.jforex.kforexutils.order.isFilled
+import com.jforex.kforexutils.order.extension.isFilled
 import io.reactivex.Maybe
 import io.reactivex.rxkotlin.toObservable
 

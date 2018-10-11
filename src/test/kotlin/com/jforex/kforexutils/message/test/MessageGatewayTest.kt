@@ -13,7 +13,7 @@ class MessageGatewayTest : StringSpec({
         .test()
 
     "No message is observed when subscribed after message has been published" {
-        //MessageGateway.onMessage(message)
+        MessageGateway.onMessage(message)
         subscribe().assertNoValues()
     }
 

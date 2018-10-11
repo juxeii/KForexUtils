@@ -26,4 +26,10 @@ class OrderSLActionsBuilder
         onSLChange = onSLChange,
         onReject = onReject
     )
+
+    companion object {
+        operator fun invoke(block: OrderSLActionsBuilder.() -> Unit) = OrderSLActionsBuilder()
+            .apply(block)
+            .build()
+    }
 }

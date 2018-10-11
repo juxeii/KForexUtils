@@ -7,8 +7,8 @@ import com.jforex.kforexutils.order.OrderRequestType
 import com.jforex.kforexutils.order.event.OrderEvent
 import com.jforex.kforexutils.order.event.consumer.OrderEventConsumer
 import com.jforex.kforexutils.order.event.consumer.OrderEventConsumerType
-import com.jforex.kforexutils.order.isCanceled
-import com.jforex.kforexutils.order.isClosed
+import com.jforex.kforexutils.order.extension.isCanceled
+import com.jforex.kforexutils.order.extension.isClosed
 import org.apache.logging.log4j.LogManager
 import java.util.*
 import java.util.concurrent.ConcurrentLinkedQueue

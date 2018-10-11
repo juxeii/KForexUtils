@@ -6,6 +6,9 @@ import com.jforex.kforexutils.settings.PlatformSettings
 annotation class OrderDsl
 
 lateinit var KForexUtils: KForexUtilsSingleton
+val engine = KForexUtils.engine
+val strategyThread = KForexUtils.strategyThread
+val taskExecutor = KForexUtils.orderTaskExecutor
 
 val emptyAction: KRunnable = { }
 val emptyOrderEventConsumer: OrderEventConsumer = { }
@@ -16,3 +19,6 @@ fun thisThreadName(): String = Thread
     .name
 
 fun isStrategyThread() = thisThreadName().startsWith(PlatformSettings.strategyThreadPrefix)
+
+fun executeOnStrategyThread(runner: KRunnable) = strategyThread.observeRunnable(runner)
+fun <T> executeOnStrategyThread(callable: KCallable<T>) = strategyThread.observeCallable(callable)

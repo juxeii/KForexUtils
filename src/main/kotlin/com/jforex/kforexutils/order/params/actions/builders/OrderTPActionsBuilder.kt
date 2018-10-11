@@ -7,14 +7,12 @@ import com.jforex.kforexutils.order.params.actions.OrderBasicActions
 import com.jforex.kforexutils.order.params.actions.OrderTPActions
 
 @OrderDsl
-class OrderTPActionsBuilder
-{
+class OrderTPActionsBuilder {
     var basicActions: OrderBasicActions = OrderBasicActions()
     var onTPChange: OrderEventConsumer = emptyOrderEventConsumer
     var onReject: OrderEventConsumer = emptyOrderEventConsumer
 
-    fun basicActions(block: OrderBasicActionsBuilder.() -> Unit)
-    {
+    fun basicActions(block: OrderBasicActionsBuilder.() -> Unit) {
         basicActions = OrderBasicActionsBuilder()
             .apply(block)
             .build()
@@ -26,4 +24,10 @@ class OrderTPActionsBuilder
         onTPChange = onTPChange,
         onReject = onReject
     )
+
+    companion object {
+        operator fun invoke(block: OrderTPActionsBuilder.() -> Unit) = OrderTPActionsBuilder()
+            .apply(block)
+            .build()
+    }
 }
