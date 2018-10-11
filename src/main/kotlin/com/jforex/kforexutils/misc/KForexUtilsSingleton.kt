@@ -1,7 +1,7 @@
 package com.jforex.kforexutils.misc
 
 import com.dukascopy.api.IContext
-import com.jforex.kforexutils.order.OrderTaskExecutor
+import com.jforex.kforexutils.order.task.OrderTaskExecutor
 import com.jforex.kforexutils.thread.StrategyThread
 
 class KForexUtilsSingleton private constructor(private val context: IContext)

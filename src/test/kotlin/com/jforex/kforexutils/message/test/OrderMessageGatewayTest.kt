@@ -3,7 +3,6 @@ package com.jforex.kforexutils.message.test
 import com.dukascopy.api.IMessage
 import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.message.MessageGateway
-import com.jforex.kforexutils.order.extension.setTP
 import com.jforex.kforexutils.order.message.OrderMessageGateway
 import io.kotlintest.specs.StringSpec
 import io.mockk.every
@@ -29,7 +28,7 @@ class OrderMessageGatewayTest : StringSpec()
 
     init
     {
-        "No order message is observed when subscribed after message has been published" {
+        "No jfOrder message is observed when subscribed after message has been published" {
             every { message.order } returns order
             MessageGateway.onMessage(message)
             subscribe().assertNoValues()
@@ -40,12 +39,12 @@ class OrderMessageGatewayTest : StringSpec()
 
         }
 
-        "No order message is observed when message has no order" {
+        "No jfOrder message is observed when message has no jfOrder" {
             every { message.order } returns null
             //subscribeAndPublishMessage().assertNoValues()
         }
 
-        "After subscription, a published message with an order is filtered and observed" {
+        "After subscription, a published message with an jfOrder is filtered and observed" {
             every { message.order } returns order
             subscribeAndPublishMessage().assertValue(message)
         }

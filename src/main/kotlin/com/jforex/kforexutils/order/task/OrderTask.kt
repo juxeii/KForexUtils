@@ -1,4 +1,4 @@
-package com.jforex.kforexutils.order
+package com.jforex.kforexutils.order.task
 
 import com.jforex.kforexutils.order.event.consumer.OrderEventConsumer
 import com.jforex.kforexutils.order.event.consumer.data.SubmitEventConsumerData
@@ -27,7 +27,7 @@ class OrderTask(private val taskExecutor: OrderTaskExecutor)
                     OrderMessageHandlerStore.add(handler)
                 },
                 onError = {
-                    logger.debug("Error occured on creating order for submit!")
+                    logger.debug("Error occured on creating jfOrder for submit!")
                     params.submitActions.basicActions.onError(it)
                 })
     }

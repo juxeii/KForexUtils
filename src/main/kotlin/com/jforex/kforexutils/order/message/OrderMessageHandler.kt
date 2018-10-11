@@ -29,7 +29,7 @@ class OrderMessageHandler(val order: IOrder)
             .observable()
             .doOnNext { logger.debug("Without filter received ${it.type}") }
             .filter { it.order == order }
-            .doOnNext { logger.debug("Received order message ${it.type}") }
+            .doOnNext { logger.debug("Received jfOrder message ${it.type}") }
             .takeUntil { order.isClosed() || order.isCanceled() }
             .doOnComplete { logger.debug("Order is closed now") }
             .subscribe(this::onMessage)
@@ -42,7 +42,7 @@ class OrderMessageHandler(val order: IOrder)
         val requestType = OrderMessageTypeToOrderRequestType.convert(messageType)
 
         selectConsumer(requestType).ifPresent {
-            logger.debug("Sending order event $orderEvent to consumer with type ${it.type}")
+            logger.debug("Sending jfOrder event $orderEvent to consumer with type ${it.type}")
             it.onOrderEvent(orderEvent)
         }
     }

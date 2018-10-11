@@ -25,7 +25,7 @@ class OrderEventConsumer(consumerData: OrderEventConsumerData)
         .observable()
         .doOnSubscribe { basicActions.onStart() }
         .doOnNext {
-            logger.debug("Next order event with ${it.messageType} received on consumer type $type ")
+            logger.debug("Next jfOrder event with ${it.messageType} received on consumer type $type ")
         }
         .takeUntil { finishMessageTypes.contains(it.messageType) }
         .doFinally {

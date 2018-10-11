@@ -20,5 +20,4 @@ fun thisThreadName(): String = Thread
 
 fun isStrategyThread() = thisThreadName().startsWith(PlatformSettings.strategyThreadPrefix)
 
-fun executeOnStrategyThread(runner: KRunnable) = strategyThread.observeRunnable(runner)
 fun <T> executeOnStrategyThread(callable: KCallable<T>) = strategyThread.observeCallable(callable)
