@@ -5,7 +5,7 @@ import com.dukascopy.api.Instrument
 import com.jforex.kforexutils.order.params.actions.OrderSubmitActions
 import com.jforex.kforexutils.settings.TradingSettings
 
-data class OrderSubmitParams @JvmOverloads constructor(
+data class OrderSubmitParams(
     val label: String,
     val instrument: Instrument,
     val orderCommand: OrderCommand,

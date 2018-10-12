@@ -1,15 +1,13 @@
-package com.jforex.kforexutils.order.task
+package com.jforex.kforexutils.engine.task
 
-import com.jforex.kforexutils.misc.KRunnable
+import com.jforex.kforexutils.misc.KCallable
 import com.jforex.kforexutils.order.Order
 import com.jforex.kforexutils.order.event.consumer.data.OrderEventConsumerData
 import com.jforex.kforexutils.order.params.actions.OrderBasicActions
 
-interface OrderTaskBase
-{
+interface EngineTask {
     fun executeOnStrategyThread(
-        orderCall: KRunnable,
-        order: Order,
+        engineCall: KCallable<Order>,
         consumerData: OrderEventConsumerData,
         basicActions: OrderBasicActions
     )

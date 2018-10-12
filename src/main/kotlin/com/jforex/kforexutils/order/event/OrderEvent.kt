@@ -1,9 +1,8 @@
 package com.jforex.kforexutils.order.event
 
-import com.dukascopy.api.IMessage
-import com.dukascopy.api.IOrder
+import com.jforex.kforexutils.order.Order
+import com.jforex.kforexutils.order.message.OrderMessage
 
-data class OrderEvent(val message: IMessage, val messageType: OrderEventType)
-{
-    val order: IOrder = message.order
+data class OrderEvent(val message: OrderMessage, val messageType: OrderEventType) {
+    val order: Order = message.order
 }

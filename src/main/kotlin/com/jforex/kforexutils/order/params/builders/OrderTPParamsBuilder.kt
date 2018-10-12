@@ -16,4 +16,11 @@ class OrderTPParamsBuilder(private val price: Double) {
     }
 
     fun build() = OrderTPParams(price = price, tpActions = tpActions)
+
+    companion object {
+        operator fun invoke(price: Double, block: OrderTPParamsBuilder.() -> Unit) =
+            OrderTPParamsBuilder(price)
+                .apply(block)
+                .build()
+    }
 }

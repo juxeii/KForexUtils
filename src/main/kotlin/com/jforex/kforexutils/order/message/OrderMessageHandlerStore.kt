@@ -1,18 +1,18 @@
 package com.jforex.kforexutils.order.message
 
-import com.dukascopy.api.IOrder
 import com.google.common.collect.MapMaker
+import com.jforex.kforexutils.order.Order
 import java.util.*
 
-object OrderMessageHandlerStore {
+class OrderMessageHandlerStore(private val orderMessageGateway: OrderMessageGateway) {
     private val handlerByOrder = MapMaker()
         .weakKeys()
-        .makeMap<IOrder, OrderMessageHandler>()
+        .makeMap<Order, OrderMessageHandler>()
 
-    fun add(handler: OrderMessageHandler): OrderMessageHandler =
-        handlerByOrder.computeIfAbsent(handler.order) { handler }
+    fun create(order: Order): OrderMessageHandler =
+        handlerByOrder.computeIfAbsent(order) { OrderMessageHandler(order, orderMessageGateway) }
 
-    fun get(order: IOrder): Optional<OrderMessageHandler> = Optional.ofNullable(handlerByOrder[order])
+    fun get(order: Order) = Optional.ofNullable(handlerByOrder[order])
 
-    fun remove(order: IOrder) = handlerByOrder.remove(order)
+    fun remove(order: Order) = handlerByOrder.remove(order)
 }
