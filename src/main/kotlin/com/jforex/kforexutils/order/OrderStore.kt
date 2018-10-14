@@ -5,29 +5,18 @@ import com.google.common.collect.MapMaker
 import java.util.*
 
 class OrderStore {
-    private val orderSet: Set<Order> = Collections.newSetFromMap(
+    private val orders: Set<IOrder> = Collections.newSetFromMap(
         MapMaker()
             .weakKeys()
-            .makeMap<Order, Boolean>()
+            .makeMap<IOrder, Boolean>()
     )
-    private val orderByJFOrder = MapMaker()
-        .weakKeys()
-        .makeMap<IOrder, Order>()
 
     @Synchronized
-    fun add(order: Order) {
-        orderSet.plusElement(order)
-        orderByJFOrder.computeIfAbsent(order.jfOrder) { order }
-    }
+    fun add(order: IOrder) = orders.plusElement(order)
 
     @Synchronized
-    fun getForJFOrder(jfOrder: IOrder) = Optional.ofNullable(orderByJFOrder[jfOrder])
+    fun remove(order: IOrder) = orders.minusElement(order)
 
     @Synchronized
-    fun remove(order: Order) {
-        orderSet.minusElement(order)
-        orderByJFOrder.remove(order.jfOrder)
-    }
-
-    fun containsJFOrder(jfOrder: IOrder) = orderByJFOrder.containsKey(jfOrder)
+    fun contains(order: IOrder) = orders.contains(order)
 }

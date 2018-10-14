@@ -6,7 +6,6 @@ import com.jforex.kforexutils.settings.PlatformSettings
 annotation class OrderDsl
 
 val emptyAction: KRunnable = { }
-val emptyOrderEventConsumer: OrderEventConsumer = { }
 val emptyErrorConsumer: ErrorConsumer = { }
 
 fun thisThreadName(): String = Thread

@@ -1,6 +1,5 @@
 package com.jforex.kforexutils.order.task
 
-import com.jforex.kforexutils.order.Order
 import com.jforex.kforexutils.order.event.consumer.data.SetTPEventConsumerData
 import com.jforex.kforexutils.order.params.OrderTPParams
 

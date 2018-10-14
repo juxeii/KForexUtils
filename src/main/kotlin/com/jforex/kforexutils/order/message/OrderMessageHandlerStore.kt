@@ -1,7 +1,6 @@
 package com.jforex.kforexutils.order.message
 
 import com.google.common.collect.MapMaker
-import com.jforex.kforexutils.order.Order
 import java.util.*
 
 class OrderMessageHandlerStore(private val orderMessageGateway: OrderMessageGateway) {

@@ -1,38 +1,40 @@
 package com.jforex.kforexutils.order.message
 
+import com.dukascopy.api.IMessage
+import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.message.MessageToOrderMessageType
-import com.jforex.kforexutils.order.Order
 import com.jforex.kforexutils.order.OrderRequestType
 import com.jforex.kforexutils.order.event.OrderEvent
 import com.jforex.kforexutils.order.event.consumer.OrderEventConsumer
 import com.jforex.kforexutils.order.event.consumer.OrderEventConsumerType
+import com.jforex.kforexutils.order.extension.isCanceled
+import com.jforex.kforexutils.order.extension.isClosed
+import io.reactivex.Observable
 import org.apache.logging.log4j.LogManager
 import java.util.*
 import java.util.concurrent.ConcurrentLinkedQueue
 
-class OrderMessageHandler(val order: Order, private val orderMessageGateway: OrderMessageGateway) {
-    private val emptyConsumer: Optional<OrderEventConsumer> = Optional.empty()
-    private var submitConsumer = emptyConsumer
-    private var closeConsumer = emptyConsumer
-    private var mergeConsumer = emptyConsumer
+class OrderMessageHandler(val messageObservable: Observable<IMessage>)
+{
+    private var submitConsumer: Optional<OrderEventConsumer> = Optional.empty()
+    private var closeConsumer: Optional<OrderEventConsumer> = Optional.empty()
+    private var mergeConsumer: Optional<OrderEventConsumer> = Optional.empty()
     private var changeConsumers = ConcurrentLinkedQueue<OrderEventConsumer>()
 
     private val logger = LogManager.getLogger(this.javaClass.name)
 
-    init {
-        orderMessageGateway
-            .observable
-            .filter { it.order == order }
-            .doOnNext { logger.debug("Received order message ${it.message.type}") }
+    init
+    {
+        messageObservable
             .takeUntil { isOrderActive(it.order) }
-            .doOnComplete { logger.debug("Order ${order.jfOrder.label} no longer active") }
             .subscribe(this::onMessage)
     }
 
-    private fun isOrderActive(order: Order) = order.isClosed() || order.isCanceled()
+    private fun isOrderActive(order: IOrder) = order.isClosed() || order.isCanceled()
 
-    private fun onMessage(orderMessage: OrderMessage) {
-        val messageType = MessageToOrderMessageType.convert(orderMessage.message)
+    private fun onMessage(orderMessage: IMessage)
+    {
+        val messageType = MessageToOrderMessageType.convert(orderMessage)
         val orderEvent = OrderEvent(orderMessage, messageType)
         val requestType = OrderMessageTypeToOrderRequestType.convert(messageType)
 
@@ -42,35 +44,44 @@ class OrderMessageHandler(val order: Order, private val orderMessageGateway: Ord
         }
     }
 
-    private fun selectConsumer(requestType: OrderRequestType): Optional<OrderEventConsumer> {
-        val consumer = when (requestType) {
+    private fun selectConsumer(requestType: OrderRequestType): Optional<OrderEventConsumer>
+    {
+        val consumer = when (requestType)
+        {
             OrderRequestType.SUBMIT -> submitConsumer
             OrderRequestType.CLOSE -> closeConsumer
             OrderRequestType.MERGE -> mergeConsumer
-            OrderRequestType.CHANGE -> {
+            OrderRequestType.CHANGE ->
+            {
                 logger.debug("Calling change handler now! IS queue empty ${changeConsumers.isEmpty()}")
-                if (!changeConsumers.isEmpty()) {
-                    if (changeConsumers.element().isCompleted()) {
+                if (!changeConsumers.isEmpty())
+                {
+                    if (changeConsumers.element().isCompleted())
+                    {
                         changeConsumers.poll()
                         val nextConsumer = changeConsumers.peek()
                         nextConsumer?.subscribe()
                         Optional.ofNullable(nextConsumer)
                     } else Optional.ofNullable(changeConsumers.peek())
-                } else emptyConsumer
+                } else Optional.empty()
             }
-            else -> emptyConsumer
+            else -> Optional.empty()
         }
         return consumer
     }
 
-    fun registerConsumer(consumer: OrderEventConsumer) {
-        when (consumer.type) {
-            OrderEventConsumerType.SUBMIT -> {
+    fun registerConsumer(consumer: OrderEventConsumer)
+    {
+        when (consumer.type)
+        {
+            OrderEventConsumerType.SUBMIT ->
+            {
                 logger.debug("Registering submit consumer")
                 consumer.subscribe()
                 submitConsumer = Optional.of(consumer)
             }
-            OrderEventConsumerType.CLOSE -> {
+            OrderEventConsumerType.CLOSE ->
+            {
                 logger.debug("Registering close consumer")
                 consumer.subscribe()
                 closeConsumer = Optional.of(consumer)
@@ -81,7 +92,8 @@ class OrderMessageHandler(val order: Order, private val orderMessageGateway: Ord
             OrderEventConsumerType.CHANGE_AMOUNT,
             OrderEventConsumerType.CHANGE_PRICE,
             OrderEventConsumerType.CHANGE_GTT,
-            OrderEventConsumerType.CHANGE_TYPE -> {
+            OrderEventConsumerType.CHANGE_TYPE ->
+            {
                 logger.debug("Registering ${consumer.type} consumer. Adding it to queue")
                 if (changeConsumers.isEmpty()) consumer.subscribe()
                 changeConsumers.add(consumer)

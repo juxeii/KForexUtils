@@ -1,20 +1,20 @@
 package com.jforex.kforexutils.order.task
 
-import com.jforex.kforexutils.order.Order
+import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.order.params.OrderSLParams
 import com.jforex.kforexutils.order.params.OrderTPParams
 
-data class OrderTasks(
+data class OrderTask(
     val setSLTask: OrderSetSLTask,
     val setTPTask: OrderSetTPTask
 ) {
     fun setSL(
-        order: Order,
+        order: IOrder,
         params: OrderSLParams
     ) = setSLTask.execute(order, params)
 
     fun setTP(
-        order: Order,
+        order: IOrder,
         params: OrderTPParams
     ) = setTPTask.execute(order, params)
 }
