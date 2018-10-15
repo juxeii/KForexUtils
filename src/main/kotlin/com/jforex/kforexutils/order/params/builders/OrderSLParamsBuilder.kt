@@ -9,11 +9,12 @@ import com.jforex.kforexutils.settings.TradingSettings
 
 @OrderDsl
 class OrderSLParamsBuilder(private val price: Double) {
-    private val offerSide: OfferSide = OfferSide.BID
-    private val trailingStep: Double = TradingSettings.noTrailingStep
-    private var slActions = OrderSLActions()
+    var offerSide: OfferSide = OfferSide.BID
+    var trailingStep: Double = TradingSettings.noTrailingStep
+    var slActions = OrderSLActions()
 
-    fun slActions(block: OrderSLActionsBuilder.() -> Unit) {
+    fun actions(block: OrderSLActionsBuilder.() -> Unit)
+    {
         slActions = OrderSLActionsBuilder()
             .apply(block)
             .build()

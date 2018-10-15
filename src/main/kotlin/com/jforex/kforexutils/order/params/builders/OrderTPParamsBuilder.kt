@@ -9,7 +9,8 @@ import com.jforex.kforexutils.order.params.actions.builders.OrderTPActionsBuilde
 class OrderTPParamsBuilder(private val price: Double) {
     private var tpActions = OrderTPActions()
 
-    fun tpActions(block: OrderTPActionsBuilder.() -> Unit) {
+    fun actions(block: OrderTPActionsBuilder.() -> Unit)
+    {
         tpActions = OrderTPActionsBuilder()
             .apply(block)
             .build()

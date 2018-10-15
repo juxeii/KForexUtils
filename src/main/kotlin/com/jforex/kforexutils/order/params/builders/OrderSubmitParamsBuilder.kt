@@ -23,7 +23,8 @@ class OrderSubmitParamsBuilder(
     var comment = TradingSettings.defaultComment
     var submitActions = OrderSubmitActions()
 
-    fun submitActions(block: OrderSubmitActionsBuilder.() -> Unit) {
+    fun actions(block: OrderSubmitActionsBuilder.() -> Unit)
+    {
         submitActions = OrderSubmitActionsBuilder()
             .apply(block)
             .build()
