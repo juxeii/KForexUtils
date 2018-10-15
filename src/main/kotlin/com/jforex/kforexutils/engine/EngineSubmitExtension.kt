@@ -11,7 +11,7 @@ fun IEngine.submit(
     instrument: Instrument,
     orderCommand: IEngine.OrderCommand,
     amount: Double,
-    block: OrderSubmitParamsBuilder.() -> Unit
+    block: OrderSubmitParamsBuilder.() -> Unit = {}
 ) {
     val params = OrderSubmitParamsBuilder(
         label = label,

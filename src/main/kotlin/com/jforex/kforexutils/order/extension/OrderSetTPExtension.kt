@@ -5,7 +5,7 @@ import com.jforex.kforexutils.order.event.consumer.data.SetTPEventConsumerData
 import com.jforex.kforexutils.order.params.builders.OrderTPParamsBuilder
 
 @Synchronized
-fun IOrder.setTP(price: Double, block: OrderTPParamsBuilder.() -> Unit)
+fun IOrder.setTP(price: Double, block: OrderTPParamsBuilder.() -> Unit = {})
 {
     val params = OrderTPParamsBuilder(price, block)
     runTask(
