@@ -1,20 +1,13 @@
 package com.jforex.kforexutils.order.task
 
-import com.dukascopy.api.IOrder
-import com.jforex.kforexutils.order.params.OrderSLParams
-import com.jforex.kforexutils.order.params.OrderTPParams
+import com.jforex.kforexutils.misc.KRunnable
+import com.jforex.kforexutils.order.event.consumer.data.OrderEventConsumerData
+import com.jforex.kforexutils.order.message.OrderMessageHandler
 
-data class OrderTask(
-    val setSLTask: OrderSetSLTask,
-    val setTPTask: OrderSetTPTask
-) {
-    fun setSL(
-        order: IOrder,
-        params: OrderSLParams
-    ) = setSLTask.execute(order, params)
-
-    fun setTP(
-        order: IOrder,
-        params: OrderTPParams
-    ) = setTPTask.execute(order, params)
+interface OrderTask {
+    fun run(
+        orderCall: KRunnable,
+        consumerData: OrderEventConsumerData,
+        messageHandler: OrderMessageHandler
+    )
 }

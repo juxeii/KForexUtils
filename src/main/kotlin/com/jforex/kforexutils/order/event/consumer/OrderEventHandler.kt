@@ -1,40 +1,36 @@
 package com.jforex.kforexutils.order.event.consumer
 
+import com.jforex.kforexutils.misc.KRunnable
 import com.jforex.kforexutils.order.event.OrderEvent
 import com.jforex.kforexutils.order.event.consumer.data.OrderEventConsumerData
 import com.jforex.kforexutils.rx.HotPublisher
+import io.reactivex.Observable
 import io.reactivex.rxkotlin.subscribeBy
 import org.apache.logging.log4j.LogManager
 
-class OrderEventConsumer(consumerData: OrderEventConsumerData)
-{
+class OrderEventHandler(consumerData: OrderEventConsumerData) {
     private val orderEventPublisher = HotPublisher<OrderEvent>()
     private val eventHandlers = consumerData.eventHandlers
     private val finishMessageTypes = consumerData.finishEventTypes
     private val basicActions = consumerData.basicActions
-    private var isCompleted = false
     val type = consumerData.type
 
     private val logger = LogManager.getLogger(this.javaClass.name)
 
-    fun onOrderEvent(oderEvent: OrderEvent) = orderEventPublisher.onNext(oderEvent)
-
-    fun isCompleted() = isCompleted
-
-    fun subscribe() = orderEventPublisher
-        .observable()
+    fun subscribe(orderEvents: Observable<OrderEvent>, onDone: KRunnable = {}) = orderEvents
         .doOnSubscribe { basicActions.onStart() }
+        .filter { eventHandlers.containsKey(it.messageType) }
         .doOnNext {
-            logger.debug("Next jfOrder event with ${it.messageType} received on consumer type $type ")
+            logger.debug("Next order event with ${it.messageType} received on consumer type $type ")
         }
         .takeUntil { finishMessageTypes.contains(it.messageType) }
         .doFinally {
-            logger.debug("OrderEventConsumer type $type finished ")
-            isCompleted = true
+            logger.debug("OrderEventHandler type $type finished ")
+            onDone()
         }
         .subscribeBy(
             onNext = {
-                logger.debug("OrderEventConsumer onnext with ${it.messageType} called on consumer type $type")
+                logger.debug("OrderEventHandler onnext with ${it.messageType} called on consumer type $type")
                 eventHandlers.getValue(it.messageType)(it)
             },
             onComplete = { basicActions.onComplete() },

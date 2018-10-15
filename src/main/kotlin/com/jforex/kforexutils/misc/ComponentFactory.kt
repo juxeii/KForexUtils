@@ -2,10 +2,8 @@ package com.jforex.kforexutils.misc
 
 import com.dukascopy.api.IContext
 import com.dukascopy.api.IMessage
-import com.jforex.kforexutils.engine.task
+import com.jforex.kforexutils.engine.orderCreation
 import com.jforex.kforexutils.engine.task.EngineOrderCreationImpl
-import com.jforex.kforexutils.engine.task.EngineSubmitTask
-import com.jforex.kforexutils.engine.task.EngineTask
 import com.jforex.kforexutils.message.MessageGateway
 import com.jforex.kforexutils.order.OrderStore
 import com.jforex.kforexutils.order.message.OrderMessageGateway
@@ -26,11 +24,8 @@ class ComponentFactory(val context: IContext)
         orderStore,
         orderMessageGateway
     )
-    private val submitTask = EngineSubmitTask(orderCreationImpl)
-    val engineTask = EngineTask(submitTask)
-
     init
     {
-        engine.task = engineTask
+        engine.orderCreation = orderCreationImpl
     }
 }

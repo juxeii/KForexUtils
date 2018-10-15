@@ -7,6 +7,7 @@ annotation class OrderDsl
 
 val emptyAction: KRunnable = { }
 val emptyErrorConsumer: ErrorConsumer = { }
+val emptyOrderEventConsumer: OrderEventConsumer = {}
 
 fun thisThreadName(): String = Thread
     .currentThread()
