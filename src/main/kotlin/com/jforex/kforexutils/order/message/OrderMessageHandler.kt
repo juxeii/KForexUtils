@@ -4,8 +4,8 @@ import com.dukascopy.api.IMessage
 import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.message.MessageToOrderMessageType
 import com.jforex.kforexutils.order.event.OrderEvent
-import com.jforex.kforexutils.order.event.consumer.OrderEventConsumerType
 import com.jforex.kforexutils.order.event.consumer.OrderEventHandler
+import com.jforex.kforexutils.order.event.consumer.OrderEventHandlerType
 import org.apache.logging.log4j.LogManager
 import java.util.concurrent.ConcurrentLinkedQueue
 
@@ -17,7 +17,7 @@ class OrderMessageHandler(
         .observable
         .filter { it.order == order }
         .map { messageToOrderEvent(it) }
-    private var changeConsumers = ConcurrentLinkedQueue<OrderEventHandler>()
+    private var changeHandlers = ConcurrentLinkedQueue<OrderEventHandler>()
 
     private val logger = LogManager.getLogger(this.javaClass.name)
 
@@ -27,29 +27,29 @@ class OrderMessageHandler(
     }
 
     private fun subscribeNextConsumer() {
-        val currentConsumer = changeConsumers.poll()
+        val currentConsumer = changeHandlers.poll()
         logger.debug("Removed current change consumer with type ${currentConsumer.type} from queue")
-        if (!changeConsumers.isEmpty()) {
+        if (!changeHandlers.isEmpty()) {
             logger.debug("Subscribing next change consumer with type ${currentConsumer.type} from queue")
-            changeConsumers
+            changeHandlers
                 .peek()
                 .subscribe(orderEvents) { -> subscribeNextConsumer() }
         }
     }
 
-    fun registerConsumer(consumer: OrderEventHandler) {
-        when (consumer.type) {
-            OrderEventConsumerType.SUBMIT,
-            OrderEventConsumerType.CLOSE,
-            OrderEventConsumerType.MERGE -> {
-                logger.debug("Consumer with type ${consumer.type} subscribes to order events.")
-                consumer.subscribe(orderEvents)
+    fun registerConsumer(handler: OrderEventHandler) {
+        when (handler.type) {
+            OrderEventHandlerType.SUBMIT,
+            OrderEventHandlerType.CLOSE,
+            OrderEventHandlerType.MERGE -> {
+                logger.debug("Consumer with type ${handler.type} subscribes to order events.")
+                handler.subscribe(orderEvents)
             }
             else -> {
-                logger.debug("Change consumer with type ${consumer.type} gets added to consumer queue")
-                if (changeConsumers.isEmpty())
-                    consumer.subscribe(orderEvents)
-                changeConsumers.add(consumer)
+                logger.debug("Change handler with type ${handler.type} gets added to handler queue")
+                if (changeHandlers.isEmpty())
+                    handler.subscribe(orderEvents)
+                changeHandlers.add(handler)
             }
         }
     }

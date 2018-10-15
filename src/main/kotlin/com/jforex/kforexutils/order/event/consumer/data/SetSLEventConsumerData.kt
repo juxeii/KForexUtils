@@ -1,7 +1,7 @@
 package com.jforex.kforexutils.order.event.consumer.data
 
 import com.jforex.kforexutils.order.event.OrderEventType
-import com.jforex.kforexutils.order.event.consumer.OrderEventConsumerType
+import com.jforex.kforexutils.order.event.consumer.OrderEventHandlerType
 import com.jforex.kforexutils.order.params.actions.OrderBasicActions
 import com.jforex.kforexutils.order.params.actions.OrderSLActions
 
@@ -18,6 +18,6 @@ data class SetSLEventConsumerData(private val slActions: OrderSLActions) :
     )
     override val basicActions: OrderBasicActions
         get() = slActions.basicActions
-    override val type: OrderEventConsumerType
-        get() = OrderEventConsumerType.CHANGE_SL
+    override val type: OrderEventHandlerType
+        get() = OrderEventHandlerType.CHANGE_SL
 }

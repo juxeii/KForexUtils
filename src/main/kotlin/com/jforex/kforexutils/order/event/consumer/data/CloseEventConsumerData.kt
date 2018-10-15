@@ -1,7 +1,7 @@
 package com.jforex.kforexutils.order.event.consumer.data
 
 import com.jforex.kforexutils.order.event.OrderEventType
-import com.jforex.kforexutils.order.event.consumer.OrderEventConsumerType
+import com.jforex.kforexutils.order.event.consumer.OrderEventHandlerType
 import com.jforex.kforexutils.order.params.actions.OrderBasicActions
 import com.jforex.kforexutils.order.params.actions.OrderCloseActions
 
@@ -20,6 +20,6 @@ data class CloseEventConsumerData(private val closeActions: OrderCloseActions) :
     )
     override val basicActions: OrderBasicActions
         get() = closeActions.basicActions
-    override val type: OrderEventConsumerType
-        get() = OrderEventConsumerType.CLOSE
+    override val type: OrderEventHandlerType
+        get() = OrderEventHandlerType.CLOSE
 }

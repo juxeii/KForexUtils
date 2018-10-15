@@ -3,13 +3,11 @@ package com.jforex.kforexutils.order.event.consumer
 import com.jforex.kforexutils.misc.KRunnable
 import com.jforex.kforexutils.order.event.OrderEvent
 import com.jforex.kforexutils.order.event.consumer.data.OrderEventConsumerData
-import com.jforex.kforexutils.rx.HotPublisher
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.subscribeBy
 import org.apache.logging.log4j.LogManager
 
 class OrderEventHandler(consumerData: OrderEventConsumerData) {
-    private val orderEventPublisher = HotPublisher<OrderEvent>()
     private val eventHandlers = consumerData.eventHandlers
     private val finishMessageTypes = consumerData.finishEventTypes
     private val basicActions = consumerData.basicActions

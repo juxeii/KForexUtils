@@ -1,6 +1,6 @@
 package com.jforex.kforexutils.order.event.consumer
 
-enum class OrderEventConsumerType
+enum class OrderEventHandlerType
 {
     SUBMIT,
     MERGE,

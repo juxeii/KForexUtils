@@ -1,7 +1,7 @@
 package com.jforex.kforexutils.order.event.consumer.data
 
 import com.jforex.kforexutils.order.event.OrderEventType
-import com.jforex.kforexutils.order.event.consumer.OrderEventConsumerType
+import com.jforex.kforexutils.order.event.consumer.OrderEventHandlerType
 import com.jforex.kforexutils.order.params.actions.OrderSubmitActions
 
 data class SubmitEventConsumerData(private val submitActions: OrderSubmitActions) :
@@ -19,6 +19,6 @@ data class SubmitEventConsumerData(private val submitActions: OrderSubmitActions
         OrderEventType.FILL_REJECTED
     )
     override val basicActions = submitActions.basicActions
-    override val type: OrderEventConsumerType
-        get() = OrderEventConsumerType.SUBMIT
+    override val type: OrderEventHandlerType
+        get() = OrderEventHandlerType.SUBMIT
 }
