@@ -58,7 +58,7 @@ class OrderMessageHandler(
             {
                 logger.debug("Change handler with type ${handler.type} gets added to handler queue")
                 if (changeHandlers.isEmpty())
-                    handler.subscribe(orderEvents)
+                    handler.subscribe(orderEvents) { -> subscribeNextConsumer() }
                 changeHandlers.add(handler)
             }
         }

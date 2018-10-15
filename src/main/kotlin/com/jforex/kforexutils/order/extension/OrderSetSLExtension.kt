@@ -9,7 +9,8 @@ fun IOrder.setSL(price: Double, block: OrderSLParamsBuilder.() -> Unit = {})
 {
     val params = OrderSLParamsBuilder(price, block)
     runTask(
-        orderCall = {
+        orderCall =
+        {
             setStopLossPrice(
                 params.price,
                 params.offerSide,

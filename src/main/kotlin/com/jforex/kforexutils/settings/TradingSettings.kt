@@ -10,5 +10,5 @@ object TradingSettings
     const val defaultComment = ""
 
     const val defaultCloseSlippage = 5.0
-    const val noTrailingStep = -1.0
+    const val noTrailingStep = 0.0
 }

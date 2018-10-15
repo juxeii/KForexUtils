@@ -4,6 +4,7 @@ import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.misc.KCallable
 import com.jforex.kforexutils.order.event.consumer.data.OrderEventConsumerData
 import com.jforex.kforexutils.order.extension.messageHandler
+import com.jforex.kforexutils.order.extension.strategyThread
 import com.jforex.kforexutils.order.message.OrderMessageGateway
 import com.jforex.kforexutils.order.message.OrderMessageHandler
 import com.jforex.kforexutils.thread.StrategyThread
@@ -27,6 +28,7 @@ class EngineOrderCreationImpl(
     }
 
     private fun onComplete(order: IOrder, consumerData: OrderEventConsumerData) {
+        order.strategyThread = strategyThread
         order.messageHandler = OrderMessageHandler(order, orderMessageGateway)
         order.messageHandler.registerConsumer(consumerData)
     }
