@@ -5,7 +5,6 @@ import com.dukascopy.api.IMessage
 import com.jforex.kforexutils.engine.orderCreation
 import com.jforex.kforexutils.engine.task.EngineOrderCreationImpl
 import com.jforex.kforexutils.message.MessageGateway
-import com.jforex.kforexutils.order.OrderStore
 import com.jforex.kforexutils.order.message.OrderMessageGateway
 import com.jforex.kforexutils.rx.HotPublisher
 import com.jforex.kforexutils.thread.StrategyThread
@@ -14,16 +13,15 @@ class ComponentFactory(val context: IContext)
 {
     val strategyThread = StrategyThread(context)
     val engine = context.engine
-    val orderStore = OrderStore()
 
     private val messagePublisher = HotPublisher<IMessage>()
     val messageGateway = MessageGateway(messagePublisher)
-    val orderMessageGateway = OrderMessageGateway(messageGateway, orderStore)
+    val orderMessageGateway = OrderMessageGateway(messageGateway.observable)
     private val orderCreationImpl = EngineOrderCreationImpl(
-        strategyThread,
-        orderStore,
-        orderMessageGateway
+        strategyThread = strategyThread,
+        orderMessageGateway = orderMessageGateway
     )
+
     init
     {
         engine.orderCreation = orderCreationImpl

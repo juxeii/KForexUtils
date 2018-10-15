@@ -6,13 +6,15 @@ import com.jforex.kforexutils.message.MessageToOrderMessageType
 import com.jforex.kforexutils.order.event.OrderEvent
 import com.jforex.kforexutils.order.event.consumer.OrderEventHandler
 import com.jforex.kforexutils.order.event.consumer.OrderEventHandlerType
+import com.jforex.kforexutils.order.event.consumer.data.OrderEventConsumerData
 import org.apache.logging.log4j.LogManager
 import java.util.concurrent.ConcurrentLinkedQueue
 
 class OrderMessageHandler(
     private val order: IOrder,
     private val orderMessageGateway: OrderMessageGateway
-) {
+)
+{
     private var orderEvents = orderMessageGateway
         .observable
         .filter { it.order == order }
@@ -21,15 +23,18 @@ class OrderMessageHandler(
 
     private val logger = LogManager.getLogger(this.javaClass.name)
 
-    private fun messageToOrderEvent(orderMessage: IMessage): OrderEvent {
+    private fun messageToOrderEvent(orderMessage: IMessage): OrderEvent
+    {
         val messageType = MessageToOrderMessageType.convert(orderMessage)
         return OrderEvent(orderMessage, messageType)
     }
 
-    private fun subscribeNextConsumer() {
+    private fun subscribeNextConsumer()
+    {
         val currentConsumer = changeHandlers.poll()
         logger.debug("Removed current change consumer with type ${currentConsumer.type} from queue")
-        if (!changeHandlers.isEmpty()) {
+        if (!changeHandlers.isEmpty())
+        {
             logger.debug("Subscribing next change consumer with type ${currentConsumer.type} from queue")
             changeHandlers
                 .peek()
@@ -37,15 +42,20 @@ class OrderMessageHandler(
         }
     }
 
-    fun registerConsumer(handler: OrderEventHandler) {
-        when (handler.type) {
+    fun registerConsumer(consumerData: OrderEventConsumerData)
+    {
+        val handler = OrderEventHandler(consumerData)
+        when (handler.type)
+        {
             OrderEventHandlerType.SUBMIT,
             OrderEventHandlerType.CLOSE,
-            OrderEventHandlerType.MERGE -> {
+            OrderEventHandlerType.MERGE ->
+            {
                 logger.debug("Consumer with type ${handler.type} subscribes to order events.")
                 handler.subscribe(orderEvents)
             }
-            else -> {
+            else ->
+            {
                 logger.debug("Change handler with type ${handler.type} gets added to handler queue")
                 if (changeHandlers.isEmpty())
                     handler.subscribe(orderEvents)
