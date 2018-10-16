@@ -1,8 +1,8 @@
-package com.jforex.kforexutils.order.event.consumer.data
+package com.jforex.kforexutils.order.event.handler.data
 
 import com.jforex.kforexutils.misc.OrderEventConsumer
 import com.jforex.kforexutils.order.event.OrderEventType
-import com.jforex.kforexutils.order.event.consumer.OrderEventHandlerType
+import com.jforex.kforexutils.order.event.handler.OrderEventHandlerType
 import com.jforex.kforexutils.order.params.actions.OrderBasicActions
 
 interface OrderEventConsumerData

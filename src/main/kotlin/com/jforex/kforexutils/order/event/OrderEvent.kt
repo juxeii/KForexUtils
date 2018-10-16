@@ -1,5 +1,5 @@
 package com.jforex.kforexutils.order.event
 
-import com.dukascopy.api.IMessage
+import com.dukascopy.api.IOrder
 
-data class OrderEvent(val message: IMessage, val messageType: OrderEventType)
+data class OrderEvent(val order: IOrder, val type: OrderEventType)

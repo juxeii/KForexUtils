@@ -14,6 +14,4 @@ class StrategyThread(private val context: IContext)
     fun <T> observeCallable(callable: KCallable<T>): Single<T> =
         if (isStrategyThread()) Single.fromCallable(callable)
         else Single.defer { Single.fromFuture(context.executeTask(callable)) }
-
-    fun <T> execute(callable: KCallable<T>) = context.executeTask(callable)
 }

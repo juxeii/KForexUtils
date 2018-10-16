@@ -1,4 +1,4 @@
-package com.jforex.kforexutils.order.event.consumer
+package com.jforex.kforexutils.order.event.handler
 
 enum class OrderEventHandlerType
 {
@@ -11,5 +11,6 @@ enum class OrderEventHandlerType
     CHANGE_AMOUNT,
     CHANGE_PRICE,
     CHANGE_GTT,
-    CHANGE_TYPE
+    CHANGE_TYPE,
+    CHANGE_COMMENT
 }

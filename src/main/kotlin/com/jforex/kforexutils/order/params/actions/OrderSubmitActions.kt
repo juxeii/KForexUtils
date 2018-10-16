@@ -3,7 +3,7 @@ package com.jforex.kforexutils.order.params.actions
 import com.jforex.kforexutils.misc.OrderEventConsumer
 import com.jforex.kforexutils.misc.emptyOrderEventConsumer
 
-data class OrderSubmitActions @JvmOverloads constructor(
+data class OrderSubmitActions(
     val basicActions: OrderBasicActions = OrderBasicActions(),
     val onSubmit: OrderEventConsumer = emptyOrderEventConsumer,
     val onPartialFill: OrderEventConsumer = emptyOrderEventConsumer,

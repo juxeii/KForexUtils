@@ -3,11 +3,10 @@ package com.jforex.kforexutils.order.extension
 import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.misc.FieldProperty
 import com.jforex.kforexutils.misc.KRunnable
-import com.jforex.kforexutils.order.event.consumer.data.OrderEventConsumerData
+import com.jforex.kforexutils.order.event.handler.data.OrderEventConsumerData
 import com.jforex.kforexutils.order.message.OrderMessageHandler
 import com.jforex.kforexutils.thread.StrategyThread
-import kotlinx.coroutines.experimental.GlobalScope
-import kotlinx.coroutines.experimental.launch
+import io.reactivex.rxkotlin.subscribeBy
 
 internal var IOrder.strategyThread: StrategyThread by FieldProperty<IOrder, StrategyThread>()
 internal var IOrder.messageHandler: OrderMessageHandler by FieldProperty<IOrder, OrderMessageHandler>()
@@ -15,27 +14,15 @@ internal var IOrder.messageHandler: OrderMessageHandler by FieldProperty<IOrder,
 internal fun IOrder.runTask(
     orderCall: KRunnable,
     consumerData: OrderEventConsumerData
-)
-{
-    GlobalScope.launch {
-        val test = strategyThread.execute(orderCall)
-        try
-        {
-            test.get()
-            messageHandler.registerConsumer(consumerData)
-        } catch (e: Exception)
-        {
-            consumerData.basicActions.onError(e)
-        }
+) {
+    val orderCallWithConsumerRegistration = {
+        orderCall()
+        messageHandler.registerConsumer(consumerData)
     }
 
-/*
     strategyThread
-        .observeRunnable(orderCall)
-        .subscribeBy(
-            onComplete = { messageHandler.registerConsumer(consumerData) },
-            onError = { consumerData.basicActions.onError(it) }
-        )*/
+        .observeRunnable(orderCallWithConsumerRegistration)
+        .subscribeBy(onError = { consumerData.basicActions.onError(it) })
 }
 
 fun IOrder.isOpened() = state == IOrder.State.OPENED
