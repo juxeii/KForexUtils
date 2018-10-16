@@ -16,5 +16,5 @@ data class OrderSubmitParams(
     val takeProfitPrice: Double = TradingSettings.noTPPrice,
     val goodTillTime: Long = TradingSettings.defaultGTT,
     val comment: String = TradingSettings.defaultComment,
-    val submitActions: OrderSubmitActions = OrderSubmitActions()
+    val actions: OrderSubmitActions = OrderSubmitActions()
 )

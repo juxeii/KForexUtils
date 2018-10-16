@@ -4,21 +4,21 @@ import com.jforex.kforexutils.order.event.OrderEventType
 import com.jforex.kforexutils.order.event.handler.OrderEventHandlerType
 import com.jforex.kforexutils.order.params.actions.OrderSubmitActions
 
-data class SubmitEventConsumerData(private val submitActions: OrderSubmitActions) :
+data class SubmitEventConsumerData(private val actions: OrderSubmitActions) :
     OrderEventConsumerData {
     override val eventHandlers = mapOf(
-        OrderEventType.SUBMIT_OK to submitActions.onSubmit,
-        OrderEventType.PARTIALLY_FILLED to submitActions.onPartialFill,
-        OrderEventType.FULLY_FILLED to submitActions.onFullFill,
-        OrderEventType.SUBMIT_REJECTED to submitActions.onSubmitReject,
-        OrderEventType.FILL_REJECTED to submitActions.onFillReject
+        OrderEventType.SUBMIT_OK to actions.onSubmit,
+        OrderEventType.PARTIALLY_FILLED to actions.onPartialFill,
+        OrderEventType.FULLY_FILLED to actions.onFullFill,
+        OrderEventType.SUBMIT_REJECTED to actions.onSubmitReject,
+        OrderEventType.FILL_REJECTED to actions.onFillReject
     )
     override val finishEventTypes = setOf(
         OrderEventType.FULLY_FILLED,
         OrderEventType.SUBMIT_REJECTED,
         OrderEventType.FILL_REJECTED
     )
-    override val basicActions = submitActions.basicActions
+    override val basicActions = actions.basicActions
     override val type: OrderEventHandlerType
         get() = OrderEventHandlerType.SUBMIT
 }
