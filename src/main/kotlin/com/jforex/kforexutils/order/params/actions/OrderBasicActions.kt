@@ -5,7 +5,7 @@ import com.jforex.kforexutils.misc.KRunnable
 import com.jforex.kforexutils.misc.emptyAction
 import com.jforex.kforexutils.misc.emptyErrorConsumer
 
-data class OrderBasicActions @JvmOverloads constructor(
+data class OrderBasicActions(
     val onStart: KRunnable = emptyAction,
     val onComplete: KRunnable = emptyAction,
     val onError: ErrorConsumer = emptyErrorConsumer
