@@ -4,8 +4,8 @@ import com.dukascopy.api.IMessage
 import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.message.MessageToOrderEventType
 import com.jforex.kforexutils.order.event.OrderEvent
+import com.jforex.kforexutils.order.event.OrderEventGateway
 import com.jforex.kforexutils.order.event.OrderEventType
-import com.jforex.kforexutils.order.message.OrderEventGateway
 import io.kotlintest.specs.StringSpec
 import io.mockk.every
 import io.mockk.mockk

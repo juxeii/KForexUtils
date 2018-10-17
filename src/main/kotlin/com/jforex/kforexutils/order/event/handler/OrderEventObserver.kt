@@ -7,7 +7,7 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.subscribeBy
 import org.apache.logging.log4j.LogManager
 
-class OrderEventHandler(consumerData: OrderEventHandlerData)
+class OrderEventObserver(consumerData: OrderEventHandlerData)
 {
     val type = consumerData.type
     private val eventHandlers = consumerData.eventHandlers
@@ -24,12 +24,12 @@ class OrderEventHandler(consumerData: OrderEventHandlerData)
         .filter { eventHandlers.containsKey(it.type) }
         .takeUntil { finishMessageTypes.contains(it.type) }
         .doFinally {
-            logger.debug("OrderEventHandler type $type finished ")
+            logger.debug("OrderEventObserver type $type finished ")
             onDone()
         }
         .subscribeBy(
             onNext = {
-                logger.debug("OrderEventHandler onnext with ${it.type} called on handler type $type")
+                logger.debug("OrderEventObserver onnext with ${it.type} called on handler type $type")
                 eventHandlers.getValue(it.type)(it)
             },
             onComplete = { basicActions.onComplete() },

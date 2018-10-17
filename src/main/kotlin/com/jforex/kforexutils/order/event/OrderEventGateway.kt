@@ -1,9 +1,8 @@
-package com.jforex.kforexutils.order.message
+package com.jforex.kforexutils.order.event
 
 import com.dukascopy.api.IMessage
 import com.jforex.kforexutils.message.MessageFilter
 import com.jforex.kforexutils.message.MessageToOrderEventType
-import com.jforex.kforexutils.order.event.OrderEvent
 import io.reactivex.Observable
 
 class OrderEventGateway(

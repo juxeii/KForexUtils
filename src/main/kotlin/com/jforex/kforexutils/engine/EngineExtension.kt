@@ -4,11 +4,11 @@ import com.dukascopy.api.IEngine
 import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.misc.FieldProperty
 import com.jforex.kforexutils.misc.KCallable
+import com.jforex.kforexutils.order.event.OrderEventGateway
+import com.jforex.kforexutils.order.event.OrderEventHandler
 import com.jforex.kforexutils.order.event.handler.data.OrderEventHandlerData
-import com.jforex.kforexutils.order.extension.messageHandler
+import com.jforex.kforexutils.order.extension.eventHandler
 import com.jforex.kforexutils.order.extension.strategyThread
-import com.jforex.kforexutils.order.message.OrderEventGateway
-import com.jforex.kforexutils.order.message.OrderMessageHandler
 import com.jforex.kforexutils.thread.StrategyThread
 import io.reactivex.rxkotlin.subscribeBy
 
@@ -22,8 +22,12 @@ internal fun IEngine.createOrder(
     val engineCallWithOrderInitialization = {
         val order = engineCall()
         order.strategyThread = strategyThread
-        order.messageHandler = OrderMessageHandler(order, orderMessageGateway)
-        order.messageHandler.registerConsumer(consumerData)
+
+        val orderEvents = orderMessageGateway
+            .observable
+            .filter { it.order == order }
+        order.eventHandler = OrderEventHandler(orderEvents)
+        order.eventHandler.registerHandler(consumerData)
     }
 
     strategyThread
