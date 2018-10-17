@@ -9,6 +9,7 @@ val Instrument.currencies
 val Instrument.noOfDecimalPlaces
     get() = pipScale + 1
 
-operator fun Instrument.contains(currency: ICurrency) = currencies.contains(currency)
+val Instrument.asNameNoSeparator
+    get() = toString().replace("/", "")
 
-fun Instrument.toStringNoSeparator() = toString().replace("/", "")
+operator fun Instrument.contains(currency: ICurrency) = currencies.contains(currency)

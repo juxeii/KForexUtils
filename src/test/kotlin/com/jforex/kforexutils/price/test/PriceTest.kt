@@ -61,11 +61,6 @@ class PriceTest : StringSpec() {
         }
 
         "Adding pips is correct EURUSD" {
-            val price = Price(Instrument.EURUSD, 1.15888)
-            val pips = Pips(4.345)
-            val newPrice = price + pips
-
-            newPrice.value.toDouble() shouldBe 1.15931
             forall(
                 row(1.15888, 4.345, 1.15931)
             ) { initValue, pips, expectedValue ->
