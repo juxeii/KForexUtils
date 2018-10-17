@@ -4,11 +4,9 @@ import com.dukascopy.api.IMessage
 import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.order.event.OrderEventType
 import com.jforex.kforexutils.order.extension.isFilled
-import io.reactivex.Maybe
 import io.reactivex.rxkotlin.toObservable
 
-class MessageToOrderEventType
-{
+class MessageToOrderEventType {
     private val changeTypeByReason = mapOf(
         IMessage.Reason.ORDER_FULLY_FILLED to OrderEventType.FULLY_FILLED,
         IMessage.Reason.ORDER_CHANGED_AMOUNT to OrderEventType.CHANGED_AMOUNT,
@@ -26,10 +24,8 @@ class MessageToOrderEventType
         IMessage.Reason.ORDER_CLOSED_BY_MERGE to OrderEventType.CLOSED_BY_MERGE
     )
 
-    fun convert(orderMessage: IMessage): OrderEventType
-    {
-        return when (orderMessage.type)
-        {
+    fun convert(orderMessage: IMessage): OrderEventType =
+        when (orderMessage.type) {
             IMessage.Type.ORDER_SUBMIT_REJECTED -> OrderEventType.SUBMIT_REJECTED
             IMessage.Type.ORDER_SUBMIT_OK -> OrderEventType.SUBMIT_OK
             IMessage.Type.ORDER_FILL_REJECTED -> OrderEventType.FILL_REJECTED
@@ -42,43 +38,33 @@ class MessageToOrderEventType
             IMessage.Type.ORDER_CHANGED_REJECTED -> OrderEventType.CHANGE_REJECTED
             else -> OrderEventType.NOTIFICATION
         }
-    }
 
-    private fun convertForClosedOrder(orderMessage: IMessage): OrderEventType
-    {
-        return if (orderMessage.order.isFilled()) OrderEventType.PARTIAL_CLOSE_OK
+    private fun convertForClosedOrder(orderMessage: IMessage) =
+        if (orderMessage.order.isFilled()) OrderEventType.PARTIAL_CLOSE_OK
         else convertIfReasonMatch(orderMessage.reasons, closeTypeByReason)
             .defaultIfEmpty(OrderEventType.CLOSE_OK)
             .blockingGet()
-    }
 
-    private fun convertForOrderFill(order: IOrder): OrderEventType
-    {
-        return if (order.amount < order.requestedAmount) OrderEventType.PARTIALLY_FILLED
+    private fun convertForOrderFill(order: IOrder) =
+        if (order.amount < order.requestedAmount) OrderEventType.PARTIALLY_FILLED
         else OrderEventType.FULLY_FILLED
-    }
 
     private fun convertForOrderMerge(orderMessage: IMessage) =
         if (orderMessage.order.isFilled()) OrderEventType.MERGE_OK
         else OrderEventType.MERGE_CLOSE_OK
 
-    private fun convertForOrderChange(orderMessage: IMessage): OrderEventType
-    {
-        return convertIfReasonMatch(orderMessage.reasons, changeTypeByReason)
+    private fun convertForOrderChange(orderMessage: IMessage) =
+        convertIfReasonMatch(orderMessage.reasons, changeTypeByReason)
             .defaultIfEmpty(OrderEventType.PARTIALLY_FILLED)
             .blockingGet()
-    }
 
     private fun convertIfReasonMatch(
         reasons: Set<IMessage.Reason>,
         typeByReason: Map<IMessage.Reason, OrderEventType>
-    ): Maybe<OrderEventType>
-    {
-        return typeByReason
-            .entries
-            .toObservable()
-            .skipWhile { !reasons.contains(it.key) }
-            .map { it.value }
-            .firstElement()
-    }
+    ) = typeByReason
+        .entries
+        .toObservable()
+        .skipWhile { !reasons.contains(it.key) }
+        .map { it.value }
+        .firstElement()
 }

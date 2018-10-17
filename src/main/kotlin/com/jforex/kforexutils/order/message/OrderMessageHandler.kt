@@ -21,12 +21,12 @@ class OrderMessageHandler(
     private fun subscribeNextConsumer() {
         if (changeHandlers.isEmpty()) return
 
-        val currentConsumer = changeHandlers.poll()
-        logger.debug("Removed current change handler with type ${currentConsumer.type} from queue")
+        val currentHandler = changeHandlers.poll()
+        logger.debug("Removed current change handler with type ${currentHandler.type} from queue")
         if (!changeHandlers.isEmpty()) {
-            val nextConsumer = changeHandlers.peek()
-            logger.debug("Subscribing next change handler with type ${nextConsumer.type} from queue")
-            nextConsumer.subscribe(orderEvents) { subscribeNextConsumer() }
+            val nextHandler = changeHandlers.peek()
+            logger.debug("Subscribing next change handler with type ${nextHandler.type} from queue")
+            nextHandler.subscribe(orderEvents) { subscribeNextConsumer() }
         }
     }
 
