@@ -5,7 +5,7 @@ import com.jforex.kforexutils.misc.emptyOrderEventConsumer
 import com.jforex.kforexutils.order.params.actions.OrderTPActions
 
 @OrderDsl
-class OrderTPActionsBuilder : OrderActionsBuilderBase()
+class OrderTPActionsBuilder : OrderBasicActionsBuilderBase()
 {
     var onTPChange = emptyOrderEventConsumer
     var onReject = emptyOrderEventConsumer

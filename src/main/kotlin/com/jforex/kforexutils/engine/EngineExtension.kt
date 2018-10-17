@@ -4,7 +4,7 @@ import com.dukascopy.api.IEngine
 import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.misc.FieldProperty
 import com.jforex.kforexutils.misc.KCallable
-import com.jforex.kforexutils.order.event.handler.data.OrderEventConsumerData
+import com.jforex.kforexutils.order.event.handler.data.OrderEventHandlerData
 import com.jforex.kforexutils.order.extension.messageHandler
 import com.jforex.kforexutils.order.extension.strategyThread
 import com.jforex.kforexutils.order.message.OrderEventGateway
@@ -17,7 +17,7 @@ internal var IEngine.orderMessageGateway: OrderEventGateway by FieldProperty<IEn
 
 internal fun IEngine.createOrder(
     engineCall: KCallable<IOrder>,
-    consumerData: OrderEventConsumerData
+    consumerData: OrderEventHandlerData
 ) {
     val engineCallWithOrderInitialization = {
         val order = engineCall()

@@ -5,7 +5,7 @@ import com.jforex.kforexutils.misc.emptyOrderEventConsumer
 import com.jforex.kforexutils.order.params.actions.OrderSubmitActions
 
 @OrderDsl
-class OrderSubmitActionsBuilder : OrderActionsBuilderBase()
+class OrderSubmitActionsBuilder : OrderBasicActionsBuilderBase()
 {
     var onSubmit = emptyOrderEventConsumer
     var onPartialFill = emptyOrderEventConsumer

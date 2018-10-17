@@ -3,7 +3,7 @@ package com.jforex.kforexutils.order.extension
 import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.misc.FieldProperty
 import com.jforex.kforexutils.misc.KRunnable
-import com.jforex.kforexutils.order.event.handler.data.OrderEventConsumerData
+import com.jforex.kforexutils.order.event.handler.data.OrderEventHandlerData
 import com.jforex.kforexutils.order.message.OrderMessageHandler
 import com.jforex.kforexutils.thread.StrategyThread
 import io.reactivex.rxkotlin.subscribeBy
@@ -13,7 +13,7 @@ internal var IOrder.messageHandler: OrderMessageHandler by FieldProperty<IOrder,
 
 internal fun IOrder.runTask(
     orderCall: KRunnable,
-    consumerData: OrderEventConsumerData
+    consumerData: OrderEventHandlerData
 ) {
     val orderCallWithConsumerRegistration = {
         orderCall()

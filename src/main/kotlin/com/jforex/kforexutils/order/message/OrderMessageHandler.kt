@@ -3,7 +3,7 @@ package com.jforex.kforexutils.order.message
 import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.order.event.handler.OrderEventHandler
 import com.jforex.kforexutils.order.event.handler.OrderEventHandlerType
-import com.jforex.kforexutils.order.event.handler.data.OrderEventConsumerData
+import com.jforex.kforexutils.order.event.handler.data.OrderEventHandlerData
 import org.apache.logging.log4j.LogManager
 import java.util.concurrent.ConcurrentLinkedQueue
 
@@ -30,7 +30,8 @@ class OrderMessageHandler(
         }
     }
 
-    fun registerConsumer(consumerData: OrderEventConsumerData) {
+    fun registerConsumer(consumerData: OrderEventHandlerData)
+    {
         val handler = OrderEventHandler(consumerData)
         when (handler.type) {
             OrderEventHandlerType.SUBMIT,

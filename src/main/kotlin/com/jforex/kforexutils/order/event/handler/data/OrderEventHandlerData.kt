@@ -5,7 +5,7 @@ import com.jforex.kforexutils.order.event.OrderEventType
 import com.jforex.kforexutils.order.event.handler.OrderEventHandlerType
 import com.jforex.kforexutils.order.params.actions.OrderBasicActions
 
-interface OrderEventConsumerData
+interface OrderEventHandlerData
 {
     val eventHandlers: Map<OrderEventType, OrderEventConsumer>
 

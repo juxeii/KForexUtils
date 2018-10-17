@@ -4,8 +4,8 @@ import com.jforex.kforexutils.order.event.OrderEventType
 import com.jforex.kforexutils.order.event.handler.OrderEventHandlerType
 import com.jforex.kforexutils.order.params.actions.OrderOpenPriceActions
 
-data class SetOpenPriceEventConsumerData(private val actions: OrderOpenPriceActions) :
-    OrderEventConsumerData
+data class SetOpenPriceEventHandlerData(private val actions: OrderOpenPriceActions) :
+    OrderEventHandlerData
 {
     override val eventHandlers = mapOf(
         OrderEventType.CHANGED_PRICE to actions.onOpenPriceChange,

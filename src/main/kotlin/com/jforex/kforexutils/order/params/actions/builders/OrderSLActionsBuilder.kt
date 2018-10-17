@@ -5,7 +5,7 @@ import com.jforex.kforexutils.misc.emptyOrderEventConsumer
 import com.jforex.kforexutils.order.params.actions.OrderSLActions
 
 @OrderDsl
-class OrderSLActionsBuilder : OrderActionsBuilderBase()
+class OrderSLActionsBuilder : OrderBasicActionsBuilderBase()
 {
     var onSLChange = emptyOrderEventConsumer
     var onReject = emptyOrderEventConsumer

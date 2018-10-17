@@ -4,8 +4,8 @@ import com.jforex.kforexutils.order.event.OrderEventType
 import com.jforex.kforexutils.order.event.handler.OrderEventHandlerType
 import com.jforex.kforexutils.order.params.actions.OrderTPActions
 
-data class SetTPEventConsumerData(private val actions: OrderTPActions) :
-    OrderEventConsumerData
+data class SetTPEventHandlerData(private val actions: OrderTPActions) :
+    OrderEventHandlerData
 {
     override val eventHandlers = mapOf(
         OrderEventType.CHANGED_TP to actions.onTPChange,

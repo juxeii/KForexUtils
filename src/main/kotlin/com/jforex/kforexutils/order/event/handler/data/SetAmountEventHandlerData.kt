@@ -4,8 +4,8 @@ import com.jforex.kforexutils.order.event.OrderEventType
 import com.jforex.kforexutils.order.event.handler.OrderEventHandlerType
 import com.jforex.kforexutils.order.params.actions.OrderAmountActions
 
-data class SetAmountEventConsumerData(private val actions: OrderAmountActions) :
-    OrderEventConsumerData
+data class SetAmountEventHandlerData(private val actions: OrderAmountActions) :
+    OrderEventHandlerData
 {
     override val eventHandlers = mapOf(
         OrderEventType.CHANGED_AMOUNT to actions.onAmountChange,

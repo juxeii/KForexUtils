@@ -5,7 +5,7 @@ import com.jforex.kforexutils.misc.emptyOrderEventConsumer
 import com.jforex.kforexutils.order.params.actions.OrderMergeActions
 
 @OrderDsl
-class OrderMergeActionsBuilder : OrderActionsBuilderBase()
+class OrderMergeActionsBuilder : OrderBasicActionsBuilderBase()
 {
     var onMerge = emptyOrderEventConsumer
     var onMergeClose = emptyOrderEventConsumer

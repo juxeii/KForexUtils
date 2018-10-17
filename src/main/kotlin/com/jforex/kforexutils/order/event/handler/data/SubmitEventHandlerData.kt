@@ -4,8 +4,8 @@ import com.jforex.kforexutils.order.event.OrderEventType
 import com.jforex.kforexutils.order.event.handler.OrderEventHandlerType
 import com.jforex.kforexutils.order.params.actions.OrderSubmitActions
 
-data class SubmitEventConsumerData(private val actions: OrderSubmitActions) :
-    OrderEventConsumerData
+data class SubmitEventHandlerData(private val actions: OrderSubmitActions) :
+    OrderEventHandlerData
 {
     override val eventHandlers = mapOf(
         OrderEventType.SUBMIT_OK to actions.onSubmit,

@@ -5,7 +5,7 @@ import com.jforex.kforexutils.misc.emptyOrderEventConsumer
 import com.jforex.kforexutils.order.params.actions.OrderGTTActions
 
 @OrderDsl
-class OrderGTTActionsBuilder : OrderActionsBuilderBase()
+class OrderGTTActionsBuilder : OrderBasicActionsBuilderBase()
 {
     var onGTTChange = emptyOrderEventConsumer
     var onReject = emptyOrderEventConsumer

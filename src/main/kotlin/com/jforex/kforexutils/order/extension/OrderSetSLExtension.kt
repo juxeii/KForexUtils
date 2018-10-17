@@ -1,7 +1,7 @@
 package com.jforex.kforexutils.order.extension
 
 import com.dukascopy.api.IOrder
-import com.jforex.kforexutils.order.event.handler.data.SetSLEventConsumerData
+import com.jforex.kforexutils.order.event.handler.data.SetSLEventHandlerData
 import com.jforex.kforexutils.order.params.builders.OrderSLParamsBuilder
 import com.jforex.kforexutils.settings.TradingSettings
 
@@ -16,7 +16,7 @@ fun IOrder.setSL(price: Double, block: OrderSLParamsBuilder.() -> Unit = {}) {
                 params.trailingStep
             )
         },
-        consumerData = SetSLEventConsumerData(params.slActions)
+        consumerData = SetSLEventHandlerData(params.slActions)
     )
 }
 

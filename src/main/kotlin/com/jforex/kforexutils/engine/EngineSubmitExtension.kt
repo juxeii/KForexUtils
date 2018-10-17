@@ -2,7 +2,7 @@ package com.jforex.kforexutils.engine
 
 import com.dukascopy.api.IEngine
 import com.dukascopy.api.Instrument
-import com.jforex.kforexutils.order.event.handler.data.SubmitEventConsumerData
+import com.jforex.kforexutils.order.event.handler.data.SubmitEventHandlerData
 import com.jforex.kforexutils.order.params.OrderSubmitParams
 import com.jforex.kforexutils.order.params.builders.OrderSubmitParamsBuilder
 
@@ -22,7 +22,7 @@ fun IEngine.submit(
     )
     createOrder(
         engineCall = createSubmitCall(this, params),
-        consumerData = SubmitEventConsumerData(params.actions)
+        consumerData = SubmitEventHandlerData(params.actions)
     )
 }
 
