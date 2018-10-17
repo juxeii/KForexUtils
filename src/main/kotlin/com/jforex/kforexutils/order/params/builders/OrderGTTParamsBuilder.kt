@@ -6,13 +6,13 @@ import com.jforex.kforexutils.order.params.actions.OrderGTTActions
 import com.jforex.kforexutils.order.params.actions.builders.OrderGTTActionsBuilder
 
 @OrderDsl
-class OrderGTTParamsBuilder(private val gtt: Long) {
+class OrderGTTParamsBuilder(private val gtt: Long)
+{
     private var actions = OrderGTTActions()
 
-    fun actions(block: OrderGTTActionsBuilder.() -> Unit) {
-        actions = OrderGTTActionsBuilder()
-            .apply(block)
-            .build()
+    fun actions(block: OrderGTTActionsBuilder.() -> Unit)
+    {
+        actions = OrderGTTActionsBuilder(block)
     }
 
     fun build() = OrderGTTParams(
@@ -20,7 +20,8 @@ class OrderGTTParamsBuilder(private val gtt: Long) {
         actions = actions
     )
 
-    companion object {
+    companion object
+    {
         operator fun invoke(gtt: Long, block: OrderGTTParamsBuilder.() -> Unit) =
             OrderGTTParamsBuilder(gtt)
                 .apply(block)

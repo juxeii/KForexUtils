@@ -2,7 +2,6 @@ package com.jforex.kforexutils.order.event.handler.data
 
 import com.jforex.kforexutils.order.event.OrderEventType
 import com.jforex.kforexutils.order.event.handler.OrderEventHandlerType
-import com.jforex.kforexutils.order.params.actions.OrderBasicActions
 import com.jforex.kforexutils.order.params.actions.OrderTPActions
 
 data class SetTPEventConsumerData(private val actions: OrderTPActions) :
@@ -16,8 +15,6 @@ data class SetTPEventConsumerData(private val actions: OrderTPActions) :
         OrderEventType.CHANGED_TP,
         OrderEventType.CHANGE_REJECTED
     )
-    override val basicActions: OrderBasicActions
-        get() = actions.basicActions
-    override val type: OrderEventHandlerType
-        get() = OrderEventHandlerType.CHANGE_TP
+    override val basicActions = actions.basicActions
+    override val type = OrderEventHandlerType.CHANGE_TP
 }

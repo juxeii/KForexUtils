@@ -8,16 +8,15 @@ import com.jforex.kforexutils.order.params.actions.builders.OrderSLActionsBuilde
 import com.jforex.kforexutils.settings.TradingSettings
 
 @OrderDsl
-class OrderSLParamsBuilder(private val price: Double) {
-    var offerSide: OfferSide = OfferSide.BID
-    var trailingStep: Double = TradingSettings.noTrailingStep
+class OrderSLParamsBuilder(private val price: Double)
+{
+    var offerSide = OfferSide.BID
+    var trailingStep = TradingSettings.noTrailingStep
     var slActions = OrderSLActions()
 
     fun actions(block: OrderSLActionsBuilder.() -> Unit)
     {
-        slActions = OrderSLActionsBuilder()
-            .apply(block)
-            .build()
+        slActions = OrderSLActionsBuilder(block)
     }
 
     fun build() = OrderSLParams(
@@ -27,7 +26,8 @@ class OrderSLParamsBuilder(private val price: Double) {
         slActions = slActions
     )
 
-    companion object {
+    companion object
+    {
         operator fun invoke(price: Double, block: OrderSLParamsBuilder.() -> Unit) =
             OrderSLParamsBuilder(price)
                 .apply(block)

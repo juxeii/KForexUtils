@@ -10,9 +10,7 @@ class OrderLabelParamsBuilder(private val label: String) {
     private var actions = OrderLabelActions()
 
     fun actions(block: OrderLabelActionsBuilder.() -> Unit) {
-        actions = OrderLabelActionsBuilder()
-            .apply(block)
-            .build()
+        actions = OrderLabelActionsBuilder(block)
     }
 
     fun build() = OrderLabelParams(

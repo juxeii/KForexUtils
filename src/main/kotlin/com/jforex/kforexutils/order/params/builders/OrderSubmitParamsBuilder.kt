@@ -25,9 +25,7 @@ class OrderSubmitParamsBuilder(
 
     fun actions(block: OrderSubmitActionsBuilder.() -> Unit)
     {
-        submitActions = OrderSubmitActionsBuilder()
-            .apply(block)
-            .build()
+        submitActions = OrderSubmitActionsBuilder(block)
     }
 
     fun build() = OrderSubmitParams(

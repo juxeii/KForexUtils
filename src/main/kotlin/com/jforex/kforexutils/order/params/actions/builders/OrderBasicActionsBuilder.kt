@@ -1,14 +1,16 @@
 package com.jforex.kforexutils.order.params.actions.builders
 
-import com.jforex.kforexutils.misc.*
+import com.jforex.kforexutils.misc.OrderDsl
+import com.jforex.kforexutils.misc.emptyAction
+import com.jforex.kforexutils.misc.emptyErrorConsumer
 import com.jforex.kforexutils.order.params.actions.OrderBasicActions
 
 @OrderDsl
 class OrderBasicActionsBuilder
 {
-    var onStart: KRunnable = emptyAction
-    var onComplete: KRunnable = emptyAction
-    var onError: ErrorConsumer = emptyErrorConsumer
+    var onStart = emptyAction
+    var onComplete = emptyAction
+    var onError = emptyErrorConsumer
 
     fun build() = OrderBasicActions(
         onStart,
@@ -16,4 +18,10 @@ class OrderBasicActionsBuilder
         onError
     )
 
+    companion object
+    {
+        operator fun invoke(block: OrderBasicActionsBuilder.() -> Unit) = OrderBasicActionsBuilder()
+            .apply(block)
+            .build()
+    }
 }

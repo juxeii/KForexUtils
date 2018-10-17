@@ -7,16 +7,16 @@ import com.jforex.kforexutils.order.params.actions.builders.OrderCloseActionsBui
 import com.jforex.kforexutils.settings.TradingSettings
 
 @OrderDsl
-class OrderCloseParamsBuilder {
+class OrderCloseParamsBuilder
+{
     var amount = 0.0
     var price = 0.0
     var slippage = TradingSettings.defaultCloseSlippage
     var closeActions = OrderCloseActions()
 
-    fun closeActions(block: OrderCloseActionsBuilder.() -> Unit) {
-        closeActions = OrderCloseActionsBuilder()
-            .apply(block)
-            .build()
+    fun closeActions(block: OrderCloseActionsBuilder.() -> Unit)
+    {
+        closeActions = OrderCloseActionsBuilder(block)
     }
 
     fun build() = OrderCloseParams(
@@ -26,7 +26,8 @@ class OrderCloseParamsBuilder {
         slippage = slippage
     )
 
-    companion object {
+    companion object
+    {
         operator fun invoke(block: OrderCloseParamsBuilder.() -> Unit) = OrderCloseParamsBuilder()
             .apply(block)
             .build()

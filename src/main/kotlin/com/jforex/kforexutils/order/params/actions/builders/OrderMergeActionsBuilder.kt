@@ -1,24 +1,15 @@
 package com.jforex.kforexutils.order.params.actions.builders
 
 import com.jforex.kforexutils.misc.OrderDsl
-import com.jforex.kforexutils.misc.OrderEventConsumer
 import com.jforex.kforexutils.misc.emptyOrderEventConsumer
-import com.jforex.kforexutils.order.params.actions.OrderBasicActions
 import com.jforex.kforexutils.order.params.actions.OrderMergeActions
 
 @OrderDsl
-class OrderMergeActionsBuilder {
-    var basicActions: OrderBasicActions = OrderBasicActions()
-    var onMerge: OrderEventConsumer = emptyOrderEventConsumer
-    var onMergeClose: OrderEventConsumer = emptyOrderEventConsumer
-    var onReject: OrderEventConsumer = emptyOrderEventConsumer
-
-    fun basicActions(block: OrderBasicActionsBuilder.() -> Unit) {
-        basicActions = OrderBasicActionsBuilder()
-            .apply(block)
-            .build()
-
-    }
+class OrderMergeActionsBuilder : OrderActionsBuilderBase()
+{
+    var onMerge = emptyOrderEventConsumer
+    var onMergeClose = emptyOrderEventConsumer
+    var onReject = emptyOrderEventConsumer
 
     fun build() = OrderMergeActions(
         basicActions = basicActions,
@@ -27,7 +18,8 @@ class OrderMergeActionsBuilder {
         onReject = onReject
     )
 
-    companion object {
+    companion object
+    {
         operator fun invoke(block: OrderMergeActionsBuilder.() -> Unit) = OrderMergeActionsBuilder()
             .apply(block)
             .build()

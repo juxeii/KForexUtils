@@ -6,13 +6,13 @@ import com.jforex.kforexutils.order.params.actions.OrderAmountActions
 import com.jforex.kforexutils.order.params.actions.builders.OrderAmountActionsBuilder
 
 @OrderDsl
-class OrderAmountParamsBuilder(private val amount: Double) {
+class OrderAmountParamsBuilder(private val amount: Double)
+{
     private var actions = OrderAmountActions()
 
-    fun actions(block: OrderAmountActionsBuilder.() -> Unit) {
-        actions = OrderAmountActionsBuilder()
-            .apply(block)
-            .build()
+    fun actions(block: OrderAmountActionsBuilder.() -> Unit)
+    {
+        actions = OrderAmountActionsBuilder(block)
     }
 
     fun build() = OrderAmountParams(
@@ -20,7 +20,8 @@ class OrderAmountParamsBuilder(private val amount: Double) {
         actions = actions
     )
 
-    companion object {
+    companion object
+    {
         operator fun invoke(amount: Double, block: OrderAmountParamsBuilder.() -> Unit) =
             OrderAmountParamsBuilder(amount)
                 .apply(block)

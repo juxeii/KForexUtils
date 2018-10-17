@@ -6,13 +6,13 @@ import com.jforex.kforexutils.order.params.actions.OrderTPActions
 import com.jforex.kforexutils.order.params.actions.builders.OrderTPActionsBuilder
 
 @OrderDsl
-class OrderTPParamsBuilder(private val price: Double) {
+class OrderTPParamsBuilder(private val price: Double)
+{
     private var actions = OrderTPActions()
 
-    fun actions(block: OrderTPActionsBuilder.() -> Unit) {
-        actions = OrderTPActionsBuilder()
-            .apply(block)
-            .build()
+    fun actions(block: OrderTPActionsBuilder.() -> Unit)
+    {
+        actions = OrderTPActionsBuilder(block)
     }
 
     fun build() = OrderTPParams(
@@ -20,7 +20,8 @@ class OrderTPParamsBuilder(private val price: Double) {
         actions = actions
     )
 
-    companion object {
+    companion object
+    {
         operator fun invoke(price: Double, block: OrderTPParamsBuilder.() -> Unit) =
             OrderTPParamsBuilder(price)
                 .apply(block)

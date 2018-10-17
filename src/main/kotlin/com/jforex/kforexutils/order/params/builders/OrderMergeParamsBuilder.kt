@@ -10,14 +10,14 @@ import com.jforex.kforexutils.order.params.actions.builders.OrderMergeActionsBui
 class OrderMergeParamsBuilder(
     private val label: String,
     private val orders: Collection<IOrder>
-) {
+)
+{
     var comment: String = ""
     private var actions = OrderMergeActions()
 
-    fun actions(block: OrderMergeActionsBuilder.() -> Unit) {
-        actions = OrderMergeActionsBuilder()
-            .apply(block)
-            .build()
+    fun actions(block: OrderMergeActionsBuilder.() -> Unit)
+    {
+        actions = OrderMergeActionsBuilder(block)
     }
 
     fun build() = OrderMergeParams(
@@ -27,7 +27,8 @@ class OrderMergeParamsBuilder(
         actions = actions
     )
 
-    companion object {
+    companion object
+    {
         operator fun invoke(
             label: String,
             orders: Collection<IOrder>,
