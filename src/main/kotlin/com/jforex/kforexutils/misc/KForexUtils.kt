@@ -10,8 +10,7 @@ import com.jforex.kforexutils.order.event.OrderEventGateway
 import com.jforex.kforexutils.rx.HotPublisher
 import com.jforex.kforexutils.thread.StrategyThread
 
-class KForexUtils private constructor(val context: IContext)
-{
+class KForexUtils(val context: IContext) {
     val strategyThread = StrategyThread(context)
     val engine = context.engine
 
@@ -21,11 +20,8 @@ class KForexUtils private constructor(val context: IContext)
     val orderMessageGateway =
         OrderEventGateway(messageGateway.observable, orderEventConverter)
 
-    init
-    {
+    init {
         engine.strategyThread = strategyThread
         engine.orderMessageGateway = orderMessageGateway
     }
-
-    companion object : SingletonHolder<KForexUtils, IContext>(::KForexUtils)
 }
