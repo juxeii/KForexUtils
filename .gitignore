@@ -1,6 +1,7 @@
 # IDEA
 .idea
 *.iml
+/out/
 
 # Kotlin
 *.class
