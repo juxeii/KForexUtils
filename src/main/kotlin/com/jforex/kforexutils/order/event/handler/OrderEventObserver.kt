@@ -7,12 +7,11 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.subscribeBy
 import org.apache.logging.log4j.LogManager
 
-class OrderEventObserver(consumerData: OrderEventHandlerData)
-{
-    val type = consumerData.type
-    private val eventHandlers = consumerData.eventHandlers
-    private val finishMessageTypes = consumerData.finishEventTypes
-    private val basicActions = consumerData.basicActions
+class OrderEventObserver(handlerData: OrderEventHandlerData) {
+    val type = handlerData.type
+    private val eventHandlers = handlerData.eventHandlers
+    private val finishMessageTypes = handlerData.finishEventTypes
+    private val basicActions = handlerData.basicActions
 
     private val logger = LogManager.getLogger(this.javaClass.name)
 
