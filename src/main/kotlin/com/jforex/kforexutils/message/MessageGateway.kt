@@ -1,10 +1,9 @@
 package com.jforex.kforexutils.message
 
 import com.dukascopy.api.IMessage
-import com.jforex.kforexutils.rx.HotPublisher
+import com.jakewharton.rxrelay2.PublishRelay
 
-class MessageGateway(private val messagePublisher: HotPublisher<IMessage>) {
-    val observable = messagePublisher.observable()
-
-    fun onMessage(message: IMessage) = messagePublisher.onNext(message)
+class MessageGateway(val observable: PublishRelay<IMessage>)
+{
+    fun onMessage(message: IMessage) = observable.accept(message)
 }

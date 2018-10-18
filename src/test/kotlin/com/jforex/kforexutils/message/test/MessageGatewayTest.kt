@@ -1,13 +1,13 @@
 package com.jforex.kforexutils.message.test
 
 import com.dukascopy.api.IMessage
+import com.jakewharton.rxrelay2.PublishRelay
 import com.jforex.kforexutils.message.MessageGateway
-import com.jforex.kforexutils.rx.HotPublisher
 import io.kotlintest.specs.StringSpec
 import io.mockk.mockk
 
 class MessageGatewayTest : StringSpec({
-    val messagePublisher = HotPublisher<IMessage>()
+    val messagePublisher: PublishRelay<IMessage> = PublishRelay.create()
     val messageGateway = MessageGateway(messagePublisher)
     val message = mockk<IMessage>()
 

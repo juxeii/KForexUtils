@@ -23,6 +23,7 @@ dependencies {
     compile("com.google.guava:guava:26.0-jre")
     compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:0.30.2")
     compile("org.aeonbits.owner:owner:1.0.10")
+    compile("com.jakewharton.rxrelay2:rxrelay:2.1.0")
 
     testCompile("io.kotlintest:kotlintest-runner-junit5:3.1.10")
     testCompile("io.mockk:mockk:1.8.9")
