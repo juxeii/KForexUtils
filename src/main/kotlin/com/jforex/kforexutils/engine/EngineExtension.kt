@@ -27,7 +27,7 @@ internal fun IEngine.createOrder(
             .observable
             .filter { it.order == order }
         order.eventHandler = OrderEventHandler(orderEvents)
-        order.eventHandler.registerHandler(consumerData)
+        order.eventHandler.enqueueEventObserver(consumerData)
     }
 
     strategyThread

@@ -17,7 +17,7 @@ internal fun IOrder.runTask(
 ) {
     val orderCallWithConsumerRegistration = {
         orderCall()
-        eventHandler.registerHandler(consumerData)
+        eventHandler.enqueueEventObserver(consumerData)
     }
 
     strategyThread

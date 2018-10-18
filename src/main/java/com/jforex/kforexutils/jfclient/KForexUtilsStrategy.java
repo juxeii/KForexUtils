@@ -20,7 +20,7 @@ public class KForexUtilsStrategy implements IStrategy {
         this.history = context.getHistory();
         this.context = context;
         this.userInterface = context.getUserInterface();
-        this.kForexUtils = KForexUtils.Companion.getInstance(context);
+        this.kForexUtils = new KForexUtils(context);
         this.bridge = new MyJFClientExampleClass();
 
         bridge.onStart(kForexUtils);

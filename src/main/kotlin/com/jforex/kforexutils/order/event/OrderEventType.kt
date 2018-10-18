@@ -25,5 +25,5 @@ enum class OrderEventType
     SUBMIT_REJECTED,
     FILL_REJECTED,
     MERGE_REJECTED,
-    CLOSE_REJECTED,
+    CLOSE_REJECTED
 }
