@@ -23,6 +23,6 @@ fun IEngine.merge(
                 orders
             )
         },
-        consumerData = MergeEventHandlerData(params.actions)
+        handlerData = MergeEventHandlerData(params.actions)
     )
 }

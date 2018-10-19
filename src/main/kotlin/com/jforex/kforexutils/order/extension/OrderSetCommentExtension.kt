@@ -8,6 +8,6 @@ fun IOrder.setComment(comment: String, block: OrderCommentParamsBuilder.() -> Un
     val params = OrderCommentParamsBuilder(comment, block)
     runTask(
         orderCall = { setComment(params.comment) },
-        consumerData = SetCommentEventHandlerData(params.actions)
+        handlerData = SetCommentEventHandlerData(params.actions)
     )
 }

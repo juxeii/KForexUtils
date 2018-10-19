@@ -8,6 +8,6 @@ fun IOrder.setGTT(gtt: Long, block: OrderGTTParamsBuilder.() -> Unit = {}) {
     val params = OrderGTTParamsBuilder(gtt, block)
     runTask(
         orderCall = { goodTillTime = params.gtt },
-        consumerData = SetGTTEventHandlerData(params.actions)
+        handlerData = SetGTTEventHandlerData(params.actions)
     )
 }

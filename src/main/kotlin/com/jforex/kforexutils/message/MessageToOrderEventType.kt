@@ -40,7 +40,7 @@ class MessageToOrderEventType {
         }
 
     private fun convertForClosedOrder(orderMessage: IMessage) =
-        if (orderMessage.order.isFilled()) OrderEventType.PARTIAL_CLOSE_OK
+        if (orderMessage.order.isFilled) OrderEventType.PARTIAL_CLOSE_OK
         else convertIfReasonMatch(orderMessage.reasons, closeTypeByReason)
             .defaultIfEmpty(OrderEventType.CLOSE_OK)
             .blockingGet()
@@ -50,7 +50,7 @@ class MessageToOrderEventType {
         else OrderEventType.FULLY_FILLED
 
     private fun convertForOrderMerge(orderMessage: IMessage) =
-        if (orderMessage.order.isFilled()) OrderEventType.MERGE_OK
+        if (orderMessage.order.isFilled) OrderEventType.MERGE_OK
         else OrderEventType.MERGE_CLOSE_OK
 
     private fun convertForOrderChange(orderMessage: IMessage) =
