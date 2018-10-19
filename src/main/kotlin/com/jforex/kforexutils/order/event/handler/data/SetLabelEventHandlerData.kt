@@ -18,6 +18,9 @@ data class SetLabelEventHandlerData(
         OrderEventType.CHANGED_LABEL,
         OrderEventType.CHANGE_REJECTED
     )
+    override val rejectEventTypes = setOf(
+        OrderEventType.CHANGE_REJECTED
+    )
     override val basicActions = actions.basicActions
     override val type = OrderEventHandlerType.CHANGE_LABEL
     override val retryParams = retryParamsEx

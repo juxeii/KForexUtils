@@ -18,6 +18,9 @@ data class SetSLEventHandlerData(
         OrderEventType.CHANGED_SL,
         OrderEventType.CHANGE_REJECTED
     )
+    override val rejectEventTypes = setOf(
+        OrderEventType.CHANGE_REJECTED
+    )
     override val basicActions = actions.basicActions
     override val type = OrderEventHandlerType.CHANGE_SL
     override val retryParams = retryParamsEx

@@ -3,6 +3,7 @@ package com.jforex.kforexutils.order
 import com.jforex.kforexutils.misc.KCallable
 import com.jforex.kforexutils.order.event.OrderEvent
 import com.jforex.kforexutils.order.event.handler.data.OrderEventHandlerData
+import com.jforex.kforexutils.rx.RejectException
 import com.jforex.kforexutils.thread.StrategyThread
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.subscribeBy
@@ -21,6 +22,7 @@ class OrderTaskRunner(private val strategyThread: StrategyThread) {
         val finishEventTypes = handlerData.finishEventTypes
         val basicActions = handlerData.basicActions
         val retryParmas = handlerData.retryParams
+        val rejectEvents = handlerData.rejectEventTypes
 
         strategyThread
             .observeCallable(call)
@@ -28,6 +30,10 @@ class OrderTaskRunner(private val strategyThread: StrategyThread) {
             .flatMapObservable { it }
             .filter { eventHandlers.containsKey(it.type) }
             .takeUntil { finishEventTypes.contains(it.type) }
+            .flatMap {
+                if (rejectEvents.contains(it.type)) Observable.error(RejectException())
+                else Observable.just(it)
+            }
             .retryWhen {
                 it.zipWith(Observable.range(1, retryParmas.attempts))
                     .flatMap { Observable.timer(retryParmas.delay, TimeUnit.SECONDS) }

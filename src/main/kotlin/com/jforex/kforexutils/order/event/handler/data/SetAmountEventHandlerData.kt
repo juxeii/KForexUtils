@@ -18,6 +18,9 @@ data class SetAmountEventHandlerData(
         OrderEventType.CHANGED_AMOUNT,
         OrderEventType.CHANGE_REJECTED
     )
+    override val rejectEventTypes = setOf(
+        OrderEventType.CHANGE_REJECTED
+    )
     override val basicActions = actions.basicActions
     override val type = OrderEventHandlerType.CHANGE_AMOUNT
     override val retryParams = retryParamsEx

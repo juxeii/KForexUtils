@@ -18,6 +18,9 @@ data class SetTPEventHandlerData(
         OrderEventType.CHANGED_TP,
         OrderEventType.CHANGE_REJECTED
     )
+    override val rejectEventTypes = setOf(
+        OrderEventType.CHANGE_REJECTED
+    )
     override val basicActions = actions.basicActions
     override val type = OrderEventHandlerType.CHANGE_TP
     override val retryParams = retryParamsEx

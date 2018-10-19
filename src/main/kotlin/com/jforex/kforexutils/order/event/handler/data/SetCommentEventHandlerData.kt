@@ -18,6 +18,9 @@ data class SetCommentEventHandlerData(
         OrderEventType.CHANGED_COMMENT,
         OrderEventType.CHANGE_REJECTED
     )
+    override val rejectEventTypes = setOf(
+        OrderEventType.CHANGE_REJECTED
+    )
     override val basicActions = actions.basicActions
     override val type = OrderEventHandlerType.CHANGE_COMMENT
     override val retryParams = retryParamsEx

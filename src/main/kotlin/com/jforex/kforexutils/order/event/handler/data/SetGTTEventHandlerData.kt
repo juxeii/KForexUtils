@@ -18,6 +18,9 @@ data class SetGTTEventHandlerData(
         OrderEventType.CHANGED_GTT,
         OrderEventType.CHANGE_REJECTED
     )
+    override val rejectEventTypes = setOf(
+        OrderEventType.CHANGE_REJECTED
+    )
     override val basicActions = actions.basicActions
     override val type = OrderEventHandlerType.CHANGE_GTT
     override val retryParams = retryParamsEx

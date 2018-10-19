@@ -18,6 +18,9 @@ data class SetOpenPriceEventHandlerData(
         OrderEventType.CHANGED_PRICE,
         OrderEventType.CHANGE_REJECTED
     )
+    override val rejectEventTypes = setOf(
+        OrderEventType.CHANGE_REJECTED
+    )
     override val basicActions = actions.basicActions
     override val type = OrderEventHandlerType.CHANGE_PRICE
     override val retryParams = retryParamsEx

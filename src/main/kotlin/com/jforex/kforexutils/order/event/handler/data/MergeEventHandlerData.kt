@@ -20,6 +20,9 @@ data class MergeEventHandlerData(
         OrderEventType.MERGE_CLOSE_OK,
         OrderEventType.MERGE_REJECTED
     )
+    override val rejectEventTypes = setOf(
+        OrderEventType.MERGE_REJECTED
+    )
     override val basicActions = actions.basicActions
     override val type = OrderEventHandlerType.MERGE
     override val retryParams = retryParamsEx

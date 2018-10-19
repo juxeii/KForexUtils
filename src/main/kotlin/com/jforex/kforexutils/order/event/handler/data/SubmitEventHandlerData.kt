@@ -22,6 +22,10 @@ data class SubmitEventHandlerData(
         OrderEventType.SUBMIT_REJECTED,
         OrderEventType.FILL_REJECTED
     )
+    override val rejectEventTypes = setOf(
+        OrderEventType.SUBMIT_REJECTED,
+        OrderEventType.FILL_REJECTED
+    )
     override val basicActions = actions.basicActions
     override val type = OrderEventHandlerType.SUBMIT
     override val retryParams = retryParamsEx

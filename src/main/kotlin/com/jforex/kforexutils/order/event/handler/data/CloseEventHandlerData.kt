@@ -20,6 +20,9 @@ data class CloseEventHandlerData(
         OrderEventType.PARTIAL_CLOSE_OK,
         OrderEventType.CLOSE_REJECTED
     )
+    override val rejectEventTypes = setOf(
+        OrderEventType.CLOSE_REJECTED
+    )
     override val basicActions = actions.basicActions
     override val type = OrderEventHandlerType.CLOSE
     override val retryParams = retryParamsEx
