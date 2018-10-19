@@ -17,15 +17,16 @@ internal var IEngine.orderMessageGateway: OrderEventGateway by FieldProperty<IEn
 internal fun IEngine.createOrder(
     engineCall: KCallable<IOrder>,
     handlerData: OrderEventHandlerData
-) {
+)
+{
     val engineCallWithOrderInitialization = {
-        with(engineCall()) {
-            taskRunner = taskRunner
-            eventHandler = OrderEventHandler(orderMessageGateway
-                .observable
-                .filter { it.order == this })
-            eventHandler.observable()
-        }
+        val order = engineCall()
+        val obs = orderMessageGateway
+            .observable
+            .filter { it.order == order }
+        order.taskRunner = taskRunner
+        order.eventHandler = OrderEventHandler(obs)
+        order.eventHandler.observable()
     }
 
     taskRunner.run(engineCallWithOrderInitialization, handlerData)
