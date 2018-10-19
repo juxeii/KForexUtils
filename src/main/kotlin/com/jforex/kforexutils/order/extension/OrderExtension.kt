@@ -3,8 +3,8 @@ package com.jforex.kforexutils.order.extension
 import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.misc.FieldProperty
 import com.jforex.kforexutils.misc.KRunnable
+import com.jforex.kforexutils.order.OrderTaskRunner
 import com.jforex.kforexutils.order.event.OrderEventHandler
-import com.jforex.kforexutils.order.event.handler.OrderTaskRunner
 import com.jforex.kforexutils.order.event.handler.data.OrderEventHandlerData
 
 internal var IOrder.taskRunner: OrderTaskRunner by FieldProperty<IOrder, OrderTaskRunner>()

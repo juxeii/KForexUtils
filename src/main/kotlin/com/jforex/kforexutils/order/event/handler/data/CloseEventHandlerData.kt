@@ -2,11 +2,14 @@ package com.jforex.kforexutils.order.event.handler.data
 
 import com.jforex.kforexutils.order.event.OrderEventType
 import com.jforex.kforexutils.order.event.handler.OrderEventHandlerType
+import com.jforex.kforexutils.order.params.OrderRetryParams
 import com.jforex.kforexutils.order.params.actions.OrderCloseActions
 
-data class CloseEventHandlerData(private val actions: OrderCloseActions) :
-    OrderEventHandlerData
-{
+data class CloseEventHandlerData(
+    private val actions: OrderCloseActions,
+    val retryParamsEx: OrderRetryParams
+) :
+    OrderEventHandlerData {
     override val eventHandlers = mapOf(
         OrderEventType.CLOSE_OK to actions.onClose,
         OrderEventType.PARTIAL_CLOSE_OK to actions.onPartialClose,
@@ -19,4 +22,5 @@ data class CloseEventHandlerData(private val actions: OrderCloseActions) :
     )
     override val basicActions = actions.basicActions
     override val type = OrderEventHandlerType.CLOSE
+    override val retryParams = retryParamsEx
 }

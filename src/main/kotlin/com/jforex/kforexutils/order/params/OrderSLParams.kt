@@ -6,7 +6,8 @@ import com.jforex.kforexutils.settings.TradingSettings
 
 data class OrderSLParams(
     val price: Double,
-    val slActions: OrderSLActions = OrderSLActions(),
     val offerSide: OfferSide = OfferSide.BID,
-    val trailingStep: Double = TradingSettings.noTrailingStep
+    val trailingStep: Double = TradingSettings.noTrailingStep,
+    val actions: OrderSLActions = OrderSLActions(),
+    val retry: OrderRetryParams = OrderRetryParams()
 )

@@ -7,27 +7,25 @@ import com.jforex.kforexutils.order.params.actions.builders.OrderCloseActionsBui
 import com.jforex.kforexutils.settings.TradingSettings
 
 @OrderDsl
-class OrderCloseParamsBuilder
-{
+class OrderCloseParamsBuilder : OrderRetryBuilderBase() {
     var amount = 0.0
     var price = 0.0
     var slippage = TradingSettings.defaultCloseSlippage
-    var closeActions = OrderCloseActions()
+    var actions = OrderCloseActions()
 
-    fun closeActions(block: OrderCloseActionsBuilder.() -> Unit)
-    {
-        closeActions = OrderCloseActionsBuilder(block)
+    fun closeActions(block: OrderCloseActionsBuilder.() -> Unit) {
+        actions = OrderCloseActionsBuilder(block)
     }
 
     fun build() = OrderCloseParams(
-        closeActions = closeActions,
+        actions = actions,
         amount = amount,
         price = price,
-        slippage = slippage
+        slippage = slippage,
+        retry = retry
     )
 
-    companion object
-    {
+    companion object {
         operator fun invoke(block: OrderCloseParamsBuilder.() -> Unit) = OrderCloseParamsBuilder()
             .apply(block)
             .build()

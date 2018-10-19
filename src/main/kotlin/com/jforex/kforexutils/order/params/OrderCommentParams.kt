@@ -4,5 +4,6 @@ import com.jforex.kforexutils.order.params.actions.OrderCommentActions
 
 data class OrderCommentParams(
     val comment: String,
-    val actions: OrderCommentActions = OrderCommentActions()
+    val actions: OrderCommentActions = OrderCommentActions(),
+    val retry: OrderRetryParams = OrderRetryParams()
 )

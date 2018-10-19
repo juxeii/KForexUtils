@@ -22,7 +22,7 @@ fun IEngine.submit(
     )
     createOrder(
         engineCall = createSubmitCall(this, params),
-        handlerData = SubmitEventHandlerData(params.actions)
+        handlerData = SubmitEventHandlerData(params.actions, params.retry)
     )
 }
 

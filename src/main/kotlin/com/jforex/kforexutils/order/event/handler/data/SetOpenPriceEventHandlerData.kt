@@ -2,11 +2,14 @@ package com.jforex.kforexutils.order.event.handler.data
 
 import com.jforex.kforexutils.order.event.OrderEventType
 import com.jforex.kforexutils.order.event.handler.OrderEventHandlerType
+import com.jforex.kforexutils.order.params.OrderRetryParams
 import com.jforex.kforexutils.order.params.actions.OrderOpenPriceActions
 
-data class SetOpenPriceEventHandlerData(private val actions: OrderOpenPriceActions) :
-    OrderEventHandlerData
-{
+data class SetOpenPriceEventHandlerData(
+    private val actions: OrderOpenPriceActions,
+    val retryParamsEx: OrderRetryParams
+) :
+    OrderEventHandlerData {
     override val eventHandlers = mapOf(
         OrderEventType.CHANGED_PRICE to actions.onOpenPriceChange,
         OrderEventType.CHANGE_REJECTED to actions.onReject
@@ -17,4 +20,5 @@ data class SetOpenPriceEventHandlerData(private val actions: OrderOpenPriceActio
     )
     override val basicActions = actions.basicActions
     override val type = OrderEventHandlerType.CHANGE_PRICE
+    override val retryParams = retryParamsEx
 }

@@ -6,22 +6,20 @@ import com.jforex.kforexutils.order.params.actions.OrderTPActions
 import com.jforex.kforexutils.order.params.actions.builders.OrderTPActionsBuilder
 
 @OrderDsl
-class OrderTPParamsBuilder(private val price: Double)
-{
+class OrderTPParamsBuilder(private val price: Double) : OrderRetryBuilderBase() {
     private var actions = OrderTPActions()
 
-    fun actions(block: OrderTPActionsBuilder.() -> Unit)
-    {
+    fun actions(block: OrderTPActionsBuilder.() -> Unit) {
         actions = OrderTPActionsBuilder(block)
     }
 
     fun build() = OrderTPParams(
         price = price,
-        actions = actions
+        actions = actions,
+        retry = retry
     )
 
-    companion object
-    {
+    companion object {
         operator fun invoke(price: Double, block: OrderTPParamsBuilder.() -> Unit) =
             OrderTPParamsBuilder(price)
                 .apply(block)

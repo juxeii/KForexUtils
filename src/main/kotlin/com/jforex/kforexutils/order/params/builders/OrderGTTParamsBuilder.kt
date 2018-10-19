@@ -6,22 +6,20 @@ import com.jforex.kforexutils.order.params.actions.OrderGTTActions
 import com.jforex.kforexutils.order.params.actions.builders.OrderGTTActionsBuilder
 
 @OrderDsl
-class OrderGTTParamsBuilder(private val gtt: Long)
-{
+class OrderGTTParamsBuilder(private val gtt: Long) : OrderRetryBuilderBase() {
     private var actions = OrderGTTActions()
 
-    fun actions(block: OrderGTTActionsBuilder.() -> Unit)
-    {
+    fun actions(block: OrderGTTActionsBuilder.() -> Unit) {
         actions = OrderGTTActionsBuilder(block)
     }
 
     fun build() = OrderGTTParams(
         gtt = gtt,
-        actions = actions
+        actions = actions,
+        retry = retry
     )
 
-    companion object
-    {
+    companion object {
         operator fun invoke(gtt: Long, block: OrderGTTParamsBuilder.() -> Unit) =
             OrderGTTParamsBuilder(gtt)
                 .apply(block)

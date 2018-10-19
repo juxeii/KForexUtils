@@ -2,11 +2,14 @@ package com.jforex.kforexutils.order.event.handler.data
 
 import com.jforex.kforexutils.order.event.OrderEventType
 import com.jforex.kforexutils.order.event.handler.OrderEventHandlerType
+import com.jforex.kforexutils.order.params.OrderRetryParams
 import com.jforex.kforexutils.order.params.actions.OrderSubmitActions
 
-data class SubmitEventHandlerData(private val actions: OrderSubmitActions) :
-    OrderEventHandlerData
-{
+data class SubmitEventHandlerData(
+    private val actions: OrderSubmitActions,
+    val retryParamsEx: OrderRetryParams
+) :
+    OrderEventHandlerData {
     override val eventHandlers = mapOf(
         OrderEventType.SUBMIT_OK to actions.onSubmit,
         OrderEventType.PARTIALLY_FILLED to actions.onPartialFill,
@@ -21,4 +24,5 @@ data class SubmitEventHandlerData(private val actions: OrderSubmitActions) :
     )
     override val basicActions = actions.basicActions
     override val type = OrderEventHandlerType.SUBMIT
+    override val retryParams = retryParamsEx
 }

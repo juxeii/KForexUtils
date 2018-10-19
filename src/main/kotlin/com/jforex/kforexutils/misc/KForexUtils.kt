@@ -7,8 +7,8 @@ import com.jforex.kforexutils.engine.orderMessageGateway
 import com.jforex.kforexutils.engine.taskRunner
 import com.jforex.kforexutils.message.MessageGateway
 import com.jforex.kforexutils.message.MessageToOrderEventType
+import com.jforex.kforexutils.order.OrderTaskRunner
 import com.jforex.kforexutils.order.event.OrderEventGateway
-import com.jforex.kforexutils.order.event.handler.OrderTaskRunner
 import com.jforex.kforexutils.thread.StrategyThread
 
 class KForexUtils(val context: IContext) {

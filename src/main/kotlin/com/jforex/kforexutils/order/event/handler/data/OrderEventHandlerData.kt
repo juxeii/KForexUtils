@@ -3,6 +3,7 @@ package com.jforex.kforexutils.order.event.handler.data
 import com.jforex.kforexutils.misc.OrderEventConsumer
 import com.jforex.kforexutils.order.event.OrderEventType
 import com.jforex.kforexutils.order.event.handler.OrderEventHandlerType
+import com.jforex.kforexutils.order.params.OrderRetryParams
 import com.jforex.kforexutils.order.params.actions.OrderBasicActions
 
 interface OrderEventHandlerData
@@ -14,4 +15,6 @@ interface OrderEventHandlerData
     val basicActions: OrderBasicActions
 
     val type: OrderEventHandlerType
+
+    val retryParams: OrderRetryParams
 }

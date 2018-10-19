@@ -4,9 +4,9 @@ import com.dukascopy.api.IEngine
 import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.misc.FieldProperty
 import com.jforex.kforexutils.misc.KCallable
+import com.jforex.kforexutils.order.OrderTaskRunner
 import com.jforex.kforexutils.order.event.OrderEventGateway
 import com.jforex.kforexutils.order.event.OrderEventHandler
-import com.jforex.kforexutils.order.event.handler.OrderTaskRunner
 import com.jforex.kforexutils.order.event.handler.data.OrderEventHandlerData
 import com.jforex.kforexutils.order.extension.eventHandler
 import com.jforex.kforexutils.order.extension.taskRunner

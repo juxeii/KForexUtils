@@ -14,32 +14,32 @@ class OrderSubmitParamsBuilder(
     private val instrument: Instrument,
     private val orderCommand: IEngine.OrderCommand,
     private val amount: Double
-) {
+) : OrderRetryBuilderBase() {
     var price = TradingSettings.noPreferredPrice
     var slippage = TradingSettings.defaultSlippage
     var stopLossPrice = TradingSettings.noSLPrice
     var takeProfitPrice = TradingSettings.noTPPrice
     var goodTillTime = TradingSettings.defaultGTT
     var comment = TradingSettings.defaultComment
-    var submitActions = OrderSubmitActions()
+    var actions = OrderSubmitActions()
 
-    fun actions(block: OrderSubmitActionsBuilder.() -> Unit)
-    {
-        submitActions = OrderSubmitActionsBuilder(block)
+    fun actions(block: OrderSubmitActionsBuilder.() -> Unit) {
+        actions = OrderSubmitActionsBuilder(block)
     }
 
     fun build() = OrderSubmitParams(
-        label,
-        instrument,
-        orderCommand,
-        amount,
-        price,
-        slippage,
-        stopLossPrice,
-        takeProfitPrice,
-        goodTillTime,
-        comment,
-        submitActions
+        label = label,
+        instrument = instrument,
+        orderCommand = orderCommand,
+        amount = amount,
+        price = price,
+        slippage = slippage,
+        stopLossPrice = stopLossPrice,
+        takeProfitPrice = takeProfitPrice,
+        goodTillTime = goodTillTime,
+        comment = comment,
+        actions = actions,
+        retry = retry
     )
 
     companion object {
