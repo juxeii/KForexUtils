@@ -6,13 +6,13 @@ import com.jforex.kforexutils.misc.FieldProperty
 import com.jforex.kforexutils.misc.KCallable
 import com.jforex.kforexutils.order.OrderTaskRunner
 import com.jforex.kforexutils.order.event.OrderEventGateway
-import com.jforex.kforexutils.order.event.OrderEventHandler
+import com.jforex.kforexutils.order.event.handler.OrderEventHandler
 import com.jforex.kforexutils.order.event.handler.data.OrderEventHandlerData
 import com.jforex.kforexutils.order.extension.eventHandler
 import com.jforex.kforexutils.order.extension.taskRunner
 
-internal var IEngine.taskRunner: OrderTaskRunner by FieldProperty<IEngine, OrderTaskRunner>()
-internal var IEngine.orderMessageGateway: OrderEventGateway by FieldProperty<IEngine, OrderEventGateway>()
+internal var IEngine.taskRunner: OrderTaskRunner by FieldProperty()
+internal var IEngine.orderMessageGateway: OrderEventGateway by FieldProperty()
 
 internal fun IEngine.createOrder(
     engineCall: KCallable<IOrder>,

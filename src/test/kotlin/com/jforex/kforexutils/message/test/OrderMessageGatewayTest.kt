@@ -2,7 +2,7 @@ package com.jforex.kforexutils.message.test
 
 import com.dukascopy.api.IMessage
 import com.dukascopy.api.IOrder
-import com.jforex.kforexutils.message.MessageToOrderEventType
+import com.jforex.kforexutils.message.MessageToOrderEvent
 import com.jforex.kforexutils.order.event.OrderEvent
 import com.jforex.kforexutils.order.event.OrderEventGateway
 import com.jforex.kforexutils.order.event.OrderEventType
@@ -14,9 +14,10 @@ import io.reactivex.subjects.PublishSubject
 
 class OrderMessageGatewayTest : StringSpec() {
     private val order = mockk<IOrder>()
+    private val orderEvent = mockk<OrderEvent>()
     private val message = mockk<IMessage>()
     private val messages: PublishSubject<IMessage> = PublishSubject.create()
-    private val messageConverter = mockk<MessageToOrderEventType>()
+    private val messageConverter = mockk<MessageToOrderEvent>()
     private val orderMessageGateway = OrderEventGateway(messages, messageConverter)
 
     private fun subscribe() = orderMessageGateway
@@ -30,7 +31,9 @@ class OrderMessageGatewayTest : StringSpec() {
     }
 
     init {
-        every { messageConverter.convert(message) } returns OrderEventType.CHANGED_AMOUNT
+        every { messageConverter.get(message) } returns orderEvent
+        every { orderEvent.type } returns OrderEventType.CHANGED_AMOUNT
+        every { orderEvent.order } returns order
         "No order event is observed when subscribed after message has been published" {
             every { message.order } returns order
             messages.onNext(message)

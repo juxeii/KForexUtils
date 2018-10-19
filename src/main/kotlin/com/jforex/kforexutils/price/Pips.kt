@@ -4,4 +4,6 @@ import java.math.BigDecimal
 
 data class Pips(private val doubleValue: Double) {
     val value: BigDecimal = BigDecimal(doubleValue).setScale(1, BigDecimal.ROUND_HALF_DOWN)
+
+    operator fun plus(pips: Pips) = Pips(this.value.add(pips.value).toDouble())
 }

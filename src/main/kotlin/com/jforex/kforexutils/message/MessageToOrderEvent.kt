@@ -2,11 +2,12 @@ package com.jforex.kforexutils.message
 
 import com.dukascopy.api.IMessage
 import com.dukascopy.api.IOrder
+import com.jforex.kforexutils.order.event.OrderEvent
 import com.jforex.kforexutils.order.event.OrderEventType
 import com.jforex.kforexutils.order.extension.isFilled
 import io.reactivex.rxkotlin.toObservable
 
-class MessageToOrderEventType {
+class MessageToOrderEvent {
     private val changeTypeByReason = mapOf(
         IMessage.Reason.ORDER_FULLY_FILLED to OrderEventType.FULLY_FILLED,
         IMessage.Reason.ORDER_CHANGED_AMOUNT to OrderEventType.CHANGED_AMOUNT,
@@ -24,7 +25,9 @@ class MessageToOrderEventType {
         IMessage.Reason.ORDER_CLOSED_BY_MERGE to OrderEventType.CLOSED_BY_MERGE
     )
 
-    fun convert(orderMessage: IMessage): OrderEventType =
+    fun get(orderMessage: IMessage) = OrderEvent(orderMessage.order, getType(orderMessage))
+
+    private fun getType(orderMessage: IMessage): OrderEventType =
         when (orderMessage.type) {
             IMessage.Type.ORDER_SUBMIT_REJECTED -> OrderEventType.SUBMIT_REJECTED
             IMessage.Type.ORDER_SUBMIT_OK -> OrderEventType.SUBMIT_OK

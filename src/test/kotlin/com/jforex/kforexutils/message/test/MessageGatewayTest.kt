@@ -12,7 +12,7 @@ class MessageGatewayTest : StringSpec({
     val message = mockk<IMessage>()
 
     fun subscribe() = messageGateway
-        .observable
+        .messages
         .test()
 
     fun sendMessage() = messageGateway.onMessage(message)
