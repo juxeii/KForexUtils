@@ -1,10 +1,10 @@
 package com.jforex.kforexutils.currency
 
+import arrow.core.Option
+import arrow.core.toOption
 import com.dukascopy.api.ICurrency
 import com.dukascopy.api.Instrument
 import com.dukascopy.api.JFCurrency
-import org.funktionale.option.Option
-import org.funktionale.option.toOption
 
 object KCurrency
 {

@@ -1,13 +1,12 @@
 package com.jforex.kforexutils.instrument
 
+import arrow.core.Option
+import arrow.core.toOption
+import arrow.syntax.function.memoize
 import com.dukascopy.api.ICurrency
 import com.dukascopy.api.Instrument
 import com.jforex.kforexutils.currency.KCurrency
 import com.jforex.kforexutils.misc.MathUtil
-import org.funktionale.memoization.memoize
-import org.funktionale.option.Option
-import org.funktionale.option.toOption
-
 
 object KInstrument
 {
@@ -18,10 +17,8 @@ object KInstrument
 
     private val memoizeFromName = { instrumentName: String ->
         val upperCaseName = instrumentName.toUpperCase()
-        if (Instrument.isInverted(upperCaseName))
-            Instrument.fromInvertedString(upperCaseName).toOption()
-        else
-            Instrument.fromString(upperCaseName).toOption()
+        (if (Instrument.isInverted(upperCaseName)) Instrument.fromInvertedString(upperCaseName)
+        else Instrument.fromString(upperCaseName)).toOption()
     }.memoize()
 
     fun fromName(instrumentName: String) = memoizeFromName(instrumentName)
