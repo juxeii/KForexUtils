@@ -3,23 +3,23 @@ package com.jforex.kforexutils.currency
 import com.dukascopy.api.ICurrency
 import com.dukascopy.api.Instrument
 import com.dukascopy.api.JFCurrency
-import java.util.*
+import org.funktionale.option.Option
+import org.funktionale.option.toOption
 
-fun ICurrency.isIsoCurrency() = javaCurrency != null
-
-object Currency {
+object KCurrency
+{
     fun instanceFromName(currencyName: String): ICurrency = JFCurrency.getInstance(currencyName.toUpperCase())
 
-    fun fromName(currencyName: String): Optional<ICurrency> {
+    fun fromName(currencyName: String): Option<ICurrency>
+    {
         val instance = instanceFromName(currencyName)
-        return if (instance.isIsoCurrency()) Optional.of(instance)
-        else Optional.empty()
+        return if (instance.isIsoCurrency()) instance.toOption()
+        else Option.empty()
     }
 
     fun fromNames(currencyNames: Collection<String>) = currencyNames
-        .map { fromName(it) }
-        .filter { it.isPresent }
-        .map { it.get() }
+        .map(::fromName)
+        .flatMap { it.toList() }
         .toSet()
 
     fun fromNames(vararg currencyNames: String) = fromNames(currencyNames.toSet())

@@ -8,10 +8,11 @@ import io.reactivex.Observable
 class OrderEventGateway(
     messages: Observable<IMessage>,
     private val messageConverter: MessageToOrderEvent
-) {
+)
+{
     val observable: Observable<OrderEvent> by lazy {
         messages
             .filter(MessageFilter.ORDER::isMatch)
-            .map { messageConverter.get(it) }
+            .map(messageConverter::get)
     }
 }

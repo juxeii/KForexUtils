@@ -2,6 +2,8 @@ package com.jforex.kforexutils.message.test
 
 import com.dukascopy.api.IMessage
 import com.dukascopy.api.IOrder
+import com.jforex.kforexutils.currency.KCurrency
+import com.jforex.kforexutils.instrument.KInstrument
 import com.jforex.kforexutils.message.MessageFilter
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
@@ -44,6 +46,17 @@ class MessageFilterTest : StringSpec({
     }
 
     "CALENDAR filter is correct"{
+        val ca = KCurrency.fromName("EUR").get()
+        val cb = KCurrency.fromName("USD").get()
+        val cc = KCurrency.fromName("JPY").get()
+        val cd = KCurrency.fromName("AUD").get()
+        val all = setOf(ca, cb, cc, cd)
+        for (x in 1..10)
+        {
+            val inst = KInstrument.fromAnchorCurency(ca, all)
+            println("inst is ${inst}")
+        }
+
         assertForNoOrderFilter(IMessage.Type.CALENDAR, MessageFilter.CALENDAR)
     }
 

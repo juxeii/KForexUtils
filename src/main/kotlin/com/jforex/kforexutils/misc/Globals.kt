@@ -3,6 +3,7 @@ package com.jforex.kforexutils.misc
 import com.jforex.kforexutils.settings.PlatformSettings
 import org.aeonbits.owner.ConfigFactory
 
+
 @DslMarker
 annotation class OrderDsl
 
