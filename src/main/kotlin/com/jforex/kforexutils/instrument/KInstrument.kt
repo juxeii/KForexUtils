@@ -1,6 +1,6 @@
 package com.jforex.kforexutils.instrument
 
-import arrow.core.Option
+import arrow.core.None
 import arrow.core.toOption
 import arrow.syntax.function.memoize
 import com.dukascopy.api.ICurrency
@@ -11,7 +11,7 @@ import com.jforex.kforexutils.misc.MathUtil
 object KInstrument
 {
     private val memoizeFromCurrencies = { currencyA: ICurrency, currencyB: ICurrency ->
-        if (currencyA.equals(currencyB)) Option.empty()
+        if (currencyA.equals(currencyB)) None
         else memoizeFromName(currencyA.toString() + Instrument.getPairsSeparator() + currencyB.toString())
     }.memoize()
 
