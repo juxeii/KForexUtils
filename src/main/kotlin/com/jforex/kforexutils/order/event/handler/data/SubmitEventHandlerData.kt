@@ -2,31 +2,23 @@ package com.jforex.kforexutils.order.event.handler.data
 
 import com.jforex.kforexutils.order.event.OrderEventType
 import com.jforex.kforexutils.order.event.handler.OrderEventHandlerType
-import com.jforex.kforexutils.order.params.OrderRetryParams
 import com.jforex.kforexutils.order.params.actions.OrderSubmitActions
 
-data class SubmitEventHandlerData(
-    private val actions: OrderSubmitActions,
-    val retryParamsEx: OrderRetryParams
-) :
-    OrderEventHandlerData {
+data class SubmitEventHandlerData(private val actions: OrderSubmitActions) : OrderEventHandlerData
+{
     override val eventHandlers = mapOf(
         OrderEventType.SUBMIT_OK to actions.onSubmit,
         OrderEventType.PARTIALLY_FILLED to actions.onPartialFill,
         OrderEventType.FULLY_FILLED to actions.onFullFill,
-        OrderEventType.SUBMIT_REJECTED to actions.onSubmitReject,
-        OrderEventType.FILL_REJECTED to actions.onFillReject
+        OrderEventType.SUBMIT_REJECTED to actions.onSubmitReject
     )
     override val finishEventTypes = setOf(
         OrderEventType.FULLY_FILLED,
         OrderEventType.SUBMIT_REJECTED,
         OrderEventType.FILL_REJECTED
     )
-    override val rejectEventTypes = setOf(
-        OrderEventType.SUBMIT_REJECTED,
-        OrderEventType.FILL_REJECTED
-    )
+    override val rejectEventType = OrderEventType.FILL_REJECTED
     override val basicActions = actions.basicActions
     override val type = OrderEventHandlerType.SUBMIT
-    override val retryParams = retryParamsEx
+    override val rejectEventHandler = actions.onFillReject
 }

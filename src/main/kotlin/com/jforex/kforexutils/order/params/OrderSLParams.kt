@@ -8,6 +8,5 @@ data class OrderSLParams(
     val price: Double,
     val offerSide: OfferSide = OfferSide.BID,
     val trailingStep: Double = TradingSettings.noTrailingStep,
-    val actions: OrderSLActions = OrderSLActions(),
-    val retry: OrderRetryParams = OrderRetryParams()
+    val actions: OrderSLActions = OrderSLActions()
 )

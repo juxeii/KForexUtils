@@ -14,7 +14,8 @@ class OrderSubmitParamsBuilder(
     private val instrument: Instrument,
     private val orderCommand: IEngine.OrderCommand,
     private val amount: Double
-) : OrderRetryBuilderBase() {
+)
+{
     var price = TradingSettings.noPreferredPrice
     var slippage = TradingSettings.defaultSlippage
     var stopLossPrice = TradingSettings.noSLPrice
@@ -23,7 +24,8 @@ class OrderSubmitParamsBuilder(
     var comment = TradingSettings.defaultComment
     var actions = OrderSubmitActions()
 
-    fun actions(block: OrderSubmitActionsBuilder.() -> Unit) {
+    fun actions(block: OrderSubmitActionsBuilder.() -> Unit)
+    {
         actions = OrderSubmitActionsBuilder(block)
     }
 
@@ -38,11 +40,11 @@ class OrderSubmitParamsBuilder(
         takeProfitPrice = takeProfitPrice,
         goodTillTime = goodTillTime,
         comment = comment,
-        actions = actions,
-        retry = retry
+        actions = actions
     )
 
-    companion object {
+    companion object
+    {
         operator fun invoke(
             label: String,
             instrument: Instrument,

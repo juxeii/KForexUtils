@@ -7,6 +7,5 @@ data class OrderMergeParams(
     val label: String,
     val orders: Collection<IOrder>,
     val comment: String = "",
-    val actions: OrderMergeActions = OrderMergeActions(),
-    val retry: OrderRetryParams = OrderRetryParams()
+    val actions: OrderMergeActions = OrderMergeActions()
 )

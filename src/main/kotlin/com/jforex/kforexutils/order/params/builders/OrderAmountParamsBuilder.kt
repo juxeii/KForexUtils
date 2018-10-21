@@ -6,7 +6,8 @@ import com.jforex.kforexutils.order.params.actions.OrderAmountActions
 import com.jforex.kforexutils.order.params.actions.builders.OrderAmountActionsBuilder
 
 @OrderDsl
-class OrderAmountParamsBuilder(private val amount: Double) : OrderRetryBuilderBase() {
+class OrderAmountParamsBuilder(private val amount: Double)
+{
     private var actions = OrderAmountActions()
 
     fun actions(block: OrderAmountActionsBuilder.() -> Unit) {
@@ -15,8 +16,7 @@ class OrderAmountParamsBuilder(private val amount: Double) : OrderRetryBuilderBa
 
     fun build() = OrderAmountParams(
         amount = amount,
-        actions = actions,
-        retry = retry
+        actions = actions
     )
 
     companion object {

@@ -7,22 +7,24 @@ import com.jforex.kforexutils.order.params.actions.builders.OrderOpenPriceAction
 import com.jforex.kforexutils.settings.TradingSettings
 
 @OrderDsl
-class OrderOpenPriceParamsBuilder(private val openPrice: Double) : OrderRetryBuilderBase() {
+class OrderOpenPriceParamsBuilder(private val openPrice: Double)
+{
     var slippage = TradingSettings.defaultOpenPriceSlippage
     private var actions = OrderOpenPriceActions()
 
-    fun actions(block: OrderOpenPriceActionsBuilder.() -> Unit) {
+    fun actions(block: OrderOpenPriceActionsBuilder.() -> Unit)
+    {
         actions = OrderOpenPriceActionsBuilder(block)
     }
 
     fun build() = OrderOpenPriceParams(
         openPrice = openPrice,
         slippage = slippage,
-        actions = actions,
-        retry = retry
+        actions = actions
     )
 
-    companion object {
+    companion object
+    {
         operator fun invoke(openPrice: Double, block: OrderOpenPriceParamsBuilder.() -> Unit) =
             OrderOpenPriceParamsBuilder(openPrice)
                 .apply(block)

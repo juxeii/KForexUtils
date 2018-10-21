@@ -12,8 +12,7 @@ class OrderGTTActionsBuilder : OrderBasicActionsBuilderBase()
 
     fun build() = OrderGTTActions(
         basicActions = basicActions,
-        onGTTChange = onGTTChange,
-        onReject = onReject
+        onGTTChange = onGTTChange
     )
 
     companion object

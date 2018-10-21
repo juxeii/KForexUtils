@@ -4,6 +4,5 @@ import com.jforex.kforexutils.order.params.actions.OrderAmountActions
 
 data class OrderAmountParams(
     val amount: Double,
-    val actions: OrderAmountActions = OrderAmountActions(),
-    val retry: OrderRetryParams = OrderRetryParams()
+    val actions: OrderAmountActions = OrderAmountActions()
 )

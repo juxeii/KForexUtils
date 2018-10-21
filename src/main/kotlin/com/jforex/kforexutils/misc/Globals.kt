@@ -10,6 +10,7 @@ annotation class OrderDsl
 val platformSettings: PlatformSettings = ConfigFactory.create(PlatformSettings::class.java)
 
 val emptyAction: KRunnable = { }
+val emptyRejectOrderEventConsumer: RejectOrderEventConsumer = { _, _ -> }
 val emptyErrorConsumer: ErrorConsumer = { }
 val emptyOrderEventConsumer: OrderEventConsumer = {}
 

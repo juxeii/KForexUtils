@@ -12,8 +12,7 @@ class OrderOpenPriceActionsBuilder : OrderBasicActionsBuilderBase()
 
     fun build() = OrderOpenPriceActions(
         basicActions = basicActions,
-        onOpenPriceChange = onOpenPriceChange,
-        onReject = onReject
+        onOpenPriceChange = onOpenPriceChange
     )
 
     companion object

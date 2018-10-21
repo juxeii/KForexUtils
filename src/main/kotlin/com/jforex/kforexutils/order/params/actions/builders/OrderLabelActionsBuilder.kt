@@ -12,8 +12,7 @@ class OrderLabelActionsBuilder : OrderBasicActionsBuilderBase()
 
     fun build() = OrderLabelActions(
         basicActions = basicActions,
-        onLabelChange = onLabelChange,
-        onReject = onReject
+        onLabelChange = onLabelChange
     )
 
     companion object

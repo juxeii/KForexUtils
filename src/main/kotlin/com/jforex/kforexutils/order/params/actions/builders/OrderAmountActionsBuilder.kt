@@ -12,8 +12,7 @@ class OrderAmountActionsBuilder : OrderBasicActionsBuilderBase()
 
     fun build() = OrderAmountActions(
         basicActions = basicActions,
-        onAmountChange = onAmountChange,
-        onReject = onReject
+        onAmountChange = onAmountChange
     )
 
     companion object

@@ -6,7 +6,8 @@ import com.jforex.kforexutils.order.params.actions.OrderLabelActions
 import com.jforex.kforexutils.order.params.actions.builders.OrderLabelActionsBuilder
 
 @OrderDsl
-class OrderLabelParamsBuilder(private val label: String) : OrderRetryBuilderBase() {
+class OrderLabelParamsBuilder(private val label: String)
+{
     private var actions = OrderLabelActions()
 
     fun actions(block: OrderLabelActionsBuilder.() -> Unit) {
@@ -15,8 +16,7 @@ class OrderLabelParamsBuilder(private val label: String) : OrderRetryBuilderBase
 
     fun build() = OrderLabelParams(
         label = label,
-        actions = actions,
-        retry = retry
+        actions = actions
     )
 
     companion object {

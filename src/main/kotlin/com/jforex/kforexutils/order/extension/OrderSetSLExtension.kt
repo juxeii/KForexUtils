@@ -16,7 +16,7 @@ fun IOrder.setSL(price: Double, block: OrderSLParamsBuilder.() -> Unit = {}) {
                 params.trailingStep
             )
         },
-        handlerData = SetSLEventHandlerData(params.actions, params.retry)
+        handlerData = SetSLEventHandlerData(params.actions)
     )
 }
 

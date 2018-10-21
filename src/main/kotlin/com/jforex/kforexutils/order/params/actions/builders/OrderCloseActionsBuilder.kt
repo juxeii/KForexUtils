@@ -14,8 +14,7 @@ class OrderCloseActionsBuilder : OrderBasicActionsBuilderBase()
     fun build() = OrderCloseActions(
         basicActions,
         onClose,
-        onPartialClose,
-        onReject
+        onPartialClose
     )
 
     companion object

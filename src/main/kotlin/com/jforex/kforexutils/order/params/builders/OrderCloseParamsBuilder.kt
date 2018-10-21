@@ -7,7 +7,8 @@ import com.jforex.kforexutils.order.params.actions.builders.OrderCloseActionsBui
 import com.jforex.kforexutils.settings.TradingSettings
 
 @OrderDsl
-class OrderCloseParamsBuilder : OrderRetryBuilderBase() {
+class OrderCloseParamsBuilder
+{
     var amount = 0.0
     var price = 0.0
     var slippage = TradingSettings.defaultCloseSlippage
@@ -21,8 +22,7 @@ class OrderCloseParamsBuilder : OrderRetryBuilderBase() {
         actions = actions,
         amount = amount,
         price = price,
-        slippage = slippage,
-        retry = retry
+        slippage = slippage
     )
 
     companion object {

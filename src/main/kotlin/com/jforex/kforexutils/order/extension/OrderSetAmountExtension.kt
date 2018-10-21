@@ -8,6 +8,6 @@ fun IOrder.setAmount(amount: Double, block: OrderAmountParamsBuilder.() -> Unit 
     val params = OrderAmountParamsBuilder(amount, block)
     runTask(
         orderCall = { requestedAmount = params.amount },
-        handlerData = SetAmountEventHandlerData(params.actions, params.retry)
+        handlerData = SetAmountEventHandlerData(params.actions)
     )
 }

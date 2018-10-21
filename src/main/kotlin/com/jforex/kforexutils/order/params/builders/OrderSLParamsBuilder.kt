@@ -8,7 +8,8 @@ import com.jforex.kforexutils.order.params.actions.builders.OrderSLActionsBuilde
 import com.jforex.kforexutils.settings.TradingSettings
 
 @OrderDsl
-class OrderSLParamsBuilder(private val price: Double) : OrderRetryBuilderBase() {
+class OrderSLParamsBuilder(private val price: Double)
+{
     var offerSide = OfferSide.BID
     var trailingStep = TradingSettings.noTrailingStep
     var actions = OrderSLActions()
@@ -21,8 +22,7 @@ class OrderSLParamsBuilder(private val price: Double) : OrderRetryBuilderBase() 
         price = price,
         offerSide = offerSide,
         trailingStep = trailingStep,
-        actions = actions,
-        retry = retry
+        actions = actions
     )
 
     companion object {

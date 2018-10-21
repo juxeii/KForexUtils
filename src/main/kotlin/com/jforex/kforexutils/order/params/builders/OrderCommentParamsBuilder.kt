@@ -6,7 +6,8 @@ import com.jforex.kforexutils.order.params.actions.OrderCommentActions
 import com.jforex.kforexutils.order.params.actions.builders.OrderCommentActionsBuilder
 
 @OrderDsl
-class OrderCommentParamsBuilder(private val comment: String) : OrderRetryBuilderBase() {
+class OrderCommentParamsBuilder(private val comment: String)
+{
     private var actions = OrderCommentActions()
 
     fun actions(block: OrderCommentActionsBuilder.() -> Unit) {
@@ -15,8 +16,7 @@ class OrderCommentParamsBuilder(private val comment: String) : OrderRetryBuilder
 
     fun build() = OrderCommentParams(
         comment = comment,
-        actions = actions,
-        retry = retry
+        actions = actions
     )
 
     companion object {

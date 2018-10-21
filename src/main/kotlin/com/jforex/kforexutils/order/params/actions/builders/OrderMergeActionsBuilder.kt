@@ -14,8 +14,7 @@ class OrderMergeActionsBuilder : OrderBasicActionsBuilderBase()
     fun build() = OrderMergeActions(
         basicActions = basicActions,
         onMerge = onMerge,
-        onMergeClose = onMergeClose,
-        onReject = onReject
+        onMergeClose = onMergeClose
     )
 
     companion object

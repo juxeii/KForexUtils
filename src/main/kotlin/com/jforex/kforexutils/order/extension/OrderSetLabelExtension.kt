@@ -8,6 +8,6 @@ fun IOrder.setLabel(label: String, block: OrderLabelParamsBuilder.() -> Unit = {
     val params = OrderLabelParamsBuilder(label, block)
     runTask(
         orderCall = { setLabel(params.label) },
-        handlerData = SetLabelEventHandlerData(params.actions, params.retry)
+        handlerData = SetLabelEventHandlerData(params.actions)
     )
 }

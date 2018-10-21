@@ -12,8 +12,7 @@ class OrderCommentActionsBuilder : OrderBasicActionsBuilderBase()
 
     fun build() = OrderCommentActions(
         basicActions = basicActions,
-        onCommentChange = onCommentChange,
-        onReject = onReject
+        onCommentChange = onCommentChange
     )
 
     companion object

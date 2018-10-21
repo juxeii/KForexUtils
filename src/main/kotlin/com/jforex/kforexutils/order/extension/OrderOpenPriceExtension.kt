@@ -8,6 +8,6 @@ fun IOrder.setOpenPrice(openPrice: Double, block: OrderOpenPriceParamsBuilder.()
     val params = OrderOpenPriceParamsBuilder(openPrice, block)
     runTask(
         orderCall = { setOpenPrice(params.openPrice, params.openPrice) },
-        handlerData = SetOpenPriceEventHandlerData(params.actions, params.retry)
+        handlerData = SetOpenPriceEventHandlerData(params.actions)
     )
 }

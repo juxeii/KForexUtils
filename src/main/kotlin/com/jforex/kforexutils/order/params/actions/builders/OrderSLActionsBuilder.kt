@@ -12,8 +12,7 @@ class OrderSLActionsBuilder : OrderBasicActionsBuilderBase()
 
     fun build() = OrderSLActions(
         basicActions = basicActions,
-        onSLChange = onSLChange,
-        onReject = onReject
+        onSLChange = onSLChange
     )
 
     companion object

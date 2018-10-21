@@ -7,6 +7,5 @@ data class OrderCloseParams(
     val amount: Double = 0.0,
     val price: Double = 0.0,
     val slippage: Double = TradingSettings.defaultCloseSlippage,
-    val actions: OrderCloseActions = OrderCloseActions(),
-    val retry: OrderRetryParams = OrderRetryParams()
+    val actions: OrderCloseActions = OrderCloseActions()
 )
