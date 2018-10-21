@@ -26,6 +26,12 @@ dependencies {
     compile("com.jakewharton.rxrelay2:rxrelay:2.1.0")
     compile("io.arrow-kt:arrow-core:0.7.3")
     compile("io.arrow-kt:arrow-syntax:0.7.3")
+    compile("io.arrow-kt:arrow-typeclasses:0.7.3")
+    compile("io.arrow-kt:arrow-data:0.7.3")
+    compile("io.arrow-kt:arrow-instances-core:0.7.3")
+    compile("io.arrow-kt:arrow-instances-data:0.7.3")
+    kapt("io.arrow-kt:arrow-annotations-processor:0.7.3")
+
     compile("com.github.dpaukov:combinatoricslib3:3.3.0")
 
     testCompile("io.kotlintest:kotlintest-runner-junit5:3.1.10")
