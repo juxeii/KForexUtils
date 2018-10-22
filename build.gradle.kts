@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.contracts.model.structure.UNKNOWN_COMPUTATION.effects
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "com.jforex"
@@ -32,6 +33,7 @@ dependencies {
     compile("io.arrow-kt:arrow-instances-core:0.7.3")
     compile("io.arrow-kt:arrow-instances-data:0.7.3")
     compile("io.arrow-kt:arrow-effects:0.7.3")
+    compile("io.arrow-kt:arrow-effects-rx2:0.7.3")
     compile("io.arrow-kt:arrow-effects-kotlinx-coroutines:0.7.3")
     kapt("io.arrow-kt:arrow-annotations-processor:0.7.3")
 
