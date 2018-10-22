@@ -10,7 +10,8 @@ data class SubmitEventHandlerData(private val actions: OrderSubmitActions) : Ord
         OrderEventType.SUBMIT_OK to actions.onSubmit,
         OrderEventType.PARTIALLY_FILLED to actions.onPartialFill,
         OrderEventType.FULLY_FILLED to actions.onFullFill,
-        OrderEventType.SUBMIT_REJECTED to actions.onSubmitReject
+        OrderEventType.SUBMIT_REJECTED to actions.onSubmitReject,
+        OrderEventType.FILL_REJECTED to actions.onFillReject
     )
     override val finishEventTypes = setOf(
         OrderEventType.FULLY_FILLED,
@@ -20,5 +21,4 @@ data class SubmitEventHandlerData(private val actions: OrderSubmitActions) : Ord
     override val rejectEventType = OrderEventType.FILL_REJECTED
     override val basicActions = actions.basicActions
     override val type = OrderEventHandlerType.SUBMIT
-    override val rejectEventHandler = actions.onFillReject
 }

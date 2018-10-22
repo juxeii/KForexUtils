@@ -7,7 +7,8 @@ import com.jforex.kforexutils.order.params.actions.OrderCommentActions
 data class SetCommentEventHandlerData(private val actions: OrderCommentActions) : OrderEventHandlerData
 {
     override val eventHandlers = mapOf(
-        OrderEventType.CHANGED_COMMENT to actions.onCommentChange
+        OrderEventType.CHANGED_COMMENT to actions.onCommentChange,
+        OrderEventType.CHANGE_REJECTED to actions.onReject
     )
     override val finishEventTypes = setOf(
         OrderEventType.CHANGED_COMMENT,
@@ -16,5 +17,4 @@ data class SetCommentEventHandlerData(private val actions: OrderCommentActions) 
     override val rejectEventType = OrderEventType.CHANGE_REJECTED
     override val basicActions = actions.basicActions
     override val type = OrderEventHandlerType.CHANGE_COMMENT
-    override val rejectEventHandler = actions.onReject
 }

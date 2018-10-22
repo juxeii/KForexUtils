@@ -7,7 +7,8 @@ import com.jforex.kforexutils.order.params.actions.OrderOpenPriceActions
 data class SetOpenPriceEventHandlerData(private val actions: OrderOpenPriceActions) : OrderEventHandlerData
 {
     override val eventHandlers = mapOf(
-        OrderEventType.CHANGED_PRICE to actions.onOpenPriceChange
+        OrderEventType.CHANGED_PRICE to actions.onOpenPriceChange,
+        OrderEventType.CHANGE_REJECTED to actions.onReject
     )
     override val finishEventTypes = setOf(
         OrderEventType.CHANGED_PRICE,
@@ -16,5 +17,4 @@ data class SetOpenPriceEventHandlerData(private val actions: OrderOpenPriceActio
     override val rejectEventType = OrderEventType.CHANGE_REJECTED
     override val basicActions = actions.basicActions
     override val type = OrderEventHandlerType.CHANGE_PRICE
-    override val rejectEventHandler = actions.onReject
 }

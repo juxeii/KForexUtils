@@ -7,7 +7,8 @@ import com.jforex.kforexutils.order.params.actions.OrderGTTActions
 data class SetGTTEventHandlerData(private val actions: OrderGTTActions) : OrderEventHandlerData
 {
     override val eventHandlers = mapOf(
-        OrderEventType.CHANGED_GTT to actions.onGTTChange
+        OrderEventType.CHANGED_GTT to actions.onGTTChange,
+        OrderEventType.CHANGE_REJECTED to actions.onReject
     )
     override val finishEventTypes = setOf(
         OrderEventType.CHANGED_GTT,
@@ -16,5 +17,4 @@ data class SetGTTEventHandlerData(private val actions: OrderGTTActions) : OrderE
     override val rejectEventType = OrderEventType.CHANGE_REJECTED
     override val basicActions = actions.basicActions
     override val type = OrderEventHandlerType.CHANGE_GTT
-    override val rejectEventHandler = actions.onReject
 }
