@@ -1,12 +1,17 @@
 package com.jforex.kforexutils.message.test
 
+import arrow.effects.DeferredK
+import arrow.effects.runAsync
+import com.dukascopy.api.IContext
 import com.dukascopy.api.IMessage
 import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.message.MessageFilter
+import com.jforex.kforexutils.thread.StrategyThread
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import io.mockk.every
 import io.mockk.mockk
+import java.util.concurrent.Future
 
 class MessageFilterTest : StringSpec({
     val message = mockk<IMessage>()
@@ -22,8 +27,7 @@ class MessageFilterTest : StringSpec({
 
     fun assertMessageMatch(filter: MessageFilter, result: Boolean) = filter.isMatch(message) shouldBe result
 
-    fun assertOnlyThisFilter(filter: MessageFilter)
-    {
+    fun assertOnlyThisFilter(filter: MessageFilter) {
         MessageFilter
             .values()
             .forEach {
@@ -34,8 +38,7 @@ class MessageFilterTest : StringSpec({
             }
     }
 
-    fun assertForNoOrderFilter(type: IMessage.Type, filter: MessageFilter)
-    {
+    fun assertForNoOrderFilter(type: IMessage.Type, filter: MessageFilter) {
         setOrderIsPresent(false)
         setTypeOnMessage(type)
 
@@ -44,6 +47,21 @@ class MessageFilterTest : StringSpec({
     }
 
     "CALENDAR filter is correct"{
+        val context = mockk<IContext>()
+        val call = { "HALLO" }
+        val fut = mockk<Future<String>>()
+        every { context.executeTask<String>(any()) } returns fut
+        every { fut.get() } returns call()
+
+        val st = StrategyThread(context)
+        st
+            .defer(call)
+            .runAsync { either ->
+                either.fold(
+                    { DeferredK { println("Error found ${it.message}") } },
+                    { DeferredK { println(it.toString()) } })
+            }
+
         assertForNoOrderFilter(IMessage.Type.CALENDAR, MessageFilter.CALENDAR)
     }
 

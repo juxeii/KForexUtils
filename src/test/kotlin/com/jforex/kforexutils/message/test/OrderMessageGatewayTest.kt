@@ -12,8 +12,7 @@ import io.mockk.mockk
 import io.reactivex.observers.TestObserver
 import io.reactivex.subjects.PublishSubject
 
-class OrderMessageGatewayTest : StringSpec()
-{
+class OrderMessageGatewayTest : StringSpec() {
     private val order = mockk<IOrder>()
     private val orderEvent = mockk<OrderEvent>()
     private val message = mockk<IMessage>()
@@ -25,15 +24,13 @@ class OrderMessageGatewayTest : StringSpec()
         .observable
         .test()
 
-    private fun subscribeAndPublishMessage(): TestObserver<OrderEvent>
-    {
+    private fun subscribeAndPublishMessage(): TestObserver<OrderEvent> {
         val testObserver = subscribe()
         messages.onNext(message)
         return testObserver
     }
 
-    init
-    {
+    init {
         every { messageConverter.get(message) } returns orderEvent
         every { orderEvent.type } returns OrderEventType.CHANGED_AMOUNT
         every { orderEvent.order } returns order
