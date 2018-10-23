@@ -6,6 +6,5 @@ import com.jforex.kforexutils.misc.emptyOrderEventConsumer
 data class OrderMergeActions(
     val basicActions: OrderBasicActions = OrderBasicActions(),
     val onMerge: OrderEventConsumer = emptyOrderEventConsumer,
-    val onMergeClose: OrderEventConsumer = emptyOrderEventConsumer,
-    val onReject: OrderEventConsumer = emptyOrderEventConsumer
+    val onMergeClose: OrderEventConsumer = emptyOrderEventConsumer
 )

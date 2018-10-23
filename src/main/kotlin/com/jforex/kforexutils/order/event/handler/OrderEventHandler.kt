@@ -44,11 +44,13 @@ class OrderEventHandler(private val orderEvents: Observable<OrderEvent>)
         }
     }
 
-    fun observable(): Observable<OrderEvent>
+    fun observable() = orderEvents
+
+    fun enqueue(): Observable<OrderEvent>
     {
         val relay: PublishRelay<OrderEvent> = PublishRelay.create()
         eventObservers.add(relay)
-        logger.debug("Added relayto observer queue.")
+        logger.debug("Added relay to observer queue.")
         return relay
     }
 }

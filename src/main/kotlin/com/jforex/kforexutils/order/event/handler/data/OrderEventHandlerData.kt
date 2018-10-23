@@ -11,6 +11,8 @@ interface OrderEventHandlerData
 
     val finishEventTypes: Set<OrderEventType>
 
+    val completeEventTypes: Set<OrderEventType>
+
     val rejectEventType: OrderEventType
 
     val basicActions: OrderBasicActions

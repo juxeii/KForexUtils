@@ -10,15 +10,12 @@ class OrderSubmitActionsBuilder : OrderBasicActionsBuilderBase()
     var onSubmit = emptyOrderEventConsumer
     var onPartialFill = emptyOrderEventConsumer
     var onFullFill = emptyOrderEventConsumer
-    var onSubmitReject = emptyOrderEventConsumer
-    var onFillReject = emptyOrderEventConsumer
 
     fun build() = OrderSubmitActions(
-        basicActions,
-        onSubmit,
-        onPartialFill,
-        onFullFill,
-        onSubmitReject
+        basicActions = basicActions,
+        onSubmit = onSubmit,
+        onPartialFill = onPartialFill,
+        onFullFill = onFullFill
     )
 
     companion object

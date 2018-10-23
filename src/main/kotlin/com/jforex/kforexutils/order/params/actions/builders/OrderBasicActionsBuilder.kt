@@ -4,18 +4,19 @@ import com.jforex.kforexutils.misc.OrderDsl
 import com.jforex.kforexutils.misc.emptyAction
 import com.jforex.kforexutils.misc.emptyErrorConsumer
 import com.jforex.kforexutils.order.params.actions.OrderBasicActions
+import com.jforex.kforexutils.order.task.TaskRetry
 
 @OrderDsl
 class OrderBasicActionsBuilder
 {
     var onStart = emptyAction
-    var onComplete = emptyAction
     var onError = emptyErrorConsumer
+    var taskRetry: TaskRetry? = null
 
     fun build() = OrderBasicActions(
-        onStart,
-        onComplete,
-        onError
+        onStart = onStart,
+        onError = onError,
+        taskRetry = taskRetry
     )
 
     companion object

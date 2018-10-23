@@ -7,13 +7,13 @@ import com.jforex.kforexutils.order.params.actions.OrderTPActions
 data class SetTPEventHandlerData(private val actions: OrderTPActions) : OrderEventHandlerData
 {
     override val eventHandlers = mapOf(
-        OrderEventType.CHANGED_TP to actions.onTPChange,
-        OrderEventType.CHANGE_REJECTED to actions.onReject
+        OrderEventType.CHANGED_TP to actions.onTPChange
     )
     override val finishEventTypes = setOf(
         OrderEventType.CHANGED_TP,
         OrderEventType.CHANGE_REJECTED
     )
+    override val completeEventTypes = finishEventTypes.minus(OrderEventType.CHANGE_REJECTED)
     override val rejectEventType = OrderEventType.CHANGE_REJECTED
     override val basicActions = actions.basicActions
     override val type = OrderEventHandlerType.CHANGE_TP
