@@ -5,6 +5,5 @@ import com.jforex.kforexutils.misc.emptyOrderEventConsumer
 
 data class OrderOpenPriceActions(
     val basicActions: OrderBasicActions = OrderBasicActions(),
-    val onOpenPriceChange: OrderEventConsumer = emptyOrderEventConsumer,
-    val onReject: OrderEventConsumer = emptyOrderEventConsumer
+    val onOpenPriceChange: OrderEventConsumer = emptyOrderEventConsumer
 )

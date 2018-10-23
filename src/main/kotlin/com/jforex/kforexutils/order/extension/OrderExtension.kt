@@ -3,9 +3,9 @@ package com.jforex.kforexutils.order.extension
 import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.misc.FieldProperty
 import com.jforex.kforexutils.misc.KRunnable
-import com.jforex.kforexutils.order.OrderTaskRunner
 import com.jforex.kforexutils.order.event.handler.OrderEventHandler
 import com.jforex.kforexutils.order.event.handler.data.OrderEventHandlerData
+import com.jforex.kforexutils.order.task.OrderTaskRunner
 
 internal var IOrder.taskRunner: OrderTaskRunner by FieldProperty()
 internal var IOrder.eventHandler: OrderEventHandler by FieldProperty()
@@ -16,7 +16,7 @@ internal fun IOrder.runTask(
 ) {
     val orderCallWithEventHandlerInitialization = {
         orderCall()
-        eventHandler.observable()
+        eventHandler.enqueue()
     }
     taskRunner.run(orderCallWithEventHandlerInitialization, handlerData)
 }

@@ -7,7 +7,5 @@ data class OrderSubmitActions(
     val basicActions: OrderBasicActions = OrderBasicActions(),
     val onSubmit: OrderEventConsumer = emptyOrderEventConsumer,
     val onPartialFill: OrderEventConsumer = emptyOrderEventConsumer,
-    val onFullFill: OrderEventConsumer = emptyOrderEventConsumer,
-    val onSubmitReject: OrderEventConsumer = emptyOrderEventConsumer,
-    val onFillReject: OrderEventConsumer = emptyOrderEventConsumer
+    val onFullFill: OrderEventConsumer = emptyOrderEventConsumer
 )

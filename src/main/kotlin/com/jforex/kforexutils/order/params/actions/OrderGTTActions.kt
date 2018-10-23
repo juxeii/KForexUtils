@@ -5,6 +5,5 @@ import com.jforex.kforexutils.misc.emptyOrderEventConsumer
 
 data class OrderGTTActions(
     val basicActions: OrderBasicActions = OrderBasicActions(),
-    val onGTTChange: OrderEventConsumer = emptyOrderEventConsumer,
-    val onReject: OrderEventConsumer = emptyOrderEventConsumer
+    val onGTTChange: OrderEventConsumer = emptyOrderEventConsumer
 )
