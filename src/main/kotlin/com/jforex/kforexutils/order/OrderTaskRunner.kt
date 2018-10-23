@@ -2,27 +2,26 @@ package com.jforex.kforexutils.order
 
 import arrow.effects.DeferredK
 import arrow.effects.runAsync
+import com.dukascopy.api.IContext
+import com.jforex.kforexutils.context.deferredTask
 import com.jforex.kforexutils.misc.KCallable
 import com.jforex.kforexutils.order.event.OrderEvent
 import com.jforex.kforexutils.order.event.handler.data.OrderEventHandlerData
 import com.jforex.kforexutils.rx.RejectException
-import com.jforex.kforexutils.thread.StrategyThread
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.subscribeBy
 import org.apache.logging.log4j.LogManager
 
-class OrderTaskRunner(private val strategyThread: StrategyThread)
-{
+class OrderTaskRunner(private val context: IContext) {
     private val logger = LogManager.getLogger(this.javaClass.name)
 
     fun run(
         call: KCallable<Observable<OrderEvent>>,
         handlerData: OrderEventHandlerData
-    )
-    {
+    ) {
         handlerData.run {
-            strategyThread
-                .defer {
+            context
+                .deferredTask {
                     basicActions.onStart()
                     call()
                 }.runAsync { result ->
@@ -36,8 +35,7 @@ class OrderTaskRunner(private val strategyThread: StrategyThread)
     private fun configureObservable(
         observable: Observable<OrderEvent>,
         handlerData: OrderEventHandlerData
-    )
-    {
+    ) {
         handlerData.run {
             val basicObservable = observable
                 .filter { eventHandlers.containsKey(it.type) }
@@ -60,8 +58,7 @@ class OrderTaskRunner(private val strategyThread: StrategyThread)
     private fun subscribe(
         observable: Observable<OrderEvent>,
         handlerData: OrderEventHandlerData
-    )
-    {
+    ) {
         handlerData.run {
             observable
                 .subscribeBy(

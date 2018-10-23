@@ -9,10 +9,9 @@ import com.jforex.kforexutils.message.MessageGateway
 import com.jforex.kforexutils.message.MessageToOrderEvent
 import com.jforex.kforexutils.order.OrderTaskRunner
 import com.jforex.kforexutils.order.event.OrderEventGateway
-import com.jforex.kforexutils.thread.StrategyThread
 
 class KForexUtils(val context: IContext) {
-    val strategyThread = StrategyThread(context)
+    private val orderTaskRunner = OrderTaskRunner(context)
     val engine = context.engine
 
     private val messagePublisher: PublishRelay<IMessage> = PublishRelay.create()
@@ -20,7 +19,6 @@ class KForexUtils(val context: IContext) {
     private val orderEventConverter = MessageToOrderEvent()
     val orderMessageGateway =
         OrderEventGateway(messageGateway.messages, orderEventConverter)
-    private val orderTaskRunner = OrderTaskRunner(strategyThread)
 
     init {
         engine.taskRunner = orderTaskRunner
