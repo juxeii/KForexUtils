@@ -3,9 +3,8 @@ package com.jforex.kforexutils.order.task
 import arrow.effects.DeferredK
 import arrow.effects.runAsync
 import com.dukascopy.api.IContext
-import com.jforex.kforexutils.context.deferredTask
+import com.jforex.kforexutils.context.deferOnStrategyThread
 import com.jforex.kforexutils.misc.KCallable
-import com.jforex.kforexutils.misc.KRunnable
 import com.jforex.kforexutils.order.event.OrderEvent
 import com.jforex.kforexutils.order.event.handler.data.OrderEventHandlerData
 import io.reactivex.Observable
@@ -17,42 +16,31 @@ class OrderTaskRunner(private val context: IContext)
     private val logger = LogManager.getLogger(this.javaClass.name)
 
     fun run(
-        call: KCallable<Observable<OrderEvent>>,
+        orderEvents: KCallable<Observable<OrderEvent>>,
         handlerData: OrderEventHandlerData
     )
     {
-        val thisCallForRetry = { run(call, handlerData) }
+        val thisCallForRetry = { run(orderEvents, handlerData) }
         handlerData.run {
-            context
-                .deferredTask {
-                    basicActions.onStart()
-                    call()
-                }.runAsync { result ->
-                    result.fold(
-                        { DeferredK { basicActions.onError(it) } },
-                        { DeferredK { configureObservable(it, handlerData, thisCallForRetry) } })
-                }
-        }
-    }
+            basicActions.onStart()
+            context.deferOnStrategyThread {
+                orderEvents()
+                    .filter { it.type in eventHandlers }
+                    .takeUntil { it.type in finishEventTypes }
+                    .subscribeBy(
+                        onNext = {
+                            when (it.type)
+                            {
+                                rejectEventType -> basicActions.taskRetry?.onRejectEvent(it, thisCallForRetry)
+                                else -> eventHandlers.getValue(it.type)(it)
+                            }
+                        })
+            }.runAsync { result ->
+                result.fold(
+                    { DeferredK { basicActions.onError(it) } },
+                    { DeferredK { } })
+            }
 
-    private fun configureObservable(
-        observable: Observable<OrderEvent>,
-        handlerData: OrderEventHandlerData,
-        callForRetry: KRunnable
-    )
-    {
-        handlerData.run {
-            observable
-                .filter { it.type in eventHandlers }
-                .takeUntil { it.type in finishEventTypes }
-                .subscribeBy(
-                    onNext = {
-                        when (it.type)
-                        {
-                            rejectEventType -> basicActions.taskRetry?.onRejectEvent(it, callForRetry)
-                            else -> eventHandlers.getValue(it.type)(it)
-                        }
-                    })
         }
     }
 }

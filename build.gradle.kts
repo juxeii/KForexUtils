@@ -32,10 +32,12 @@ dependencies {
     compile("io.arrow-kt:arrow-data:0.7.3")
     compile("io.arrow-kt:arrow-instances-core:0.7.3")
     compile("io.arrow-kt:arrow-instances-data:0.7.3")
+    kapt("io.arrow-kt:arrow-annotations-processor:0.7.3")
     compile("io.arrow-kt:arrow-effects:0.7.3")
     compile("io.arrow-kt:arrow-effects-rx2:0.7.3")
     compile("io.arrow-kt:arrow-effects-kotlinx-coroutines:0.7.3")
-    kapt("io.arrow-kt:arrow-annotations-processor:0.7.3")
+    compile("io.arrow-kt:arrow-optics:0.7.3")
+    compile("io.arrow-kt:arrow-recursion:0.7.3")
 
     testCompile("io.kotlintest:kotlintest-runner-junit5:3.1.10")
     testCompile("io.mockk:mockk:1.8.9")

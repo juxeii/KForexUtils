@@ -10,7 +10,7 @@ class ObservableQueue<T>(observable: Observable<T>) {
     private val logger = LogManager.getLogger(this.javaClass.name)
 
     init {
-        observable.subscribe { if (queuedObservers.isEmpty()) onQueueNotEmpty(it) }
+        observable.subscribe { if (!queuedObservers.isEmpty()) onQueueNotEmpty(it) }
     }
 
     private fun onQueueNotEmpty(item: T) {

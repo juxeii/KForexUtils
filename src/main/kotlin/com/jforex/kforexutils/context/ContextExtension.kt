@@ -5,7 +5,7 @@ import com.dukascopy.api.IContext
 import com.jforex.kforexutils.misc.KCallable
 import com.jforex.kforexutils.misc.isStrategyThread
 
-fun <T> IContext.deferredTask(callable: KCallable<T>) = DeferredK {
+fun <T> IContext.deferOnStrategyThread(callable: KCallable<T>) = DeferredK {
     if (isStrategyThread()) callable()
     else executeTask(callable).get()
 }
