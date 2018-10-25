@@ -1,7 +1,5 @@
 package com.jforex.kforexutils.order.task
 
-import arrow.effects.DeferredK
-import arrow.effects.runAsync
 import com.dukascopy.api.IContext
 import com.jforex.kforexutils.context.deferOnStrategyThread
 import com.jforex.kforexutils.misc.KCallable
@@ -9,6 +7,8 @@ import com.jforex.kforexutils.order.event.OrderEvent
 import com.jforex.kforexutils.order.event.handler.data.OrderEventHandlerData
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.subscribeBy
+import kotlinx.coroutines.experimental.GlobalScope
+import kotlinx.coroutines.experimental.async
 import org.apache.logging.log4j.LogManager
 
 class OrderTaskRunner(private val context: IContext)
@@ -16,31 +16,25 @@ class OrderTaskRunner(private val context: IContext)
     private val logger = LogManager.getLogger(this.javaClass.name)
 
     fun run(
-        orderEvents: KCallable<Observable<OrderEvent>>,
+        orderEventsProvider: KCallable<Observable<OrderEvent>>,
         handlerData: OrderEventHandlerData
     )
     {
-        val thisCallForRetry = { run(orderEvents, handlerData) }
-        handlerData.run {
-            basicActions.onStart()
-            context.deferOnStrategyThread {
-                orderEvents()
+        val thisCallForRetry = { run(orderEventsProvider, handlerData) }
+        GlobalScope.async {
+            with(handlerData) {
+                context
+                    .deferOnStrategyThread(orderEventsProvider)
+                    .flatMapObservable { it }
                     .filter { it.type in eventHandlers }
                     .takeUntil { it.type in finishEventTypes }
                     .subscribeBy(
                         onNext = {
-                            when (it.type)
-                            {
-                                rejectEventType -> basicActions.taskRetry?.onRejectEvent(it, thisCallForRetry)
-                                else -> eventHandlers.getValue(it.type)(it)
-                            }
-                        })
-            }.runAsync { result ->
-                result.fold(
-                    { DeferredK { basicActions.onError(it) } },
-                    { DeferredK { } })
+                            if (it.type == rejectEventType) basicActions.taskRetry?.onRejectEvent(it, thisCallForRetry)
+                            else eventHandlers.getValue(it.type)(it)
+                        },
+                        onError = { basicActions.onError(it) })
             }
-
         }
     }
 }
