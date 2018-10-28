@@ -11,7 +11,7 @@ class OrderSubmitActionsBuilder : OrderBasicActionsBuilderBase()
     var onPartialFill = emptyOrderEventConsumer
     var onFullFill = emptyOrderEventConsumer
 
-    fun build() = OrderSubmitActions(
+    private fun build() = OrderSubmitActions(
         basicActions = basicActions,
         onSubmit = onSubmit,
         onPartialFill = onPartialFill,

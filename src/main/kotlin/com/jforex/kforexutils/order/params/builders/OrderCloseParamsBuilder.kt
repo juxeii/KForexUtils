@@ -18,7 +18,7 @@ class OrderCloseParamsBuilder
         actions = OrderCloseActionsBuilder(block)
     }
 
-    fun build() = OrderCloseParams(
+    private fun build() = OrderCloseParams(
         actions = actions,
         amount = amount,
         price = price,

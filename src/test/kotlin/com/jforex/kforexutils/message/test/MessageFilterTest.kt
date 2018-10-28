@@ -26,12 +26,7 @@ class MessageFilterTest : StringSpec({
     {
         MessageFilter
             .values()
-            .forEach {
-                if (it == filter)
-                    assertMessageMatch(it, true)
-                else
-                    assertMessageMatch(it, false)
-            }
+            .forEach { assertMessageMatch(it, it == filter) }
     }
 
     fun assertForNoOrderFilter(type: IMessage.Type, filter: MessageFilter)

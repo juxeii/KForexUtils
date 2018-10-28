@@ -14,7 +14,7 @@ class OrderGTTParamsBuilder(private val gtt: Long)
         actions = OrderGTTActionsBuilder(block)
     }
 
-    fun build() = OrderGTTParams(
+    private fun build() = OrderGTTParams(
         gtt = gtt,
         actions = actions
     )

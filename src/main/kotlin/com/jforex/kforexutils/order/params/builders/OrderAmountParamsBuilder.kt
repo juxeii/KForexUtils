@@ -14,7 +14,7 @@ class OrderAmountParamsBuilder(private val amount: Double)
         actions = OrderAmountActionsBuilder(block)
     }
 
-    fun build() = OrderAmountParams(
+    private fun build() = OrderAmountParams(
         amount = amount,
         actions = actions
     )

@@ -11,7 +11,7 @@ class OrderCloseActionsBuilder : OrderBasicActionsBuilderBase()
     var onPartialClose = emptyOrderEventConsumer
     var onReject = emptyOrderEventConsumer
 
-    fun build() = OrderCloseActions(
+    private fun build() = OrderCloseActions(
         basicActions,
         onClose,
         onPartialClose

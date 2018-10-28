@@ -14,7 +14,7 @@ class OrderLabelParamsBuilder(private val label: String)
         actions = OrderLabelActionsBuilder(block)
     }
 
-    fun build() = OrderLabelParams(
+    private fun build() = OrderLabelParams(
         label = label,
         actions = actions
     )

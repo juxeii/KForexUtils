@@ -10,7 +10,7 @@ class OrderTPActionsBuilder : OrderBasicActionsBuilderBase()
     var onTPChange = emptyOrderEventConsumer
     var onReject = emptyOrderEventConsumer
 
-    fun build() = OrderTPActions(
+    private fun build() = OrderTPActions(
         basicActions = basicActions,
         onTPChange = onTPChange
     )

@@ -18,7 +18,7 @@ class OrderSLParamsBuilder(private val price: Double)
         actions = OrderSLActionsBuilder(block)
     }
 
-    fun build() = OrderSLParams(
+    private fun build() = OrderSLParams(
         price = price,
         offerSide = offerSide,
         trailingStep = trailingStep,

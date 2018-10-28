@@ -10,7 +10,7 @@ class OrderCommentActionsBuilder : OrderBasicActionsBuilderBase()
     var onCommentChange = emptyOrderEventConsumer
     var onReject = emptyOrderEventConsumer
 
-    fun build() = OrderCommentActions(
+    private fun build() = OrderCommentActions(
         basicActions = basicActions,
         onCommentChange = onCommentChange
     )

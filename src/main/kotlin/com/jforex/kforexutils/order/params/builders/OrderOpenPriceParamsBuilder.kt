@@ -17,7 +17,7 @@ class OrderOpenPriceParamsBuilder(private val openPrice: Double)
         actions = OrderOpenPriceActionsBuilder(block)
     }
 
-    fun build() = OrderOpenPriceParams(
+    private fun build() = OrderOpenPriceParams(
         openPrice = openPrice,
         slippage = slippage,
         actions = actions

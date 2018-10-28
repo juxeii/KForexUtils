@@ -10,7 +10,7 @@ class OrderLabelActionsBuilder : OrderBasicActionsBuilderBase()
     var onLabelChange = emptyOrderEventConsumer
     var onReject = emptyOrderEventConsumer
 
-    fun build() = OrderLabelActions(
+    private fun build() = OrderLabelActions(
         basicActions = basicActions,
         onLabelChange = onLabelChange
     )

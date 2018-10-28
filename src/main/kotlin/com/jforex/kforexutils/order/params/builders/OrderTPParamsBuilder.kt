@@ -15,7 +15,7 @@ class OrderTPParamsBuilder(private val price: Double)
         actions = OrderTPActionsBuilder(block)
     }
 
-    fun build() = OrderTPParams(
+    private fun build() = OrderTPParams(
         price = price,
         actions = actions
     )

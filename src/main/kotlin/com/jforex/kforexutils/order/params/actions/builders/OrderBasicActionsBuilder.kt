@@ -13,7 +13,7 @@ class OrderBasicActionsBuilder
     var onError = emptyErrorConsumer
     var taskRetry: TaskRetry? = null
 
-    fun build() = OrderBasicActions(
+    private fun build() = OrderBasicActions(
         onStart = onStart,
         onError = onError,
         taskRetry = taskRetry

@@ -10,7 +10,7 @@ class OrderAmountActionsBuilder : OrderBasicActionsBuilderBase()
     var onAmountChange = emptyOrderEventConsumer
     var onReject = emptyOrderEventConsumer
 
-    fun build() = OrderAmountActions(
+    private fun build() = OrderAmountActions(
         basicActions = basicActions,
         onAmountChange = onAmountChange
     )

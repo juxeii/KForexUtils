@@ -10,7 +10,7 @@ class OrderOpenPriceActionsBuilder : OrderBasicActionsBuilderBase()
     var onOpenPriceChange = emptyOrderEventConsumer
     var onReject = emptyOrderEventConsumer
 
-    fun build() = OrderOpenPriceActions(
+    private fun build() = OrderOpenPriceActions(
         basicActions = basicActions,
         onOpenPriceChange = onOpenPriceChange
     )

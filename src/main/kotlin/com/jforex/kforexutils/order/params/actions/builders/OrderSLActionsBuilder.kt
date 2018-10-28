@@ -10,7 +10,7 @@ class OrderSLActionsBuilder : OrderBasicActionsBuilderBase()
     var onSLChange = emptyOrderEventConsumer
     var onReject = emptyOrderEventConsumer
 
-    fun build() = OrderSLActions(
+    private fun build() = OrderSLActions(
         basicActions = basicActions,
         onSLChange = onSLChange
     )

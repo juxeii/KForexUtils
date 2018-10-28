@@ -10,7 +10,7 @@ class OrderGTTActionsBuilder : OrderBasicActionsBuilderBase()
     var onGTTChange = emptyOrderEventConsumer
     var onReject = emptyOrderEventConsumer
 
-    fun build() = OrderGTTActions(
+    private fun build() = OrderGTTActions(
         basicActions = basicActions,
         onGTTChange = onGTTChange
     )

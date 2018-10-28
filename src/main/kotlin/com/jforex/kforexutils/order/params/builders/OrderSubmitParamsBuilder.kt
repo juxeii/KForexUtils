@@ -29,7 +29,7 @@ class OrderSubmitParamsBuilder(
         actions = OrderSubmitActionsBuilder(block)
     }
 
-    fun build() = OrderSubmitParams(
+    private fun build() = OrderSubmitParams(
         label = label,
         instrument = instrument,
         orderCommand = orderCommand,

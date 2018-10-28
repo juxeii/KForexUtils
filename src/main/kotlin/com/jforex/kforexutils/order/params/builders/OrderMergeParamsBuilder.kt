@@ -20,7 +20,7 @@ class OrderMergeParamsBuilder(
         actions = OrderMergeActionsBuilder(block)
     }
 
-    fun build() = OrderMergeParams(
+    private fun build() = OrderMergeParams(
         label = label,
         orders = orders,
         comment = comment,

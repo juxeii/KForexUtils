@@ -14,7 +14,7 @@ class OrderCommentParamsBuilder(private val comment: String)
         actions = OrderCommentActionsBuilder(block)
     }
 
-    fun build() = OrderCommentParams(
+    private fun build() = OrderCommentParams(
         comment = comment,
         actions = actions
     )

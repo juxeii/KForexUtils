@@ -11,7 +11,7 @@ class OrderMergeActionsBuilder : OrderBasicActionsBuilderBase()
     var onMergeClose = emptyOrderEventConsumer
     var onReject = emptyOrderEventConsumer
 
-    fun build() = OrderMergeActions(
+    private fun build() = OrderMergeActions(
         basicActions = basicActions,
         onMerge = onMerge,
         onMergeClose = onMergeClose
