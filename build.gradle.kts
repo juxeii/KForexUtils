@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 group = "com.jforex"
 
 plugins {
-    kotlin("jvm") version "1.2.71"
+    kotlin("jvm") version "1.3.0"
     jacoco
     `maven-publish`
     id("com.github.johnrengelman.shadow") version "4.0.1"

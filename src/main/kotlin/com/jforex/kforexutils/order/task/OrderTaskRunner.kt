@@ -7,8 +7,6 @@ import com.jforex.kforexutils.order.event.OrderEvent
 import com.jforex.kforexutils.order.event.handler.data.OrderEventHandlerData
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.subscribeBy
-import kotlinx.coroutines.experimental.GlobalScope
-import kotlinx.coroutines.experimental.async
 import org.apache.logging.log4j.LogManager
 
 class OrderTaskRunner(private val context: IContext)
@@ -21,20 +19,18 @@ class OrderTaskRunner(private val context: IContext)
     )
     {
         val thisCallForRetry = { run(orderEventsProvider, handlerData) }
-        GlobalScope.async {
-            with(handlerData) {
-                context
-                    .deferOnStrategyThread(orderEventsProvider)
-                    .flatMapObservable { it }
-                    .filter { it.type in eventHandlers }
-                    .takeUntil { it.type in finishEventTypes }
-                    .subscribeBy(
-                        onNext = {
-                            if (it.type == rejectEventType) basicActions.taskRetry?.onRejectEvent(it, thisCallForRetry)
-                            else eventHandlers.getValue(it.type)(it)
-                        },
-                        onError = { basicActions.onError(it) })
-            }
+        with(handlerData) {
+            context
+                .deferOnStrategyThread(orderEventsProvider)
+                .flatMapObservable { it }
+                .filter { it.type in eventHandlers }
+                .takeUntil { it.type in finishEventTypes }
+                .subscribeBy(
+                    onNext = {
+                        if (it.type == rejectEventType) basicActions.taskRetry?.onRejectEvent(it, thisCallForRetry)
+                        else eventHandlers.getValue(it.type)(it)
+                    },
+                    onError = { basicActions.onError(it) })
         }
     }
 }
