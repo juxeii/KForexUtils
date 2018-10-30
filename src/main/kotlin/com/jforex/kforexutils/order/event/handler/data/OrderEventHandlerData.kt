@@ -1,5 +1,6 @@
 package com.jforex.kforexutils.order.event.handler.data
 
+import com.jforex.kforexutils.misc.KRunnable
 import com.jforex.kforexutils.misc.OrderEventConsumer
 import com.jforex.kforexutils.order.event.OrderEventType
 import com.jforex.kforexutils.order.event.handler.OrderEventHandlerType
@@ -14,6 +15,8 @@ interface OrderEventHandlerData
     val completeEventTypes: Set<OrderEventType>
 
     val rejectEventType: OrderEventType
+
+    var retryCall: KRunnable
 
     val taskActions: OrderTaskActions
 

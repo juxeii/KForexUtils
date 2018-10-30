@@ -13,11 +13,12 @@ internal var IOrder.eventHandler: OrderEventHandler by FieldProperty()
 internal fun IOrder.runTask(
     orderCall: KRunnable,
     handlerData: OrderEventHandlerData
-) {
-    val thisCall = { runTask(orderCall, handlerData) }
+)
+{
+    handlerData.retryCall = { runTask(orderCall, handlerData) }
     val orderCallWithEventHandlerInitialization = {
         orderCall()
-        eventHandler.register(handlerData, thisCall)
+        eventHandler.register(handlerData)
         this
     }
 
