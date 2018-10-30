@@ -17,6 +17,6 @@ data class MergeEventHandlerData(private val actions: OrderMergeActions) : Order
     )
     override val completeEventTypes = finishEventTypes.minus(OrderEventType.MERGE_REJECTED)
     override val rejectEventType = OrderEventType.MERGE_REJECTED
-    override val basicActions = actions.basicActions
+    override val taskActions = actions.basicActions
     override val type = OrderEventHandlerType.MERGE
 }

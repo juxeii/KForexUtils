@@ -14,11 +14,17 @@ internal fun IOrder.runTask(
     orderCall: KRunnable,
     handlerData: OrderEventHandlerData
 ) {
+    val thisCall = { runTask(orderCall, handlerData) }
     val orderCallWithEventHandlerInitialization = {
         orderCall()
-        eventHandler.enqueue()
+        eventHandler.register(handlerData, thisCall)
+        this
     }
-    taskRunner.run(orderCallWithEventHandlerInitialization, handlerData)
+
+    taskRunner.run(
+        task = orderCallWithEventHandlerInitialization,
+        actions = handlerData.taskActions
+    )
 }
 
 val IOrder.isOpened

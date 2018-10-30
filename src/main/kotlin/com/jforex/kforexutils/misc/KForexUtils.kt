@@ -12,13 +12,14 @@ import com.jforex.kforexutils.order.task.OrderTaskRunner
 
 class KForexUtils(val context: IContext) {
     private val orderTaskRunner = OrderTaskRunner(context)
-    val engine = context.engine
-
+    private val engine = context.engine
     private val messagePublisher: PublishRelay<IMessage> = PublishRelay.create()
     val messageGateway = MessageGateway(messagePublisher)
     private val orderEventConverter = MessageToOrderEvent()
-    val orderMessageGateway =
-        OrderEventGateway(messageGateway.messages, orderEventConverter)
+    private val orderMessageGateway = OrderEventGateway(
+        messageGateway.messages,
+        orderEventConverter
+    )
 
     init {
         engine.taskRunner = orderTaskRunner

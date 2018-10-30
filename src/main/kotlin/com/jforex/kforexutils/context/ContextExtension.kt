@@ -5,7 +5,7 @@ import com.jforex.kforexutils.misc.KCallable
 import com.jforex.kforexutils.misc.isStrategyThread
 import io.reactivex.Single
 
-fun <T> IContext.deferOnStrategyThread(callable: KCallable<T>) =
+fun <T> IContext.runOnStrategyThread(callable: KCallable<T>) =
     Single.defer {
         Single.fromCallable {
             if (isStrategyThread()) callable()

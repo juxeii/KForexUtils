@@ -20,16 +20,21 @@ internal fun IEngine.createOrder(
     engineCall: KCallable<IOrder>,
     handlerData: OrderEventHandlerData
 ) {
+    val thisCall = { createOrder(engineCall, handlerData) }
     val engineCallWithOrderInitialization = {
         val order = engineCall()
-        val obs = orderMessageGateway
+        val filteredOrderEvents = orderMessageGateway
             .observable
             .filter { it.order == order }
         order.taskRunner = taskRunner
-        val handlerQueue = ObservableQueue<OrderEvent>(obs)
-        order.eventHandler = OrderEventHandler(obs, handlerQueue)
-        order.eventHandler.observable()
+        val handlerQueue = ObservableQueue<OrderEvent>()
+        order.eventHandler = OrderEventHandler(filteredOrderEvents, handlerQueue)
+        order.eventHandler.register(handlerData, thisCall)
+        order
     }
 
-    taskRunner.run(engineCallWithOrderInitialization, handlerData)
+    taskRunner.run(
+        task = engineCallWithOrderInitialization,
+        actions = handlerData.taskActions
+    )
 }

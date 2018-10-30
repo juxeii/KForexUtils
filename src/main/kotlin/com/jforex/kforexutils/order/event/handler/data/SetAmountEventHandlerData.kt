@@ -14,6 +14,6 @@ data class SetAmountEventHandlerData(private val actions: OrderAmountActions) : 
     )
     override val completeEventTypes = finishEventTypes.minus(OrderEventType.CHANGE_REJECTED)
     override val rejectEventType = OrderEventType.CHANGE_REJECTED
-    override val basicActions = actions.basicActions
-    override val type = OrderEventHandlerType.CHANGE_AMOUNT
+    override val taskActions = actions.basicActions
+    override val type = OrderEventHandlerType.CHANGE
 }

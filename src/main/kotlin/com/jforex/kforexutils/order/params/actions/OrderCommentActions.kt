@@ -4,6 +4,6 @@ import com.jforex.kforexutils.misc.OrderEventConsumer
 import com.jforex.kforexutils.misc.emptyOrderEventConsumer
 
 data class OrderCommentActions(
-    val basicActions: OrderBasicActions = OrderBasicActions(),
+    val basicActions: OrderTaskActions = OrderTaskActions(),
     val onCommentChange: OrderEventConsumer = emptyOrderEventConsumer
 )

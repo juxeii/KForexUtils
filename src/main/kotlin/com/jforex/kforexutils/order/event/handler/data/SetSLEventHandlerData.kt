@@ -16,6 +16,6 @@ data class SetSLEventHandlerData(private val actions: OrderSLActions) : OrderEve
     )
     override val completeEventTypes = finishEventTypes.minus(OrderEventType.CHANGE_REJECTED)
     override val rejectEventType = OrderEventType.CHANGE_REJECTED
-    override val basicActions = actions.basicActions
-    override val type = OrderEventHandlerType.CHANGE_SL
+    override val taskActions = actions.basicActions
+    override val type = OrderEventHandlerType.CHANGE
 }

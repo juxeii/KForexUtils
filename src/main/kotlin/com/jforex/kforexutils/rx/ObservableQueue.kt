@@ -1,34 +1,38 @@
 package com.jforex.kforexutils.rx
 
-import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
+import io.reactivex.Observer
 import org.apache.logging.log4j.LogManager
 import java.util.concurrent.ConcurrentLinkedQueue
 
-class ObservableQueue<T>(observable: Observable<T>) {
-    private var queuedObservers = ConcurrentLinkedQueue<PublishRelay<T>>()
+class ObservableQueue<T> {
+    private data class QueueItem<T>(
+        val observable: Observable<T>,
+        val observer: Observer<T>
+    ) {
+        fun subscribe() = observable.subscribe(observer)
+    }
+
+    private var queuedItems = ConcurrentLinkedQueue<QueueItem<T>>()
     private val logger = LogManager.getLogger(this.javaClass.name)
 
-    init {
-        observable.subscribe { if (!queuedObservers.isEmpty()) onQueueNotEmpty(it) }
+    @Synchronized
+    fun add(
+        observable: Observable<T>,
+        observer: Observer<T>
+    ) {
+        logger.debug("Adding observer to queue.")
+        val queueItem = QueueItem(observable.doOnComplete(::subscribeNext), observer)
+        if (queuedItems.isEmpty()) queueItem.subscribe()
+        queuedItems.add(queueItem)
     }
 
-    private fun onQueueNotEmpty(item: T) {
-        val relay = queuedObservers.element()
-        if (relay.hasObservers()) relay.accept(item)
-        else onNoObserverPresent(item)
-    }
+    @Synchronized
+    private fun subscribeNext() {
+        if (queuedItems.isEmpty()) return
 
-    private fun onNoObserverPresent(item: T) {
-        logger.debug("Current relay has no more observers, so item gets pushed to next observer")
-        queuedObservers.remove()
-        queuedObservers.peek()?.accept(item)
-    }
-
-    fun enqueue(): Observable<T> {
-        val relay: PublishRelay<T> = PublishRelay.create()
-        queuedObservers.add(relay)
-        logger.debug("Added relay to observer queue.")
-        return relay
+        logger.debug("Subscribing next observer")
+        queuedItems.poll()
+        queuedItems.peek()?.subscribe()
     }
 }

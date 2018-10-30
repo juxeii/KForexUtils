@@ -4,7 +4,7 @@ import com.jforex.kforexutils.misc.OrderEventConsumer
 import com.jforex.kforexutils.misc.emptyOrderEventConsumer
 
 data class OrderSubmitActions(
-    val basicActions: OrderBasicActions = OrderBasicActions(),
+    val basicActions: OrderTaskActions = OrderTaskActions(),
     val onSubmit: OrderEventConsumer = emptyOrderEventConsumer,
     val onPartialFill: OrderEventConsumer = emptyOrderEventConsumer,
     val onFullFill: OrderEventConsumer = emptyOrderEventConsumer
