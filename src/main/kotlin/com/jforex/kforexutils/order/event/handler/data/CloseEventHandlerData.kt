@@ -20,6 +20,6 @@ data class CloseEventHandlerData(
     )
     override val completeEventTypes = finishEventTypes.minus(OrderEventType.CLOSE_REJECTED)
     override val rejectEventType = OrderEventType.CLOSE_REJECTED
-    override val taskActions = actions.basicActions
+    override val taskActions = actions.taskActions
     override val type = OrderEventHandlerType.CLOSE
 }

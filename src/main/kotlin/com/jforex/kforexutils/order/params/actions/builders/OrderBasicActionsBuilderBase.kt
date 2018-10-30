@@ -1,13 +1,13 @@
 package com.jforex.kforexutils.order.params.actions.builders
 
-import com.jforex.kforexutils.order.params.actions.OrderTaskActions
+import com.jforex.kforexutils.order.task.OrderTaskActions
+import com.jforex.kforexutils.order.task.OrderTaskActionsBuilder
 
-abstract class OrderBasicActionsBuilderBase
-{
-    var basicActions = OrderTaskActions()
+abstract class OrderTaskActionsBuilderBase {
+    var taskActions = OrderTaskActions()
 
-    fun basicActions(block: OrderTaskActionsBuilder.() -> Unit)
+    fun taskActions(block: OrderTaskActionsBuilder.() -> Unit)
     {
-        basicActions = OrderTaskActionsBuilder(block)
+        taskActions = OrderTaskActionsBuilder(block)
     }
 }

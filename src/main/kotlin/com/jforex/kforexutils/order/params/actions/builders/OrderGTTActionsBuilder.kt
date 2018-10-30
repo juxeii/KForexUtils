@@ -5,13 +5,12 @@ import com.jforex.kforexutils.misc.emptyOrderEventConsumer
 import com.jforex.kforexutils.order.params.actions.OrderGTTActions
 
 @OrderDsl
-class OrderGTTActionsBuilder : OrderBasicActionsBuilderBase()
+class OrderGTTActionsBuilder : OrderTaskActionsBuilderBase()
 {
     var onGTTChange = emptyOrderEventConsumer
-    var onReject = emptyOrderEventConsumer
 
     private fun build() = OrderGTTActions(
-        basicActions = basicActions,
+        taskActions = taskActions,
         onGTTChange = onGTTChange
     )
 

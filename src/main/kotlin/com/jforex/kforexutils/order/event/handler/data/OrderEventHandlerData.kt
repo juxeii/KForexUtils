@@ -3,7 +3,7 @@ package com.jforex.kforexutils.order.event.handler.data
 import com.jforex.kforexutils.misc.OrderEventConsumer
 import com.jforex.kforexutils.order.event.OrderEventType
 import com.jforex.kforexutils.order.event.handler.OrderEventHandlerType
-import com.jforex.kforexutils.order.params.actions.OrderTaskActions
+import com.jforex.kforexutils.order.task.OrderTaskActions
 
 interface OrderEventHandlerData
 {

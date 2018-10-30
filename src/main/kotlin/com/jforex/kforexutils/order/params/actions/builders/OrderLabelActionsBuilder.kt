@@ -5,13 +5,12 @@ import com.jforex.kforexutils.misc.emptyOrderEventConsumer
 import com.jforex.kforexutils.order.params.actions.OrderLabelActions
 
 @OrderDsl
-class OrderLabelActionsBuilder : OrderBasicActionsBuilderBase()
+class OrderLabelActionsBuilder : OrderTaskActionsBuilderBase()
 {
     var onLabelChange = emptyOrderEventConsumer
-    var onReject = emptyOrderEventConsumer
 
     private fun build() = OrderLabelActions(
-        basicActions = basicActions,
+        taskActions = taskActions,
         onLabelChange = onLabelChange
     )
 

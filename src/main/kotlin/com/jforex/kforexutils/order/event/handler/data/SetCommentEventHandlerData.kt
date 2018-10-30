@@ -15,6 +15,6 @@ data class SetCommentEventHandlerData(private val actions: OrderCommentActions) 
     )
     override val completeEventTypes = finishEventTypes.minus(OrderEventType.CHANGE_REJECTED)
     override val rejectEventType = OrderEventType.CHANGE_REJECTED
-    override val taskActions = actions.basicActions
+    override val taskActions = actions.taskActions
     override val type = OrderEventHandlerType.CHANGE
 }

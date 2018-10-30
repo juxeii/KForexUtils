@@ -5,14 +5,14 @@ import com.jforex.kforexutils.misc.emptyOrderEventConsumer
 import com.jforex.kforexutils.order.params.actions.OrderSubmitActions
 
 @OrderDsl
-class OrderSubmitActionsBuilder : OrderBasicActionsBuilderBase()
+class OrderSubmitActionsBuilder : OrderTaskActionsBuilderBase()
 {
     var onSubmit = emptyOrderEventConsumer
     var onPartialFill = emptyOrderEventConsumer
     var onFullFill = emptyOrderEventConsumer
 
     private fun build() = OrderSubmitActions(
-        basicActions = basicActions,
+        taskActions = taskActions,
         onSubmit = onSubmit,
         onPartialFill = onPartialFill,
         onFullFill = onFullFill

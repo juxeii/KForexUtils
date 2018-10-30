@@ -1,11 +1,9 @@
-package com.jforex.kforexutils.order.params.actions.builders
+package com.jforex.kforexutils.order.task
 
 import com.jforex.kforexutils.misc.OrderDsl
 import com.jforex.kforexutils.misc.emptyAction
 import com.jforex.kforexutils.misc.emptyErrorConsumer
 import com.jforex.kforexutils.misc.emptyOrderConsumer
-import com.jforex.kforexutils.order.params.actions.OrderTaskActions
-import com.jforex.kforexutils.order.task.TaskRetry
 
 @OrderDsl
 class OrderTaskActionsBuilder

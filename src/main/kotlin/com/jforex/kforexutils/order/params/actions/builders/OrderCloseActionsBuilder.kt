@@ -5,14 +5,13 @@ import com.jforex.kforexutils.misc.emptyOrderEventConsumer
 import com.jforex.kforexutils.order.params.actions.OrderCloseActions
 
 @OrderDsl
-class OrderCloseActionsBuilder : OrderBasicActionsBuilderBase()
+class OrderCloseActionsBuilder : OrderTaskActionsBuilderBase()
 {
     var onClose = emptyOrderEventConsumer
     var onPartialClose = emptyOrderEventConsumer
-    var onReject = emptyOrderEventConsumer
 
     private fun build() = OrderCloseActions(
-        basicActions,
+        taskActions,
         onClose,
         onPartialClose
     )

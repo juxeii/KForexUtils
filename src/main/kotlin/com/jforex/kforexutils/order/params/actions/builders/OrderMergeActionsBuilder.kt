@@ -5,14 +5,13 @@ import com.jforex.kforexutils.misc.emptyOrderEventConsumer
 import com.jforex.kforexutils.order.params.actions.OrderMergeActions
 
 @OrderDsl
-class OrderMergeActionsBuilder : OrderBasicActionsBuilderBase()
+class OrderMergeActionsBuilder : OrderTaskActionsBuilderBase()
 {
     var onMerge = emptyOrderEventConsumer
     var onMergeClose = emptyOrderEventConsumer
-    var onReject = emptyOrderEventConsumer
 
     private fun build() = OrderMergeActions(
-        basicActions = basicActions,
+        taskActions = taskActions,
         onMerge = onMerge,
         onMergeClose = onMergeClose
     )

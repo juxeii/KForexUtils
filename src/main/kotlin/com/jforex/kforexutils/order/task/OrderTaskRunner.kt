@@ -4,7 +4,6 @@ import com.dukascopy.api.IContext
 import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.context.runOnStrategyThread
 import com.jforex.kforexutils.misc.KCallable
-import com.jforex.kforexutils.order.params.actions.OrderTaskActions
 import io.reactivex.rxkotlin.subscribeBy
 
 class OrderTaskRunner(private val context: IContext) {

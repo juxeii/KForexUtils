@@ -18,6 +18,6 @@ data class SubmitEventHandlerData(private val actions: OrderSubmitActions) : Ord
     )
     override val completeEventTypes = setOf(OrderEventType.FULLY_FILLED)
     override val rejectEventType = OrderEventType.FILL_REJECTED
-    override val taskActions = actions.basicActions
+    override val taskActions = actions.taskActions
     override val type = OrderEventHandlerType.SUBMIT
 }

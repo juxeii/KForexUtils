@@ -5,13 +5,12 @@ import com.jforex.kforexutils.misc.emptyOrderEventConsumer
 import com.jforex.kforexutils.order.params.actions.OrderTPActions
 
 @OrderDsl
-class OrderTPActionsBuilder : OrderBasicActionsBuilderBase()
+class OrderTPActionsBuilder : OrderTaskActionsBuilderBase()
 {
     var onTPChange = emptyOrderEventConsumer
-    var onReject = emptyOrderEventConsumer
 
     private fun build() = OrderTPActions(
-        basicActions = basicActions,
+        taskActions = taskActions,
         onTPChange = onTPChange
     )
 

@@ -1,7 +1,6 @@
-package com.jforex.kforexutils.order.params.actions
+package com.jforex.kforexutils.order.task
 
 import com.jforex.kforexutils.misc.*
-import com.jforex.kforexutils.order.task.TaskRetry
 
 data class OrderTaskActions(
     val onStart: KRunnable = emptyAction,
