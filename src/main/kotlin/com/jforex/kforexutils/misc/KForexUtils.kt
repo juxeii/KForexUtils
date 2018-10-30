@@ -6,7 +6,7 @@ import com.jakewharton.rxrelay2.PublishRelay
 import com.jforex.kforexutils.engine.orderMessageGateway
 import com.jforex.kforexutils.engine.taskRunner
 import com.jforex.kforexutils.message.MessageGateway
-import com.jforex.kforexutils.message.MessageToOrderEvent
+import com.jforex.kforexutils.message.MessageToOrderEventType
 import com.jforex.kforexutils.order.event.OrderEventGateway
 import com.jforex.kforexutils.order.task.OrderTaskRunner
 
@@ -15,7 +15,7 @@ class KForexUtils(val context: IContext) {
     val engine = context.engine
     private val messagePublisher: PublishRelay<IMessage> = PublishRelay.create()
     val messageGateway = MessageGateway(messagePublisher)
-    private val orderEventConverter = MessageToOrderEvent()
+    private val orderEventConverter = MessageToOrderEventType()
     private val orderMessageGateway = OrderEventGateway(
         messageGateway.messages,
         orderEventConverter

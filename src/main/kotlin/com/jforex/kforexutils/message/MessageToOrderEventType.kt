@@ -7,7 +7,8 @@ import com.jforex.kforexutils.order.event.OrderEventType
 import com.jforex.kforexutils.order.extension.isFilled
 import io.reactivex.rxkotlin.toObservable
 
-class MessageToOrderEvent {
+class MessageToOrderEventType
+{
     private val changeTypeByReason = mapOf(
         IMessage.Reason.ORDER_FULLY_FILLED to OrderEventType.FULLY_FILLED,
         IMessage.Reason.ORDER_CHANGED_AMOUNT to OrderEventType.CHANGED_AMOUNT,

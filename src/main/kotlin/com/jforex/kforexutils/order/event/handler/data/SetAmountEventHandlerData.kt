@@ -13,7 +13,6 @@ data class SetAmountEventHandlerData(private val actions: OrderAmountActions) : 
         OrderEventType.CHANGED_AMOUNT,
         OrderEventType.CHANGE_REJECTED
     )
-    override val completeEventTypes = finishEventTypes.minus(OrderEventType.CHANGE_REJECTED)
     override val rejectEventType = OrderEventType.CHANGE_REJECTED
     override var retryCall: KRunnable = {}
     override val taskActions = actions.taskActions

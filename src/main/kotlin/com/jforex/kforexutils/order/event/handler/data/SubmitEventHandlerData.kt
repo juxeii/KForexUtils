@@ -17,7 +17,6 @@ data class SubmitEventHandlerData(private val actions: OrderSubmitActions) : Ord
         OrderEventType.SUBMIT_REJECTED,
         OrderEventType.FILL_REJECTED
     )
-    override val completeEventTypes = setOf(OrderEventType.FULLY_FILLED)
     override val rejectEventType = OrderEventType.FILL_REJECTED
     override var retryCall: KRunnable = {}
     override val taskActions = actions.taskActions

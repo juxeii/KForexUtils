@@ -2,7 +2,7 @@ package com.jforex.kforexutils.message.test
 
 import com.dukascopy.api.IMessage
 import com.dukascopy.api.IOrder
-import com.jforex.kforexutils.message.MessageToOrderEvent
+import com.jforex.kforexutils.message.MessageToOrderEventType
 import com.jforex.kforexutils.order.event.OrderEvent
 import com.jforex.kforexutils.order.event.OrderEventGateway
 import com.jforex.kforexutils.order.event.OrderEventType
@@ -17,7 +17,7 @@ class OrderMessageGatewayTest : StringSpec() {
     private val orderEvent = mockk<OrderEvent>()
     private val message = mockk<IMessage>()
     private val messages: PublishSubject<IMessage> = PublishSubject.create()
-    private val messageConverter = mockk<MessageToOrderEvent>()
+    private val messageConverter = mockk<MessageToOrderEventType>()
     private val orderMessageGateway = OrderEventGateway(messages, messageConverter)
 
     private fun subscribe() = orderMessageGateway

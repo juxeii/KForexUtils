@@ -19,7 +19,6 @@ data class CloseEventHandlerData(
         OrderEventType.PARTIAL_CLOSE_OK,
         OrderEventType.CLOSE_REJECTED
     )
-    override val completeEventTypes = finishEventTypes.minus(OrderEventType.CLOSE_REJECTED)
     override val rejectEventType = OrderEventType.CLOSE_REJECTED
     override var retryCall: KRunnable = {}
     override val taskActions = actions.taskActions

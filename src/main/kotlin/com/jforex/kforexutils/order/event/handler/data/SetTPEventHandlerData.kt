@@ -14,7 +14,6 @@ data class SetTPEventHandlerData(private val actions: OrderTPActions) : OrderEve
         OrderEventType.CHANGED_TP,
         OrderEventType.CHANGE_REJECTED
     )
-    override val completeEventTypes = finishEventTypes.minus(OrderEventType.CHANGE_REJECTED)
     override val rejectEventType = OrderEventType.CHANGE_REJECTED
     override var retryCall: KRunnable = {}
     override val taskActions = actions.taskActions

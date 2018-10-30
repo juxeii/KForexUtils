@@ -16,7 +16,6 @@ data class MergeEventHandlerData(private val actions: OrderMergeActions) : Order
         OrderEventType.MERGE_CLOSE_OK,
         OrderEventType.MERGE_REJECTED
     )
-    override val completeEventTypes = finishEventTypes.minus(OrderEventType.MERGE_REJECTED)
     override val rejectEventType = OrderEventType.MERGE_REJECTED
     override var retryCall: KRunnable = {}
     override val taskActions = actions.taskActions

@@ -12,7 +12,8 @@ fun IEngine.submit(
     orderCommand: IEngine.OrderCommand,
     amount: Double,
     block: OrderSubmitParamsBuilder.() -> Unit = {}
-) {
+)
+{
     val params = OrderSubmitParamsBuilder(
         label = label,
         instrument = instrument,
@@ -26,7 +27,7 @@ fun IEngine.submit(
     )
 }
 
-private fun createSubmitCall(engine: IEngine, params: OrderSubmitParams) = { ->
+private fun createSubmitCall(engine: IEngine, params: OrderSubmitParams) = {
     engine.submitOrder(
         params.label,
         params.instrument,

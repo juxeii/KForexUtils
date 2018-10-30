@@ -14,7 +14,6 @@ data class SetLabelEventHandlerData(private val actions: OrderLabelActions) : Or
         OrderEventType.CHANGED_LABEL,
         OrderEventType.CHANGE_REJECTED
     )
-    override val completeEventTypes = finishEventTypes.minus(OrderEventType.CHANGE_REJECTED)
     override val rejectEventType = OrderEventType.CHANGE_REJECTED
     override var retryCall: KRunnable = {}
     override val taskActions = actions.taskActions

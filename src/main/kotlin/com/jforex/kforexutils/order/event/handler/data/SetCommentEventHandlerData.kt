@@ -14,7 +14,6 @@ data class SetCommentEventHandlerData(private val actions: OrderCommentActions) 
         OrderEventType.CHANGED_COMMENT,
         OrderEventType.CHANGE_REJECTED
     )
-    override val completeEventTypes = finishEventTypes.minus(OrderEventType.CHANGE_REJECTED)
     override val rejectEventType = OrderEventType.CHANGE_REJECTED
     override var retryCall: KRunnable = {}
     override val taskActions = actions.taskActions

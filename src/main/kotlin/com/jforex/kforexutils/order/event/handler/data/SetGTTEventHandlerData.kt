@@ -14,7 +14,6 @@ data class SetGTTEventHandlerData(private val actions: OrderGTTActions) : OrderE
         OrderEventType.CHANGED_GTT,
         OrderEventType.CHANGE_REJECTED
     )
-    override val completeEventTypes = finishEventTypes.minus(OrderEventType.CHANGE_REJECTED)
     override val rejectEventType = OrderEventType.CHANGE_REJECTED
     override var retryCall: KRunnable = {}
     override val taskActions = actions.taskActions
