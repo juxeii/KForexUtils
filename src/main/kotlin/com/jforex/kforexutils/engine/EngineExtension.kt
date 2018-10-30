@@ -6,6 +6,7 @@ import com.jforex.kforexutils.misc.FieldProperty
 import com.jforex.kforexutils.misc.KCallable
 import com.jforex.kforexutils.order.event.OrderEvent
 import com.jforex.kforexutils.order.event.OrderEventGateway
+import com.jforex.kforexutils.order.event.OrderEventObservableFactory
 import com.jforex.kforexutils.order.event.handler.OrderEventHandler
 import com.jforex.kforexutils.order.event.handler.data.OrderEventHandlerData
 import com.jforex.kforexutils.order.extension.eventHandler
@@ -28,7 +29,8 @@ internal fun IEngine.createOrder(
             .filter { it.order == order }
         order.taskRunner = taskRunner
         val handlerQueue = ObservableQueue<OrderEvent>()
-        order.eventHandler = OrderEventHandler(filteredOrderEvents, handlerQueue)
+        val observableFactory = OrderEventObservableFactory(filteredOrderEvents)
+        order.eventHandler = OrderEventHandler(observableFactory, handlerQueue)
         order.eventHandler.register(handlerData, thisCall)
         order
     }
