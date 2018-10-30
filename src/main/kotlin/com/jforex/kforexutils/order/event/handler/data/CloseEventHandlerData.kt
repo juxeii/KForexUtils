@@ -5,10 +5,7 @@ import com.jforex.kforexutils.order.event.OrderEventType
 import com.jforex.kforexutils.order.event.handler.OrderEventHandlerType
 import com.jforex.kforexutils.order.params.actions.OrderCloseActions
 
-data class CloseEventHandlerData(
-    private val actions: OrderCloseActions
-) :
-    OrderEventHandlerData
+data class CloseEventHandlerData(private val actions: OrderCloseActions) : OrderEventHandlerData
 {
     override val eventHandlers = mapOf(
         OrderEventType.CLOSE_OK to actions.onClose,
