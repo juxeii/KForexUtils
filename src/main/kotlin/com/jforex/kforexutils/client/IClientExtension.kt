@@ -2,6 +2,9 @@ package com.jforex.kforexutils.client
 
 import com.dukascopy.api.system.IClient
 import com.jforex.kforexutils.authentification.LoginCredentials
+import com.jforex.kforexutils.authentification.LoginData
+import com.jforex.kforexutils.authentification.LoginDataFactory
+import com.jforex.kforexutils.authentification.LoginType
 import com.jforex.kforexutils.misc.FieldProperty
 import com.jforex.kforexutils.misc.KRunnable
 import com.jforex.kforexutils.system.ConnectionState
@@ -9,12 +12,13 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 
 internal var IClient.connectionState: Observable<ConnectionState> by FieldProperty()
+internal var IClient.loginDataFactory: LoginDataFactory by FieldProperty()
 
-internal fun IClient.loginWithCredentials(credentials: LoginCredentials) =
-    credentials
+internal fun IClient.loginWithData(loginData: LoginData) =
+    loginData
         .maybePin
-        .fold({ connect(credentials.jnlpAddress, credentials.username, credentials.password) },
-            { connect(credentials.jnlpAddress, credentials.username, credentials.password, it) })
+        .fold({ connect(loginData.jnlpAddress, loginData.credentials.username, loginData.credentials.password) },
+            { connect(loginData.jnlpAddress, loginData.credentials.username, loginData.credentials.password, it) })
 
 internal fun IClient.waitForNextConnectionUpdate() =
     connectionState
@@ -26,6 +30,9 @@ internal fun IClient.actionWithConnectionUpdate(action: KRunnable) =
         .fromAction { action() }
         .andThen { waitForNextConnectionUpdate() }
 
-fun IClient.login(credentials: LoginCredentials) = actionWithConnectionUpdate { loginWithCredentials(credentials) }
+fun IClient.login(credentials: LoginCredentials, type: LoginType = LoginType.DEMO) {
+    val loginData = loginDataFactory.create(credentials, type)
+    actionWithConnectionUpdate { loginWithData(loginData) }
+}
 
 fun IClient.logout() = actionWithConnectionUpdate { disconnect() }
