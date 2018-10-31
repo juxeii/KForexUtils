@@ -11,10 +11,12 @@ data class Price(
 ) {
     val value: BigDecimal = initBigDecimal(doubleValue)
     private val pipScalePrice = initBigDecimal(instrument.pipValue)
-    private val scaleFactor = (10.0).pow(instrument.noOfDecimalPlaces - 1)
+    private val scaleFactor by lazy { (10.0).pow(instrument.noOfDecimalPlaces - 1) }
 
     private fun initBigDecimal(value: Double) =
         BigDecimal(value).setScale(instrument.noOfDecimalPlaces, BigDecimal.ROUND_HALF_DOWN)
+
+    fun toDouble() = value.toDouble()
 
     operator fun plus(pips: Pips) = priceForPips(pips, value::add)
 
