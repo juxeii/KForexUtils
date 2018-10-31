@@ -1,38 +1,10 @@
 package com.jforex.kforexutils.client
 
 import com.dukascopy.api.system.IClient
-import com.jforex.kforexutils.authentification.LoginCredentials
-import com.jforex.kforexutils.authentification.LoginData
-import com.jforex.kforexutils.authentification.LoginDataFactory
-import com.jforex.kforexutils.authentification.LoginType
-import com.jforex.kforexutils.misc.FieldProperty
-import com.jforex.kforexutils.misc.KRunnable
-import com.jforex.kforexutils.system.ConnectionState
-import io.reactivex.Completable
-import io.reactivex.Observable
+import com.jforex.kforexutils.system.KSystemListener
+import java.io.File
 
-internal var IClient.connectionState: Observable<ConnectionState> by FieldProperty()
-internal var IClient.loginDataFactory: LoginDataFactory by FieldProperty()
-
-internal fun IClient.loginWithData(loginData: LoginData) =
-    loginData
-        .maybePin
-        .fold({ connect(loginData.jnlpAddress, loginData.credentials.username, loginData.credentials.password) },
-            { connect(loginData.jnlpAddress, loginData.credentials.username, loginData.credentials.password, it) })
-
-internal fun IClient.waitForNextConnectionUpdate() =
-    connectionState
-        .take(1)
-        .ignoreElements()
-
-internal fun IClient.actionWithConnectionUpdate(action: KRunnable) =
-    Completable
-        .fromAction { action() }
-        .andThen { waitForNextConnectionUpdate() }
-
-fun IClient.login(credentials: LoginCredentials, type: LoginType = LoginType.DEMO) {
-    val loginData = loginDataFactory.create(credentials, type)
-    actionWithConnectionUpdate { loginWithData(loginData) }
+internal fun IClient.init(cacheDirectoryPath: String) {
+    setCacheDirectory(File(cacheDirectoryPath))
+    setSystemListener(KSystemListener())
 }
-
-fun IClient.logout() = actionWithConnectionUpdate { disconnect() }

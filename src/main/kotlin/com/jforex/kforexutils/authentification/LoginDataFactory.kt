@@ -7,7 +7,7 @@ class LoginDataFactory(private val pinProvider: PinProvider) {
 
     fun create(
         credentials: LoginCredentials,
-        type: LoginType = LoginType.DEMO
+        type: LoginType
     ) = LoginData(
         credentials = credentials,
         jnlpAddress = chooseJNLPAddress(type),
