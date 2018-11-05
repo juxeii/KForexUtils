@@ -1,42 +1,54 @@
 package com.jforex.kforexutils.client
 
+import arrow.core.Failure
+import arrow.core.Success
+import arrow.core.Try
 import com.dukascopy.api.system.IClient
-import com.jforex.kforexutils.authentification.LoginCredentials
-import com.jforex.kforexutils.authentification.LoginData
-import com.jforex.kforexutils.authentification.LoginDataFactory
-import com.jforex.kforexutils.authentification.LoginType
+import com.jforex.kforexutils.authentification.*
 import com.jforex.kforexutils.misc.FieldProperty
-import com.jforex.kforexutils.misc.KRunnable
+import com.jforex.kforexutils.settings.PlatformSettings
 import com.jforex.kforexutils.system.ConnectionState
-import io.reactivex.Completable
 import io.reactivex.Observable
 
 internal var IClient.connectionState: Observable<ConnectionState> by FieldProperty()
-internal var IClient.loginDataFactory: LoginDataFactory by FieldProperty()
+internal var IClient.pinProvider: PinProvider by FieldProperty()
+internal var IClient.platformSettings: PlatformSettings by FieldProperty()
 
-internal fun IClient.loginWithData(loginData: LoginData) =
+internal fun IClient.loginWithData(loginData: LoginData): Try<Unit> =
     with(loginData) {
         val username = credentials.username
         val password = credentials.password
-        maybePin.fold(
-            { connect(jnlpAddress, username, password) },
-            { pin -> connect(jnlpAddress, username, password, pin) }
-        )
+        Try.invoke {
+            maybePin.fold(
+                { connect(jnlpAddress, username, password) },
+                { pin -> connect(jnlpAddress, username, password, pin) })
+        }
     }
 
-internal fun IClient.waitForNextConnectionUpdate() =
-    connectionState
-        .take(1)
-        .ignoreElements()
+internal fun IClient.waitForNextConnectionUpdate(): Try<ConnectionState> =
+    Try.invoke {
+        connectionState
+            .take(1)
+            .blockingFirst()
+    }
 
-internal fun IClient.actionWithConnectionUpdate(action: KRunnable) =
-    Completable
-        .fromAction { action() }
-        .andThen { waitForNextConnectionUpdate() }
+internal fun IClient.filterConnectedState(state: ConnectionState): Try<ConnectionState> =
+    waitForNextConnectionUpdate().flatMap {
+        if (it == state) Success(it)
+        else Failure(Exception("Connection state is not $state!"))
+    }
 
-fun IClient.login(credentials: LoginCredentials, type: LoginType = LoginType.DEMO) {
-    val loginData = loginDataFactory.create(credentials, type)
-    actionWithConnectionUpdate { loginWithData(loginData) }
+fun IClient.login(credentials: LoginCredentials, type: LoginType = LoginType.DEMO): Try<ConnectionState> {
+    val loginData = createLoginData(
+        credentials = credentials,
+        type = type,
+        platformSettings = platformSettings,
+        pinProvider = pinProvider
+    )
+    return loginWithData(loginData).flatMap { filterConnectedState(ConnectionState.CONNECTED) }
 }
 
-fun IClient.logout() = actionWithConnectionUpdate { disconnect() }
+fun IClient.logout(): Try<ConnectionState> =
+    Try
+        .invoke { disconnect() }
+        .flatMap { filterConnectedState(ConnectionState.DISCONNECTED) }
