@@ -1,20 +1,23 @@
 package com.jforex.kforexutils.order.extension
 
+import arrow.core.Failure
+import arrow.core.Success
+import com.dukascopy.api.IContext
 import com.dukascopy.api.IOrder
+import com.jforex.kforexutils.context.executeTaskOnStrategyThreadBlocking
 import com.jforex.kforexutils.misc.FieldProperty
 import com.jforex.kforexutils.misc.KRunnable
 import com.jforex.kforexutils.order.event.handler.OrderEventHandler
 import com.jforex.kforexutils.order.event.handler.data.OrderEventHandlerData
-import com.jforex.kforexutils.order.task.OrderTaskRunner
-import com.jforex.kforexutils.order.task.runOrderTask
 
 internal var IOrder.eventHandler: OrderEventHandler by FieldProperty()
-internal var IOrder.orderTaskRunner: OrderTaskRunner by FieldProperty()
+internal var IOrder.context: IContext by FieldProperty()
 
 internal fun IOrder.runTask(
     orderCall: KRunnable,
     handlerData: OrderEventHandlerData
-) {
+)
+{
     handlerData.retryCall = { runTask(orderCall, handlerData) }
     val orderCallWithEventHandlerInitialization = {
         orderCall()
@@ -22,11 +25,14 @@ internal fun IOrder.runTask(
         this
     }
 
-    runOrderTask(
-        task = orderCallWithEventHandlerInitialization,
-        actions = handlerData.taskActions,
-        context = orderTaskRunner.context
-    )
+    with(handlerData.taskActions) {
+        onStart()
+        when (val taskResult = context.executeTaskOnStrategyThreadBlocking(orderCallWithEventHandlerInitialization))
+        {
+            is Success -> onSuccess(taskResult.value)
+            is Failure -> onError(taskResult.exception)
+        }
+    }
 }
 
 val IOrder.isOpened
