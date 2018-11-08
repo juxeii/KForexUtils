@@ -1,10 +1,12 @@
 package com.jforex.kforexutils.order.event.handler
 
-import com.jforex.kforexutils.order.event.OrderEventObservable
+import com.jforex.kforexutils.order.event.OrderEvent
 import com.jforex.kforexutils.order.event.handler.data.OrderEventHandlerData
+import com.jforex.kforexutils.order.event.subscribeToOrderEvents
+import io.reactivex.Observable
 import java.util.concurrent.ConcurrentLinkedQueue
 
-class OrderEventHandlerQueue(private val orderEventObservable: OrderEventObservable)
+class OrderEventHandlerQueue(private val orderEvents: Observable<OrderEvent>)
 {
     private var queuedHandlerData = ConcurrentLinkedQueue<OrderEventHandlerData>()
 
@@ -23,5 +25,5 @@ class OrderEventHandlerQueue(private val orderEventObservable: OrderEventObserva
     }
 
     private fun subscribeHandler(handlerData: OrderEventHandlerData) =
-        orderEventObservable.subscribe(handlerData, ::subscribeNext)
+        subscribeToOrderEvents(handlerData, ::subscribeNext).run(orderEvents)
 }
