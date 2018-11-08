@@ -3,9 +3,7 @@ package com.jforex.kforexutils.misc
 import com.dukascopy.api.IContext
 import com.dukascopy.api.IMessage
 import com.jakewharton.rxrelay2.PublishRelay
-import com.jforex.kforexutils.context.platformSettings
-import com.jforex.kforexutils.engine.context
-import com.jforex.kforexutils.engine.orderMessageGateway
+import com.jforex.kforexutils.engine.kForexUtils
 import com.jforex.kforexutils.message.MessageGateway
 import com.jforex.kforexutils.message.MessageToOrderEventType
 import com.jforex.kforexutils.order.event.OrderEventGateway
@@ -17,16 +15,13 @@ class KForexUtils(val context: IContext) {
     private val messagePublisher: PublishRelay<IMessage> = PublishRelay.create()
     val messageGateway = MessageGateway(messagePublisher)
     private val orderEventConverter = MessageToOrderEventType()
-    private val orderMessageGateway = OrderEventGateway(
+    val orderMessageGateway = OrderEventGateway(
         messageGateway.messages,
         orderEventConverter
     )
     val platformSettings: PlatformSettings = ConfigFactory.create(PlatformSettings::class.java)
 
     init {
-        context.platformSettings = platformSettings
-
-        engine.context = context
-        engine.orderMessageGateway = orderMessageGateway
+        engine.kForexUtils = this
     }
 }
