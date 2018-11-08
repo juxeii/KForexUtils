@@ -5,8 +5,10 @@ import com.jforex.kforexutils.order.event.OrderEventType
 import com.jforex.kforexutils.order.event.handler.OrderEventHandlerType
 import com.jforex.kforexutils.order.params.actions.OrderSubmitActions
 
-data class SubmitEventHandlerData(private val actions: OrderSubmitActions) : OrderEventHandlerData
-{
+data class SubmitEventHandlerData(
+    private val actions: OrderSubmitActions,
+    override val retryCall: KRunnable
+) : OrderEventHandlerData {
     override val eventHandlers = mapOf(
         OrderEventType.SUBMIT_OK to actions.onSubmit,
         OrderEventType.PARTIALLY_FILLED to actions.onPartialFill,
@@ -18,7 +20,6 @@ data class SubmitEventHandlerData(private val actions: OrderSubmitActions) : Ord
         OrderEventType.FILL_REJECTED
     )
     override val rejectEventType = OrderEventType.FILL_REJECTED
-    override var retryCall: KRunnable = {}
     override val taskActions = actions.taskActions
     override val type = OrderEventHandlerType.SUBMIT
 }

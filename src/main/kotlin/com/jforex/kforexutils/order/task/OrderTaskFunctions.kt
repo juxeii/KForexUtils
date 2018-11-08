@@ -13,7 +13,6 @@ internal fun runOrderTask(
     orderCall: KCallable<IOrder>,
     handlerData: OrderEventHandlerData
 ): Reader<IContext, Unit> = with(handlerData.taskActions) {
-    handlerData.retryCall = { runOrderTask(orderCall, handlerData) }
     onStart()
     ReaderApi
         .ask<IContext>()

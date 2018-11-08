@@ -5,8 +5,10 @@ import com.jforex.kforexutils.order.event.OrderEventType
 import com.jforex.kforexutils.order.event.handler.OrderEventHandlerType
 import com.jforex.kforexutils.order.params.actions.OrderSLActions
 
-data class SetSLEventHandlerData(private val actions: OrderSLActions) : OrderEventHandlerData
-{
+data class SetSLEventHandlerData(
+    private val actions: OrderSLActions,
+    override val retryCall: KRunnable
+) : OrderEventHandlerData {
     override val eventHandlers = mapOf(
         OrderEventType.CHANGED_SL to actions.onSLChange
 
@@ -16,7 +18,6 @@ data class SetSLEventHandlerData(private val actions: OrderSLActions) : OrderEve
         OrderEventType.CHANGE_REJECTED
     )
     override val rejectEventType = OrderEventType.CHANGE_REJECTED
-    override var retryCall: KRunnable = {}
     override val taskActions = actions.taskActions
     override val type = OrderEventHandlerType.CHANGE
 }

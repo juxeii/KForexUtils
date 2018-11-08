@@ -5,8 +5,10 @@ import com.jforex.kforexutils.order.event.OrderEventType
 import com.jforex.kforexutils.order.event.handler.OrderEventHandlerType
 import com.jforex.kforexutils.order.params.actions.OrderCommentActions
 
-data class SetCommentEventHandlerData(private val actions: OrderCommentActions) : OrderEventHandlerData
-{
+data class SetCommentEventHandlerData(
+    private val actions: OrderCommentActions,
+    override val retryCall: KRunnable
+) : OrderEventHandlerData {
     override val eventHandlers = mapOf(
         OrderEventType.CHANGED_COMMENT to actions.onCommentChange
     )
@@ -15,7 +17,6 @@ data class SetCommentEventHandlerData(private val actions: OrderCommentActions) 
         OrderEventType.CHANGE_REJECTED
     )
     override val rejectEventType = OrderEventType.CHANGE_REJECTED
-    override var retryCall: KRunnable = {}
     override val taskActions = actions.taskActions
     override val type = OrderEventHandlerType.CHANGE
 }

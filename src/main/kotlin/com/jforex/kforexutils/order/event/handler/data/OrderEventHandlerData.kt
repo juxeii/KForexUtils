@@ -15,7 +15,7 @@ interface OrderEventHandlerData
 
     val rejectEventType: OrderEventType
 
-    var retryCall: KRunnable
+    val retryCall: KRunnable
 
     val taskActions: OrderTaskActions
 

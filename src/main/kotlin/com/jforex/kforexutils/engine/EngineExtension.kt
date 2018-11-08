@@ -5,6 +5,7 @@ import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.misc.FieldProperty
 import com.jforex.kforexutils.misc.KCallable
 import com.jforex.kforexutils.misc.KForexUtils
+import com.jforex.kforexutils.misc.KRunnable
 import com.jforex.kforexutils.order.event.OrderEventObservable
 import com.jforex.kforexutils.order.event.handler.OrderEventHandler
 import com.jforex.kforexutils.order.event.handler.OrderEventHandlerQueue
@@ -17,8 +18,9 @@ internal var IEngine.kForexUtils: KForexUtils by FieldProperty()
 
 internal fun IEngine.createOrder(
     engineCall: KCallable<IOrder>,
-    handlerData: OrderEventHandlerData
+    handlerDataProvider: (KRunnable) -> OrderEventHandlerData
 ) {
+    val handlerData = handlerDataProvider { createOrder(engineCall, handlerDataProvider) }
     val engineCallWithOrderInitialization = engineCallWithOrderInit(engineCall, handlerData)
     runOrderTask(engineCallWithOrderInitialization, handlerData).run(kForexUtils.context)
 }

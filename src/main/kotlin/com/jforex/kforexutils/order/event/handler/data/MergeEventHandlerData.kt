@@ -5,8 +5,10 @@ import com.jforex.kforexutils.order.event.OrderEventType
 import com.jforex.kforexutils.order.event.handler.OrderEventHandlerType
 import com.jforex.kforexutils.order.params.actions.OrderMergeActions
 
-data class MergeEventHandlerData(private val actions: OrderMergeActions) : OrderEventHandlerData
-{
+data class MergeEventHandlerData(
+    private val actions: OrderMergeActions,
+    override val retryCall: KRunnable
+) : OrderEventHandlerData {
     override val eventHandlers = mapOf(
         OrderEventType.MERGE_OK to actions.onMerge,
         OrderEventType.MERGE_CLOSE_OK to actions.onMergeClose
@@ -17,7 +19,6 @@ data class MergeEventHandlerData(private val actions: OrderMergeActions) : Order
         OrderEventType.MERGE_REJECTED
     )
     override val rejectEventType = OrderEventType.MERGE_REJECTED
-    override var retryCall: KRunnable = {}
     override val taskActions = actions.taskActions
     override val type = OrderEventHandlerType.MERGE
 }

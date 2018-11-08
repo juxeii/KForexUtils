@@ -13,8 +13,9 @@ internal var IOrder.kForexUtils: KForexUtils by FieldProperty()
 
 internal fun IOrder.runTask(
     orderCall: KRunnable,
-    handlerData: OrderEventHandlerData
+    handlerDataProvider: (KRunnable) -> OrderEventHandlerData
 ) {
+    val handlerData = handlerDataProvider { runTask(orderCall, handlerDataProvider) }
     val orderCallWithEventHandlerInitialization = {
         orderCall()
         eventHandler.register(handlerData)

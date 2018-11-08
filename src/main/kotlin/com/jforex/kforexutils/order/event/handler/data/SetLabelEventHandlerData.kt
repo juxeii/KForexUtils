@@ -5,8 +5,10 @@ import com.jforex.kforexutils.order.event.OrderEventType
 import com.jforex.kforexutils.order.event.handler.OrderEventHandlerType
 import com.jforex.kforexutils.order.params.actions.OrderLabelActions
 
-data class SetLabelEventHandlerData(private val actions: OrderLabelActions) : OrderEventHandlerData
-{
+data class SetLabelEventHandlerData(
+    private val actions: OrderLabelActions,
+    override val retryCall: KRunnable
+) : OrderEventHandlerData {
     override val eventHandlers = mapOf(
         OrderEventType.CHANGED_LABEL to actions.onLabelChange
     )
@@ -15,7 +17,6 @@ data class SetLabelEventHandlerData(private val actions: OrderLabelActions) : Or
         OrderEventType.CHANGE_REJECTED
     )
     override val rejectEventType = OrderEventType.CHANGE_REJECTED
-    override var retryCall: KRunnable = {}
     override val taskActions = actions.taskActions
     override val type = OrderEventHandlerType.CHANGE
 }
