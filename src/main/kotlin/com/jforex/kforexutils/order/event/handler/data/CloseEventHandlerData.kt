@@ -5,7 +5,10 @@ import com.jforex.kforexutils.order.event.OrderEventType
 import com.jforex.kforexutils.order.event.handler.OrderEventHandlerType
 import com.jforex.kforexutils.order.params.actions.OrderCloseActions
 
-data class CloseEventHandlerData(private val actions: OrderCloseActions) : OrderEventHandlerData
+data class CloseEventHandlerData(
+    private val actions: OrderCloseActions,
+    override val retryCall: KRunnable
+) : OrderEventHandlerData
 {
     override val eventHandlers = mapOf(
         OrderEventType.CLOSE_OK to actions.onClose,
@@ -17,7 +20,6 @@ data class CloseEventHandlerData(private val actions: OrderCloseActions) : Order
         OrderEventType.CLOSE_REJECTED
     )
     override val rejectEventType = OrderEventType.CLOSE_REJECTED
-    override var retryCall: KRunnable = {}
     override val taskActions = actions.taskActions
     override val type = OrderEventHandlerType.CLOSE
 }
