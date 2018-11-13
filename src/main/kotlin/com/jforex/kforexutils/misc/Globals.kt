@@ -2,8 +2,8 @@ package com.jforex.kforexutils.misc
 
 import com.jforex.kforexutils.order.event.OrderEvent
 import com.jforex.kforexutils.order.event.OrderEventType
+import com.jforex.kforexutils.order.task.OrderCallActions
 import com.jforex.kforexutils.order.task.OrderCallParams
-import com.jforex.kforexutils.order.task.OrderTaskData
 import com.jforex.kforexutils.order.task.TaskRetry
 
 
@@ -15,7 +15,7 @@ val emptyOrderConsumer: OrderConsumer = {}
 val emptyErrorConsumer: ErrorConsumer = { }
 val emptyOrderEventConsumer: OrderEventConsumer = {}
 val emptyOrderEventHandlers = emptyMap<OrderEventType, OrderEventConsumer>()
-val emptyTaskData = OrderTaskData()
+val emptyCallActions = OrderCallActions()
 val emptyTaskRetryHandler = DefaultTaskRetry()
 val emptyOrderCallParams = OrderCallParams()
 

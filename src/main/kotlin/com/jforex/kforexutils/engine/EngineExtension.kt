@@ -5,27 +5,33 @@ import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.misc.FieldProperty
 import com.jforex.kforexutils.misc.KCallable
 import com.jforex.kforexutils.misc.KForexUtils
-import com.jforex.kforexutils.misc.KRunnable
 import com.jforex.kforexutils.order.event.handler.OrderEventManager
-import com.jforex.kforexutils.order.event.handler.data.OrderEventData
 import com.jforex.kforexutils.order.extension.eventManager
 import com.jforex.kforexutils.order.extension.kForexUtils
+import com.jforex.kforexutils.order.task.OrderTaskExecutionParams
+import com.jforex.kforexutils.order.task.OrderTaskParams
 import com.jforex.kforexutils.order.task.runOrderTask
 
 internal var IEngine.kForexUtils: KForexUtils by FieldProperty()
 
 internal fun IEngine.createOrder(
     engineCall: KCallable<IOrder>,
-    dataProvider: (KRunnable) -> OrderEventData
-) {
-    val handlerData = dataProvider { createOrder(engineCall, dataProvider) }
-    val engineCallWithOrderInitialization = engineCallWithOrderInit(engineCall, handlerData)
-    runOrderTask(engineCallWithOrderInitialization, handlerData.taskData).run(kForexUtils.context)
+    taskParams: OrderTaskParams
+)
+{
+    val retryCall = { createOrder(engineCall, taskParams) }
+    val executionParams = OrderTaskExecutionParams(
+        eventParams = taskParams.eventParams,
+        retryCall = retryCall,
+        retryHandler = taskParams.callParams.retryHandler
+    )
+    val engineCallWithOrderInitialization = engineCallWithOrderInit(engineCall, executionParams)
+    runOrderTask(engineCallWithOrderInitialization, taskParams.callParams.callActions).run(kForexUtils.context)
 }
 
 private fun IEngine.engineCallWithOrderInit(
     engineCall: KCallable<IOrder>,
-    data: OrderEventData
+    params: OrderTaskExecutionParams
 ) = {
     val order = engineCall()
     order.kForexUtils = kForexUtils
@@ -33,7 +39,7 @@ private fun IEngine.engineCallWithOrderInit(
     order.eventManager = OrderEventManager(filteredOrderEvents)
     order
         .eventManager
-        .registerHandler(data)
+        .registerHandler(params)
     order
 }
 

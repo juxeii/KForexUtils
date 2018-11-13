@@ -1,16 +1,14 @@
 package com.jforex.kforexutils.order.event
 
-import arrow.data.Reader
 import arrow.data.ReaderApi
 import arrow.data.map
 import com.jforex.kforexutils.misc.KRunnable
-import com.jforex.kforexutils.order.params.actions.OrderEventExecutionParams
+import com.jforex.kforexutils.order.task.OrderTaskExecutionParams
 import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
 
 internal fun subscribeToOrderEvents(
-    params: OrderEventExecutionParams,
+    params: OrderTaskExecutionParams,
     onComplete: KRunnable = {}
 ) = ReaderApi
     .ask<Observable<OrderEvent>>()

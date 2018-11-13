@@ -2,43 +2,40 @@ package com.jforex.kforexutils.engine
 
 import com.dukascopy.api.IEngine
 import com.dukascopy.api.Instrument
-import com.jforex.kforexutils.misc.KRunnable
-import com.jforex.kforexutils.order.event.handler.data.SubmitEventData
-import com.jforex.kforexutils.order.params.OrderSubmitParams
-import com.jforex.kforexutils.order.params.builders.OrderSubmitParamsBuilder
+import com.jforex.kforexutils.order.task.builders.OrderSubmitParamsBuilder
+import com.jforex.kforexutils.settings.TradingSettings
 
 fun IEngine.submit(
     label: String,
     instrument: Instrument,
     orderCommand: IEngine.OrderCommand,
     amount: Double,
+    price: Double = TradingSettings.noPreferredPrice,
+    slippage: Double = TradingSettings.defaultSlippage,
+    stopLossPrice: Double = TradingSettings.noSLPrice,
+    takeProfitPrice: Double = TradingSettings.noTPPrice,
+    goodTillTime: Long = TradingSettings.defaultGTT,
+    comment: String = TradingSettings.defaultComment,
     block: OrderSubmitParamsBuilder.() -> Unit = {}
 )
 {
-    val params = OrderSubmitParamsBuilder(
-        label = label,
-        instrument = instrument,
-        orderCommand = orderCommand,
-        amount = amount,
-        block = block
-    )
+    val params = OrderSubmitParamsBuilder(block)
+    val engineCall = {
+        submitOrder(
+            label,
+            instrument,
+            orderCommand,
+            amount,
+            price,
+            slippage,
+            stopLossPrice,
+            takeProfitPrice,
+            goodTillTime,
+            comment
+        )
+    }
     createOrder(
-        engineCall = createSubmitCall(this, params),
-        dataProvider = { retryCall: KRunnable -> SubmitEventData(params.actions, retryCall) }
-    )
-}
-
-private fun createSubmitCall(engine: IEngine, params: OrderSubmitParams) = {
-    engine.submitOrder(
-        params.label,
-        params.instrument,
-        params.orderCommand,
-        params.amount,
-        params.price,
-        params.slippage,
-        params.stopLossPrice,
-        params.takeProfitPrice,
-        params.goodTillTime,
-        params.comment
+        engineCall = engineCall,
+        taskParams = params
     )
 }

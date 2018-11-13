@@ -9,7 +9,7 @@ import com.jforex.kforexutils.misc.KCallable
 
 internal fun runOrderTask(
     orderCall: KCallable<IOrder>,
-    taskData: OrderTaskData
+    taskData: OrderCallActions
 ) = with(taskData) {
     onStart()
     ReaderApi
