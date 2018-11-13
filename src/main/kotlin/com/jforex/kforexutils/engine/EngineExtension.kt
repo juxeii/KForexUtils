@@ -7,7 +7,7 @@ import com.jforex.kforexutils.misc.KCallable
 import com.jforex.kforexutils.misc.KForexUtils
 import com.jforex.kforexutils.misc.KRunnable
 import com.jforex.kforexutils.order.event.handler.OrderEventManager
-import com.jforex.kforexutils.order.event.handler.data.OrderEventHandlerData
+import com.jforex.kforexutils.order.event.handler.data.OrderEventData
 import com.jforex.kforexutils.order.extension.eventManager
 import com.jforex.kforexutils.order.extension.kForexUtils
 import com.jforex.kforexutils.order.task.runOrderTask
@@ -16,28 +16,27 @@ internal var IEngine.kForexUtils: KForexUtils by FieldProperty()
 
 internal fun IEngine.createOrder(
     engineCall: KCallable<IOrder>,
-    handlerDataProvider: (KRunnable) -> OrderEventHandlerData
+    dataProvider: (KRunnable) -> OrderEventData
 ) {
-    val handlerData = handlerDataProvider { createOrder(engineCall, handlerDataProvider) }
+    val handlerData = dataProvider { createOrder(engineCall, dataProvider) }
     val engineCallWithOrderInitialization = engineCallWithOrderInit(engineCall, handlerData)
-    runOrderTask(engineCallWithOrderInitialization, handlerData).run(kForexUtils.context)
+    runOrderTask(engineCallWithOrderInitialization, handlerData.taskData).run(kForexUtils.context)
 }
 
 private fun IEngine.engineCallWithOrderInit(
     engineCall: KCallable<IOrder>,
-    handlerData: OrderEventHandlerData
+    data: OrderEventData
 ) = {
     val order = engineCall()
-    val filteredOrderEvents = kForexUtils
-        .orderMessageGateway
-        .observable
-        .filter { it.order == order }
-
     order.kForexUtils = kForexUtils
+    val filteredOrderEvents = getOrderMessages(kForexUtils).filter { it.order == order }
     order.eventManager = OrderEventManager(filteredOrderEvents)
     order
         .eventManager
-        .eventHandlers
-        .accept(handlerData)
+        .registerHandler(data)
     order
 }
+
+private fun getOrderMessages(utils: KForexUtils) = utils
+    .orderMessageGateway
+    .observable

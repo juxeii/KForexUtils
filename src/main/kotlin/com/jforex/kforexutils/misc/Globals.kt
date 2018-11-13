@@ -1,16 +1,29 @@
 package com.jforex.kforexutils.misc
 
+import com.jforex.kforexutils.order.event.OrderEvent
+import com.jforex.kforexutils.order.event.OrderEventType
+import com.jforex.kforexutils.order.task.OrderCallParams
+import com.jforex.kforexutils.order.task.OrderTaskData
+import com.jforex.kforexutils.order.task.TaskRetry
+
 
 @DslMarker
 annotation class OrderDsl
-
-//val platformSettings: PlatformSettings = ConfigFactory.create(PlatformSettings::class.java)
 
 val emptyAction: KRunnable = { }
 val emptyOrderConsumer: OrderConsumer = {}
 val emptyErrorConsumer: ErrorConsumer = { }
 val emptyOrderEventConsumer: OrderEventConsumer = {}
+val emptyOrderEventHandlers = emptyMap<OrderEventType, OrderEventConsumer>()
+val emptyTaskData = OrderTaskData()
+val emptyTaskRetryHandler = DefaultTaskRetry()
+val emptyOrderCallParams = OrderCallParams()
 
 fun thisThreadName(): String = Thread
     .currentThread()
     .name
+
+class DefaultTaskRetry : TaskRetry {
+    override fun onRejectEvent(rejectEvent: OrderEvent, retryCall: KRunnable) {}
+}
+

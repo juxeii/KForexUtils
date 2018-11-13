@@ -10,7 +10,7 @@ class OrderLabelActionsBuilder : OrderTaskActionsBuilderBase()
     var onLabelChange = emptyOrderEventConsumer
 
     private fun build() = OrderLabelActions(
-        taskActions = taskActions,
+        taskData = taskActions,
         onLabelChange = onLabelChange
     )
 

@@ -2,7 +2,6 @@ package com.jforex.kforexutils.order.params.builders
 
 import com.jforex.kforexutils.misc.OrderDsl
 import com.jforex.kforexutils.order.params.OrderCloseParams
-import com.jforex.kforexutils.order.params.actions.OrderCloseActions
 import com.jforex.kforexutils.order.params.actions.builders.OrderCloseActionsBuilder
 import com.jforex.kforexutils.settings.TradingSettings
 

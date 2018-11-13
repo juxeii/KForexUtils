@@ -3,20 +3,20 @@ package com.jforex.kforexutils.order.event.handler.data
 import com.jforex.kforexutils.misc.KRunnable
 import com.jforex.kforexutils.order.event.OrderEventType
 import com.jforex.kforexutils.order.event.handler.OrderEventHandlerType
-import com.jforex.kforexutils.order.params.actions.OrderLabelActions
+import com.jforex.kforexutils.order.params.actions.OrderOpenPriceActions
 
-data class SetLabelEventHandlerData(
-    private val actions: OrderLabelActions,
+data class SetOpenPriceEventData(
+    private val actions: OrderOpenPriceActions,
     override val retryCall: KRunnable
-) : OrderEventHandlerData {
+) : OrderEventData {
     override val eventHandlers = mapOf(
-        OrderEventType.CHANGED_LABEL to actions.onLabelChange
+        OrderEventType.CHANGED_PRICE to actions.onOpenPriceChange
     )
     override val finishEventTypes = setOf(
-        OrderEventType.CHANGED_LABEL,
+        OrderEventType.CHANGED_PRICE,
         OrderEventType.CHANGE_REJECTED
     )
     override val rejectEventType = OrderEventType.CHANGE_REJECTED
-    override val taskActions = actions.taskActions
+    override val taskData = actions.taskData
     override val type = OrderEventHandlerType.CHANGE
 }

@@ -11,7 +11,7 @@ class OrderCommentActionsBuilder : OrderTaskActionsBuilderBase()
     var onReject = emptyOrderEventConsumer
 
     private fun build() = OrderCommentActions(
-        taskActions = taskActions,
+        taskData = taskActions,
         onCommentChange = onCommentChange
     )
 

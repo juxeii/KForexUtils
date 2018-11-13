@@ -11,7 +11,7 @@ class OrderMergeActionsBuilder : OrderTaskActionsBuilderBase()
     var onMergeClose = emptyOrderEventConsumer
 
     private fun build() = OrderMergeActions(
-        taskActions = taskActions,
+        taskData = taskActions,
         onMerge = onMerge,
         onMergeClose = onMergeClose
     )

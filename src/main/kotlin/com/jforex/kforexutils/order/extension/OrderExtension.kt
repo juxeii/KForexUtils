@@ -5,7 +5,8 @@ import com.jforex.kforexutils.misc.FieldProperty
 import com.jforex.kforexutils.misc.KForexUtils
 import com.jforex.kforexutils.misc.KRunnable
 import com.jforex.kforexutils.order.event.handler.OrderEventManager
-import com.jforex.kforexutils.order.event.handler.data.OrderEventHandlerData
+import com.jforex.kforexutils.order.params.actions.OrderEventExecutionParams
+import com.jforex.kforexutils.order.params.actions.OrderTaskParams
 import com.jforex.kforexutils.order.task.runOrderTask
 
 internal var IOrder.kForexUtils: KForexUtils by FieldProperty()
@@ -13,19 +14,20 @@ internal var IOrder.eventManager: OrderEventManager by FieldProperty()
 
 internal fun IOrder.runTask(
     orderCall: KRunnable,
-    handlerDataProvider: (KRunnable) -> OrderEventHandlerData
+    taskParams: OrderTaskParams
 ) {
-    val handlerData = handlerDataProvider { runTask(orderCall, handlerDataProvider) }
+    val retryCall = { runTask(orderCall, taskParams) }
+    val executionParams = OrderEventExecutionParams(
+        eventParams = taskParams.eventParams,
+        retryCall = retryCall,
+        retryHandler = taskParams.callParams.retryHandler
+    )
     val orderCallWithEventHandlerInitialization = {
         orderCall()
-        val filteredOrderEvents = kForexUtils
-            .orderMessageGateway
-            .observable
-            .filter { it.order == this }
-        eventManager.eventHandlers.accept(handlerData)
+        eventManager.registerHandler(executionParams)
         this
     }
-    runOrderTask(orderCallWithEventHandlerInitialization, handlerData).run(kForexUtils.context)
+    runOrderTask(orderCallWithEventHandlerInitialization, taskParams.callParams.taskData).run(kForexUtils.context)
 }
 
 val IOrder.isOpened

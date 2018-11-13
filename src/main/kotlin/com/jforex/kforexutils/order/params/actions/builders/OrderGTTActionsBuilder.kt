@@ -10,7 +10,7 @@ class OrderGTTActionsBuilder : OrderTaskActionsBuilderBase()
     var onGTTChange = emptyOrderEventConsumer
 
     private fun build() = OrderGTTActions(
-        taskActions = taskActions,
+        taskData = taskActions,
         onGTTChange = onGTTChange
     )
 

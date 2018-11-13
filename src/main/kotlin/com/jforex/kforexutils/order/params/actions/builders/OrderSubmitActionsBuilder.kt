@@ -12,7 +12,7 @@ class OrderSubmitActionsBuilder : OrderTaskActionsBuilderBase()
     var onFullFill = emptyOrderEventConsumer
 
     private fun build() = OrderSubmitActions(
-        taskActions = taskActions,
+        taskData = taskActions,
         onSubmit = onSubmit,
         onPartialFill = onPartialFill,
         onFullFill = onFullFill

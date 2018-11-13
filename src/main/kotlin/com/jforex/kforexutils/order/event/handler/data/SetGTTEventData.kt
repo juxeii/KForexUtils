@@ -3,20 +3,20 @@ package com.jforex.kforexutils.order.event.handler.data
 import com.jforex.kforexutils.misc.KRunnable
 import com.jforex.kforexutils.order.event.OrderEventType
 import com.jforex.kforexutils.order.event.handler.OrderEventHandlerType
-import com.jforex.kforexutils.order.params.actions.OrderTPActions
+import com.jforex.kforexutils.order.params.actions.OrderGTTActions
 
-data class SetTPEventHandlerData(
-    private val actions: OrderTPActions,
+data class SetGTTEventData(
+    private val actions: OrderGTTActions,
     override val retryCall: KRunnable
-) : OrderEventHandlerData {
+) : OrderEventData {
     override val eventHandlers = mapOf(
-        OrderEventType.CHANGED_TP to actions.onTPChange
+        OrderEventType.CHANGED_GTT to actions.onGTTChange
     )
     override val finishEventTypes = setOf(
-        OrderEventType.CHANGED_TP,
+        OrderEventType.CHANGED_GTT,
         OrderEventType.CHANGE_REJECTED
     )
     override val rejectEventType = OrderEventType.CHANGE_REJECTED
-    override val taskActions = actions.taskActions
+    override val taskData = actions.taskData
     override val type = OrderEventHandlerType.CHANGE
 }

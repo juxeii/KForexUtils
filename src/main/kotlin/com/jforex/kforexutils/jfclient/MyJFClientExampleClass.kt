@@ -18,7 +18,7 @@ class MyJFClientExampleClass : JFClientBridge
         ) {
             stopLossPrice = 1.0101
             takeProfitPrice = 2.2989
-            actions {
+            taskData {
                 onSubmit = { println("Order ${it.order.label} has been submitted") }
                 onFullFill = { println("Order ${it.order.label} has been fully filled.") }
             }

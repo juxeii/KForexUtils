@@ -1,8 +1,8 @@
 package com.jforex.kforexutils.order.params
 
-import com.jforex.kforexutils.order.params.actions.OrderTPActions
+import com.jforex.kforexutils.order.params.actions.OrderTaskParams
 
 data class OrderTPParams(
-    val price: Double,
-    val actions: OrderTPActions = OrderTPActions()
+    val tpPrice: Double,
+    val taskParams: OrderTaskParams
 )

@@ -10,7 +10,7 @@ class OrderOpenPriceActionsBuilder : OrderTaskActionsBuilderBase()
     var onOpenPriceChange = emptyOrderEventConsumer
 
     private fun build() = OrderOpenPriceActions(
-        taskActions = taskActions,
+        taskData = taskActions,
         onOpenPriceChange = onOpenPriceChange
     )
 
