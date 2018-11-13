@@ -4,12 +4,12 @@ import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.misc.FieldProperty
 import com.jforex.kforexutils.misc.KForexUtils
 import com.jforex.kforexutils.misc.KRunnable
-import com.jforex.kforexutils.order.event.handler.OrderEventHandler
+import com.jforex.kforexutils.order.event.handler.OrderEventManager
 import com.jforex.kforexutils.order.event.handler.data.OrderEventHandlerData
 import com.jforex.kforexutils.order.task.runOrderTask
 
-internal var IOrder.eventHandler: OrderEventHandler by FieldProperty()
 internal var IOrder.kForexUtils: KForexUtils by FieldProperty()
+internal var IOrder.eventManager: OrderEventManager by FieldProperty()
 
 internal fun IOrder.runTask(
     orderCall: KRunnable,
@@ -18,7 +18,11 @@ internal fun IOrder.runTask(
     val handlerData = handlerDataProvider { runTask(orderCall, handlerDataProvider) }
     val orderCallWithEventHandlerInitialization = {
         orderCall()
-        eventHandler.register(handlerData)
+        val filteredOrderEvents = kForexUtils
+            .orderMessageGateway
+            .observable
+            .filter { it.order == this }
+        eventManager.eventHandlers.accept(handlerData)
         this
     }
     runOrderTask(orderCallWithEventHandlerInitialization, handlerData).run(kForexUtils.context)

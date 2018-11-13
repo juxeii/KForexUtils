@@ -6,10 +6,9 @@ import com.jforex.kforexutils.misc.FieldProperty
 import com.jforex.kforexutils.misc.KCallable
 import com.jforex.kforexutils.misc.KForexUtils
 import com.jforex.kforexutils.misc.KRunnable
-import com.jforex.kforexutils.order.event.handler.OrderEventHandler
-import com.jforex.kforexutils.order.event.handler.OrderEventHandlerQueue
+import com.jforex.kforexutils.order.event.handler.OrderEventManager
 import com.jforex.kforexutils.order.event.handler.data.OrderEventHandlerData
-import com.jforex.kforexutils.order.extension.eventHandler
+import com.jforex.kforexutils.order.extension.eventManager
 import com.jforex.kforexutils.order.extension.kForexUtils
 import com.jforex.kforexutils.order.task.runOrderTask
 
@@ -34,9 +33,11 @@ private fun IEngine.engineCallWithOrderInit(
         .observable
         .filter { it.order == order }
 
-    val handlerQueue = OrderEventHandlerQueue(filteredOrderEvents)
     order.kForexUtils = kForexUtils
-    order.eventHandler = OrderEventHandler(filteredOrderEvents, handlerQueue)
-    order.eventHandler.register(handlerData)
+    order.eventManager = OrderEventManager(filteredOrderEvents)
+    order
+        .eventManager
+        .eventHandlers
+        .accept(handlerData)
     order
 }
