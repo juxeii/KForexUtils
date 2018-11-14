@@ -9,6 +9,6 @@ fun IOrder.setAmount(
     block: OrderAmountParamsBuilder.() -> Unit = {}
 ) = changeOrder(
     order = this,
-    orderCall = { requestedAmount = amount },
+    changeCall = { requestedAmount = amount },
     taskParams = OrderAmountParamsBuilder(block)
 )

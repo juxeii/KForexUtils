@@ -11,6 +11,6 @@ fun IOrder.setOpenPrice(
     block: OrderOpenPriceParamsBuilder.() -> Unit = {}
 ) = changeOrder(
     order = this,
-    orderCall = { setOpenPrice(openPrice, slippage) },
+    changeCall = { setOpenPrice(openPrice, slippage) },
     taskParams = OrderOpenPriceParamsBuilder(block)
 )

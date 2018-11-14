@@ -9,6 +9,6 @@ fun IOrder.setGTT(
     block: OrderGTTParamsBuilder.() -> Unit = {}
 ) = changeOrder(
     order = this,
-    orderCall = { goodTillTime = gtt },
+    changeCall = { goodTillTime = gtt },
     taskParams = OrderGTTParamsBuilder(block)
 )

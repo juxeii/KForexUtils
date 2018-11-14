@@ -13,7 +13,7 @@ fun IOrder.setSL(
     block: OrderSLParamsBuilder.() -> Unit = {}
 ) = changeOrder(
     order = this,
-    orderCall =
+    changeCall =
     {
         setStopLossPrice(
             slPrice,

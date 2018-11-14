@@ -11,7 +11,7 @@ fun IEngine.merge(
     block: OrderMergeParamsBuilder.() -> Unit = {}
 ) = createOrder(
     kForexUtils = kForexUtils,
-    engineCall = {
+    orderCreationCall = {
         mergeOrders(
             label,
             comment,

@@ -10,7 +10,7 @@ fun IOrder.setTP(
     block: OrderTPParamsBuilder.() -> Unit = {}
 ) = changeOrder(
     order = this,
-    orderCall = { takeProfitPrice = tpPrice },
+    changeCall = { takeProfitPrice = tpPrice },
     taskParams = OrderTPParamsBuilder(block)
 )
 

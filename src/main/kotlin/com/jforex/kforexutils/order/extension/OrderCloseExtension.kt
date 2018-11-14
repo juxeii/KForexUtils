@@ -12,6 +12,6 @@ fun IOrder.close(
     block: OrderTPParamsBuilder.() -> Unit = {}
 ) = changeOrder(
     order = this,
-    orderCall = { close(amount, price, slippage) },
+    changeCall = { close(amount, price, slippage) },
     taskParams = OrderTPParamsBuilder(block)
 )

@@ -18,7 +18,7 @@ fun IEngine.submit(
     comment: String = TradingSettings.defaultComment,
     block: OrderSubmitParamsBuilder.() -> Unit = {}
 ) {
-    val engineCall = {
+    val orderCreationCall = {
         submitOrder(
             label,
             instrument,
@@ -34,7 +34,7 @@ fun IEngine.submit(
     }
     createOrder(
         kForexUtils = kForexUtils,
-        engineCall = engineCall,
+        orderCreationCall = orderCreationCall,
         taskParams = OrderSubmitParamsBuilder(block)
     )
 }

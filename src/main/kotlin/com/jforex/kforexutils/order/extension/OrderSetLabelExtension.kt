@@ -9,6 +9,6 @@ fun IOrder.setLabel(
     block: OrderLabelParamsBuilder.() -> Unit = {}
 ) = changeOrder(
     order = this,
-    orderCall = { setLabel(label) },
+    changeCall = { setLabel(label) },
     taskParams = OrderLabelParamsBuilder(block)
 )

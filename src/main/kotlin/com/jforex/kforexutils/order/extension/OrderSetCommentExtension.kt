@@ -9,6 +9,6 @@ fun IOrder.setComment(
     block: OrderCommentParamsBuilder.() -> Unit = {}
 ) = changeOrder(
     order = this,
-    orderCall = { setComment(comment) },
+    changeCall = { setComment(comment) },
     taskParams = OrderCommentParamsBuilder(block)
 )
