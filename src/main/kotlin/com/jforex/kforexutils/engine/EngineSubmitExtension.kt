@@ -17,9 +17,7 @@ fun IEngine.submit(
     goodTillTime: Long = TradingSettings.defaultGTT,
     comment: String = TradingSettings.defaultComment,
     block: OrderSubmitParamsBuilder.() -> Unit = {}
-)
-{
-    val params = OrderSubmitParamsBuilder(block)
+) {
     val engineCall = {
         submitOrder(
             label,
@@ -35,7 +33,8 @@ fun IEngine.submit(
         )
     }
     createOrder(
+        kForexUtils = kForexUtils,
         engineCall = engineCall,
-        taskParams = params
+        taskParams = OrderSubmitParamsBuilder(block)
     )
 }

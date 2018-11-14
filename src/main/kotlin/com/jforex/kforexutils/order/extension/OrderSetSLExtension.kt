@@ -2,6 +2,7 @@ package com.jforex.kforexutils.order.extension
 
 import com.dukascopy.api.IOrder
 import com.dukascopy.api.OfferSide
+import com.jforex.kforexutils.order.changeOrder
 import com.jforex.kforexutils.order.task.builders.OrderSLParamsBuilder
 import com.jforex.kforexutils.settings.TradingSettings
 
@@ -10,7 +11,8 @@ fun IOrder.setSL(
     offerSide: OfferSide = OfferSide.BID,
     trailingStep: Double = TradingSettings.noTrailingStep,
     block: OrderSLParamsBuilder.() -> Unit = {}
-) = runTask(
+) = changeOrder(
+    order = this,
     orderCall =
     {
         setStopLossPrice(

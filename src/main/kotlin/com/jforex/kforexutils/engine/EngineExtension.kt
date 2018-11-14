@@ -1,48 +1,7 @@
 package com.jforex.kforexutils.engine
 
 import com.dukascopy.api.IEngine
-import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.misc.FieldProperty
-import com.jforex.kforexutils.misc.KCallable
 import com.jforex.kforexutils.misc.KForexUtils
-import com.jforex.kforexutils.order.event.handler.OrderEventManager
-import com.jforex.kforexutils.order.extension.eventManager
-import com.jforex.kforexutils.order.extension.kForexUtils
-import com.jforex.kforexutils.order.task.OrderTaskExecutionParams
-import com.jforex.kforexutils.order.task.OrderTaskParams
-import com.jforex.kforexutils.order.task.runOrderTask
 
 internal var IEngine.kForexUtils: KForexUtils by FieldProperty()
-
-internal fun IEngine.createOrder(
-    engineCall: KCallable<IOrder>,
-    taskParams: OrderTaskParams
-)
-{
-    val retryCall = { createOrder(engineCall, taskParams) }
-    val executionParams = OrderTaskExecutionParams(
-        eventParams = taskParams.eventParams,
-        retryCall = retryCall,
-        retryHandler = taskParams.callParams.retryHandler
-    )
-    val engineCallWithOrderInitialization = engineCallWithOrderInit(engineCall, executionParams)
-    runOrderTask(engineCallWithOrderInitialization, taskParams.callParams.callActions).run(kForexUtils.context)
-}
-
-private fun IEngine.engineCallWithOrderInit(
-    engineCall: KCallable<IOrder>,
-    params: OrderTaskExecutionParams
-) = {
-    val order = engineCall()
-    order.kForexUtils = kForexUtils
-    val filteredOrderEvents = getOrderMessages(kForexUtils).filter { it.order == order }
-    order.eventManager = OrderEventManager(filteredOrderEvents)
-    order
-        .eventManager
-        .registerHandler(params)
-    order
-}
-
-private fun getOrderMessages(utils: KForexUtils) = utils
-    .orderMessageGateway
-    .observable

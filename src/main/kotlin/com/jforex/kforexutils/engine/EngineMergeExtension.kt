@@ -9,17 +9,14 @@ fun IEngine.merge(
     orders: Collection<IOrder>,
     comment: String = "",
     block: OrderMergeParamsBuilder.() -> Unit = {}
+) = createOrder(
+    kForexUtils = kForexUtils,
+    engineCall = {
+        mergeOrders(
+            label,
+            comment,
+            orders
+        )
+    },
+    taskParams = OrderMergeParamsBuilder(block)
 )
-{
-    val params = OrderMergeParamsBuilder(block)
-    createOrder(
-        engineCall = {
-            mergeOrders(
-                label,
-                comment,
-                orders
-            )
-        },
-        taskParams = params
-    )
-}
