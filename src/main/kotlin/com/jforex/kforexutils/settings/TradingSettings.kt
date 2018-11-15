@@ -11,4 +11,6 @@ object TradingSettings {
     const val defaultCloseSlippage = 5.0
     const val noTrailingStep = 0.0
     const val defaultOpenPriceSlippage = -1.0
+
+    const val defaultMergeComment = ""
 }

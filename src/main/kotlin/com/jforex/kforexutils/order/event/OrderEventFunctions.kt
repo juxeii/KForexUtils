@@ -9,7 +9,7 @@ import io.reactivex.rxkotlin.subscribeBy
 
 internal fun subscribeToOrderEvents(
     params: OrderTaskExecutionParams,
-    onComplete: KRunnable = {}
+    onComplete: KRunnable
 ) = ReaderApi
     .ask<Observable<OrderEvent>>()
     .map { orderEvents ->
@@ -22,8 +22,8 @@ internal fun subscribeToOrderEvents(
             .subscribeBy(
                 onNext =
                 {
+                    eventHandlers.getValue(it.type)(it)
                     if (it.type in eventData.rejectEventTypes) retryHandler.onRejectEvent(it, params.retryCall)
-                    else eventHandlers.getValue(it.type)(it)
                 },
                 onComplete = { onComplete() })
     }
