@@ -33,8 +33,7 @@ fun IEngine.submit(
         )
     }
     createOrder(
-        kForexUtils = kForexUtils,
         orderCreationCall = orderCreationCall,
         taskParams = OrderSubmitParamsBuilder(block)
-    )
+    ).run(kForexUtils)
 }

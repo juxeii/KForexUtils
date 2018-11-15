@@ -10,7 +10,6 @@ fun IEngine.merge(
     comment: String = "",
     block: OrderMergeParamsBuilder.() -> Unit = {}
 ) = createOrder(
-    kForexUtils = kForexUtils,
     orderCreationCall = {
         mergeOrders(
             label,
@@ -19,4 +18,4 @@ fun IEngine.merge(
         )
     },
     taskParams = OrderMergeParamsBuilder(block)
-)
+).run(kForexUtils)

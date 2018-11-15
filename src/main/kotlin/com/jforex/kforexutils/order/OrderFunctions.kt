@@ -16,8 +16,7 @@ internal fun changeOrder(
         order
     }
     runOrderTask(
-        order.kForexUtils,
         orderCallable,
         taskParams
-    )
+    ).run(order.kForexUtils)
 }
