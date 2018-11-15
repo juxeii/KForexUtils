@@ -15,6 +15,11 @@ internal fun createOrder(
     taskParams: OrderTaskParams
 ) = ReaderApi
     .ask<KForexUtils>()
+    .flatMap { creationCallWithOrderInit(orderCreationCall) }
+    .flatMap { runOrderTask(orderCallable = it, taskParams = taskParams) }
+
+private fun creationCallWithOrderInit(orderCreationCall: KCallable<IOrder>) = ReaderApi
+    .ask<KForexUtils>()
     .map { kForexUtils ->
         {
             val order = orderCreationCall()
@@ -22,4 +27,3 @@ internal fun createOrder(
             order
         }
     }
-    .flatMap { runOrderTask(it, taskParams) }
