@@ -2,14 +2,15 @@ package com.jforex.kforexutils.engine
 
 import com.dukascopy.api.IEngine
 import com.dukascopy.api.IOrder
-import com.jforex.kforexutils.order.task.builders.OrderMergeParamsBuilder
+import com.jforex.kforexutils.order.task.builders.MergeEventParamsBuilder
+import com.jforex.kforexutils.order.task.builders.OrderParamsBuilder
 import com.jforex.kforexutils.settings.TradingSettings
 
 fun IEngine.merge(
     label: String,
     orders: Collection<IOrder>,
     comment: String = TradingSettings.defaultMergeComment,
-    block: OrderMergeParamsBuilder.() -> Unit = {}
+    block: OrderParamsBuilder<MergeEventParamsBuilder>.() -> Unit = {}
 ) = createOrder(
     orderCreationCall = {
         mergeOrders(
@@ -18,5 +19,5 @@ fun IEngine.merge(
             orders
         )
     },
-    taskParams = OrderMergeParamsBuilder(block)
+    taskParams = OrderParamsBuilder(MergeEventParamsBuilder(), block)
 ).run(kForexUtils)

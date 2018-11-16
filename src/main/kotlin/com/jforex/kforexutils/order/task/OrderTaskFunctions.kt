@@ -15,7 +15,7 @@ internal fun runOrderTask(
 ) = ReaderApi
     .ask<KForexUtils>()
     .map { createStrategyCallable(taskParams, orderCallable) }
-    .flatMap { run(taskParams.callActions, it) }
+    .flatMap { run(taskParams.callHandlers, it) }
 
 private fun createStrategyCallable(
     taskParams: OrderTaskParams,
@@ -27,9 +27,9 @@ private fun createStrategyCallable(
 }
 
 private fun run(
-    callActions: OrderCallActions,
+    callHandlers: OrderCallHandlers,
     orderCallable: KCallable<IOrder>
-) = with(callActions) {
+) = with(callHandlers) {
     ReaderApi
         .ask<KForexUtils>()
         .map { onStart() }

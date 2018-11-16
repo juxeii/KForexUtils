@@ -1,8 +1,8 @@
 package com.jforex.kforexutils.order.task
 
-import com.jforex.kforexutils.misc.emptyCallActions
+import com.jforex.kforexutils.misc.emptyCallHandlers
 
 data class OrderTaskParams(
     val eventHandlerParams: OrderEventHandlerParams,
-    val callActions: OrderCallActions = emptyCallActions
+    val callHandlers: OrderCallHandlers = emptyCallHandlers
 )

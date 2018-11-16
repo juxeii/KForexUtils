@@ -2,7 +2,8 @@ package com.jforex.kforexutils.engine
 
 import com.dukascopy.api.IEngine
 import com.dukascopy.api.Instrument
-import com.jforex.kforexutils.order.task.builders.OrderSubmitParamsBuilder
+import com.jforex.kforexutils.order.task.builders.OrderParamsBuilder
+import com.jforex.kforexutils.order.task.builders.SubmitEventParamsBuilder
 import com.jforex.kforexutils.settings.TradingSettings
 
 fun IEngine.submit(
@@ -16,7 +17,7 @@ fun IEngine.submit(
     takeProfitPrice: Double = TradingSettings.noTPPrice,
     goodTillTime: Long = TradingSettings.defaultGTT,
     comment: String = TradingSettings.defaultComment,
-    block: OrderSubmitParamsBuilder.() -> Unit = {}
+    block: OrderParamsBuilder<SubmitEventParamsBuilder>.() -> Unit = {}
 ) {
     val orderCreationCall = {
         submitOrder(
@@ -34,6 +35,6 @@ fun IEngine.submit(
     }
     createOrder(
         orderCreationCall = orderCreationCall,
-        taskParams = OrderSubmitParamsBuilder(block)
+        taskParams = OrderParamsBuilder(SubmitEventParamsBuilder(), block)
     ).run(kForexUtils)
 }

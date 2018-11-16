@@ -2,13 +2,14 @@ package com.jforex.kforexutils.order.extension
 
 import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.order.changeOrder
-import com.jforex.kforexutils.order.task.builders.OrderLabelParamsBuilder
+import com.jforex.kforexutils.order.task.builders.LabelEventParamsBuilder
+import com.jforex.kforexutils.order.task.builders.OrderParamsBuilder
 
 fun IOrder.setLabel(
     label: String,
-    block: OrderLabelParamsBuilder.() -> Unit = {}
+    block: OrderParamsBuilder<LabelEventParamsBuilder>.() -> Unit = {}
 ) = changeOrder(
     order = this,
     changeCall = { setLabel(label) },
-    taskParams = OrderLabelParamsBuilder(block)
+    taskParams = OrderParamsBuilder(LabelEventParamsBuilder(), block)
 )
