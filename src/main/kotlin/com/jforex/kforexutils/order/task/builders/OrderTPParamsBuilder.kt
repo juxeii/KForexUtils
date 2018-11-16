@@ -5,7 +5,7 @@ import com.jforex.kforexutils.misc.emptyCallActions
 import com.jforex.kforexutils.misc.emptyOrderEventConsumer
 import com.jforex.kforexutils.order.event.OrderEventType
 import com.jforex.kforexutils.order.event.handler.data.ChangeEventData
-import com.jforex.kforexutils.order.task.OrderTaskEventParams
+import com.jforex.kforexutils.order.task.OrderEventHandlerParams
 import com.jforex.kforexutils.order.task.OrderTaskParams
 
 @OrderDsl
@@ -14,10 +14,6 @@ class OrderTPParamsBuilder
     private var callActions = emptyCallActions
     var onTPChange = emptyOrderEventConsumer
     var onTPReject = emptyOrderEventConsumer
-    private val eventHandlers = mapOf(
-        OrderEventType.CHANGED_TP to onTPChange,
-        OrderEventType.CHANGE_REJECTED to onTPReject
-    )
 
     fun callActions(block: OrderCallActionsBuilder.() -> Unit)
     {
@@ -26,9 +22,12 @@ class OrderTPParamsBuilder
 
     private fun build() = OrderTaskParams(
         callActions = callActions,
-        eventParams = OrderTaskEventParams(
+        eventHandlerParams = OrderEventHandlerParams(
             eventData = ChangeEventData(OrderEventType.CHANGED_TP),
-            eventHandlers = eventHandlers
+            eventHandlers = mapOf(
+                OrderEventType.CHANGED_TP to onTPChange,
+                OrderEventType.CHANGE_REJECTED to onTPReject
+            )
         )
     )
 

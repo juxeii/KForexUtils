@@ -5,7 +5,7 @@ import com.jforex.kforexutils.misc.emptyCallActions
 import com.jforex.kforexutils.misc.emptyOrderEventConsumer
 import com.jforex.kforexutils.order.event.OrderEventType
 import com.jforex.kforexutils.order.event.handler.data.CloseEventData
-import com.jforex.kforexutils.order.task.OrderTaskEventParams
+import com.jforex.kforexutils.order.task.OrderEventHandlerParams
 import com.jforex.kforexutils.order.task.OrderTaskParams
 
 @OrderDsl
@@ -16,12 +16,6 @@ class OrderCloseParamsBuilder
     var onPartialClose = emptyOrderEventConsumer
     var onCloseReject = emptyOrderEventConsumer
 
-    private val eventHandlers = mapOf(
-        OrderEventType.CLOSE_OK to onClose,
-        OrderEventType.PARTIAL_CLOSE_OK to onPartialClose,
-        OrderEventType.CLOSE_REJECTED to onCloseReject
-    )
-
     fun callActions(block: OrderCallActionsBuilder.() -> Unit)
     {
         callActions = OrderCallActionsBuilder(block)
@@ -29,9 +23,13 @@ class OrderCloseParamsBuilder
 
     private fun build() = OrderTaskParams(
         callActions = callActions,
-        eventParams = OrderTaskEventParams(
+        eventHandlerParams = OrderEventHandlerParams(
             eventData = CloseEventData(),
-            eventHandlers = eventHandlers
+            eventHandlers = mapOf(
+                OrderEventType.CLOSE_OK to onClose,
+                OrderEventType.PARTIAL_CLOSE_OK to onPartialClose,
+                OrderEventType.CLOSE_REJECTED to onCloseReject
+            )
         )
     )
 

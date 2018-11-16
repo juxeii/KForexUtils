@@ -3,6 +3,6 @@ package com.jforex.kforexutils.order.task
 import com.jforex.kforexutils.misc.emptyCallActions
 
 data class OrderTaskParams(
-    val eventParams: OrderTaskEventParams,
+    val eventHandlerParams: OrderEventHandlerParams,
     val callActions: OrderCallActions = emptyCallActions
 )

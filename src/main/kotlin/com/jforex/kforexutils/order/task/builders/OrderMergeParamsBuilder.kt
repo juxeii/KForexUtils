@@ -5,7 +5,7 @@ import com.jforex.kforexutils.misc.emptyCallActions
 import com.jforex.kforexutils.misc.emptyOrderEventConsumer
 import com.jforex.kforexutils.order.event.OrderEventType
 import com.jforex.kforexutils.order.event.handler.data.MergeEventData
-import com.jforex.kforexutils.order.task.OrderTaskEventParams
+import com.jforex.kforexutils.order.task.OrderEventHandlerParams
 import com.jforex.kforexutils.order.task.OrderTaskParams
 
 @OrderDsl
@@ -15,11 +15,6 @@ class OrderMergeParamsBuilder
     var onMerge = emptyOrderEventConsumer
     var onMergeClose = emptyOrderEventConsumer
     var onMergeReject = emptyOrderEventConsumer
-    private val eventHandlers = mapOf(
-        OrderEventType.MERGE_OK to onMerge,
-        OrderEventType.MERGE_CLOSE_OK to onMergeClose,
-        OrderEventType.MERGE_REJECTED to onMergeReject
-    )
 
     fun callActions(block: OrderCallActionsBuilder.() -> Unit)
     {
@@ -28,9 +23,13 @@ class OrderMergeParamsBuilder
 
     private fun build() = OrderTaskParams(
         callActions = callActions,
-        eventParams = OrderTaskEventParams(
+        eventHandlerParams = OrderEventHandlerParams(
             eventData = MergeEventData(),
-            eventHandlers = eventHandlers
+            eventHandlers = mapOf(
+                OrderEventType.MERGE_OK to onMerge,
+                OrderEventType.MERGE_CLOSE_OK to onMergeClose,
+                OrderEventType.MERGE_REJECTED to onMergeReject
+            )
         )
     )
 

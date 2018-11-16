@@ -5,7 +5,7 @@ import com.jforex.kforexutils.misc.emptyCallActions
 import com.jforex.kforexutils.misc.emptyOrderEventConsumer
 import com.jforex.kforexutils.order.event.OrderEventType
 import com.jforex.kforexutils.order.event.handler.data.ChangeEventData
-import com.jforex.kforexutils.order.task.OrderTaskEventParams
+import com.jforex.kforexutils.order.task.OrderEventHandlerParams
 import com.jforex.kforexutils.order.task.OrderTaskParams
 
 @OrderDsl
@@ -14,10 +14,6 @@ class OrderLabelParamsBuilder
     private var callActions = emptyCallActions
     var onLabelChange = emptyOrderEventConsumer
     var onLabelReject = emptyOrderEventConsumer
-    private val eventHandlers = mapOf(
-        OrderEventType.CHANGED_LABEL to onLabelChange,
-        OrderEventType.CHANGE_REJECTED to onLabelReject
-    )
 
     fun callActions(block: OrderCallActionsBuilder.() -> Unit)
     {
@@ -26,9 +22,12 @@ class OrderLabelParamsBuilder
 
     private fun build() = OrderTaskParams(
         callActions = callActions,
-        eventParams = OrderTaskEventParams(
+        eventHandlerParams = OrderEventHandlerParams(
             eventData = ChangeEventData(OrderEventType.CHANGED_LABEL),
-            eventHandlers = eventHandlers
+            eventHandlers = mapOf(
+                OrderEventType.CHANGED_LABEL to onLabelChange,
+                OrderEventType.CHANGE_REJECTED to onLabelReject
+            )
         )
     )
 

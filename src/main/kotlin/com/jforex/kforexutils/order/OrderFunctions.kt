@@ -10,10 +10,13 @@ internal fun changeOrder(
     order: IOrder,
     changeCall: KRunnable,
     taskParams: OrderTaskParams
-) = runOrderTask(
-    orderCallable = changeToCallableCall(order, changeCall),
-    taskParams = taskParams
-).run(order.kForexUtils)
+)
+{
+    runOrderTask(
+        orderCallable = changeToCallableCall(order, changeCall),
+        taskParams = taskParams
+    ).run(order.kForexUtils)
+}
 
 private fun changeToCallableCall(
     order: IOrder,
