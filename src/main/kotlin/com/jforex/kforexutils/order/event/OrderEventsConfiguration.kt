@@ -4,9 +4,9 @@ import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.misc.EventHandlers
 import com.jforex.kforexutils.misc.KRunnable
 
-data class OrderEventsConfigurationParams(
+data class OrderEventsConfiguration(
     val order: IOrder,
-    val eventHandlers: EventHandlers,
-    val finishEventTypes: Set<OrderEventType>,
+    val handlers: EventHandlers,
+    val finishTypes: Set<OrderEventType>,
     val completionCall: KRunnable
 )

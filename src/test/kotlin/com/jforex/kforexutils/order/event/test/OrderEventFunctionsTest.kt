@@ -4,7 +4,7 @@ import com.dukascopy.api.IOrder
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jforex.kforexutils.order.event.OrderEvent
 import com.jforex.kforexutils.order.event.OrderEventType
-import com.jforex.kforexutils.order.event.OrderEventsConfigurationParams
+import com.jforex.kforexutils.order.event.OrderEventsConfiguration
 import com.jforex.kforexutils.order.event.subscribeToOrderEvents
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
@@ -15,10 +15,10 @@ class OrderEventFunctionsTest : StringSpec({
     val orderEvents: PublishRelay<OrderEvent> = PublishRelay.create()
     var handlerWasInvoked = false
     var completionWasInvoked = false
-    val configParams = OrderEventsConfigurationParams(
+    val configParams = OrderEventsConfiguration(
         order = order,
-        eventHandlers = mapOf(OrderEventType.CHANGED_AMOUNT to { (_) -> handlerWasInvoked = true }),
-        finishEventTypes = setOf(OrderEventType.CHANGED_GTT),
+        handlers = mapOf(OrderEventType.CHANGED_AMOUNT to { (_) -> handlerWasInvoked = true }),
+        finishTypes = setOf(OrderEventType.CHANGED_GTT),
         completionCall = { completionWasInvoked = true }
     )
 

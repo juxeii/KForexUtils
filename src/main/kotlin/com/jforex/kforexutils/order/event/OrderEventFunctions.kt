@@ -5,14 +5,14 @@ import io.reactivex.rxkotlin.subscribeBy
 
 internal fun subscribeToOrderEvents(
     orderEvents: Observable<OrderEvent>,
-    params: OrderEventsConfigurationParams
-) = with(params) {
+    configuration: OrderEventsConfiguration
+) = with(configuration) {
     orderEvents
-        .filter { it.order == order }
-        .takeUntil { it.type in finishEventTypes }
-        .filter { it.type in eventHandlers }
+        .filter { orderEvent -> orderEvent.order == order }
+        .takeUntil { orderEvent -> orderEvent.type in finishTypes }
+        .filter { orderEvent -> orderEvent.type in handlers }
         .subscribeBy(
-            onNext = { eventHandlers.getValue(it.type)(it) },
-            onComplete = { completionCall() }
+            onNext = { handlers.getValue(it.type)(it) },
+            onComplete = completionCall
         )
 }
