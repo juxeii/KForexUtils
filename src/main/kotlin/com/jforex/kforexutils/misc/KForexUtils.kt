@@ -8,8 +8,10 @@ import com.jforex.kforexutils.message.MessageGateway
 import com.jforex.kforexutils.message.MessageToOrderEventType
 import com.jforex.kforexutils.order.event.OrderEventGateway
 import com.jforex.kforexutils.order.event.handler.OrderEventHandlerObservables
-import com.jforex.kforexutils.order.event.handler.subscribeToCompletionAndHandlers
+import com.jforex.kforexutils.order.event.subscribeToOrderEvents
 import com.jforex.kforexutils.settings.PlatformSettings
+import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.rxkotlin.zipWith
 import org.aeonbits.owner.ConfigFactory
 
 class KForexUtils(val context: IContext) {
@@ -34,3 +36,13 @@ class KForexUtils(val context: IContext) {
         subscribeToCompletionAndHandlers(handlerObservables)
     }
 }
+
+internal fun subscribeToCompletionAndHandlers(handlerObservables: OrderEventHandlerObservables) =
+    with(handlerObservables) {
+        completionTriggers
+            .zipWith(changeEventHandlers)
+            .map { it.second }
+            .subscribeBy(onNext = { subscribeToOrderEvents(orderEvents = orderEvents, configuration = it) })
+
+        completionTriggers.accept(Unit)
+    }

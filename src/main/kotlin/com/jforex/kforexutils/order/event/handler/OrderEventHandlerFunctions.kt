@@ -1,35 +1,49 @@
 package com.jforex.kforexutils.order.event.handler
 
+import arrow.data.ReaderApi
+import arrow.data.flatMap
+import arrow.data.map
 import com.dukascopy.api.IOrder
+import com.jforex.kforexutils.misc.KForexUtils
+import com.jforex.kforexutils.misc.emptyAction
 import com.jforex.kforexutils.order.event.OrderEventsConfiguration
 import com.jforex.kforexutils.order.event.subscribeToOrderEvents
-import com.jforex.kforexutils.order.extension.kForexUtils
 import com.jforex.kforexutils.order.task.OrderEventHandlerParams
-import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.rxkotlin.zipWith
 
 internal fun registerEventHandlerParams(
     order: IOrder,
     eventHandlerParams: OrderEventHandlerParams
-) = with(order.kForexUtils.handlerObservables) {
-    val eventsConfiguration = OrderEventsConfiguration(
-        order = order,
-        handlers = eventHandlerParams.eventHandlers,
-        finishTypes = eventHandlerParams.eventData.finishEventTypes,
-        completionCall = {}
-    )
-    if (eventHandlerParams.eventData.handlerType == OrderEventHandlerType.CHANGE)
-    {
-        changeEventHandlers.accept(eventsConfiguration.copy(completionCall = { completionTriggers.accept(Unit) }))
-    } else subscribeToOrderEvents(orderEvents = orderEvents, configuration = eventsConfiguration)
-}
+) = ReaderApi
+    .ask<KForexUtils>()
+    .flatMap { createEventsConfiguration(order, eventHandlerParams) }
+    .flatMap { registerForEvents(it, eventHandlerParams.eventData.handlerType) }
 
-internal fun subscribeToCompletionAndHandlers(handlerObservables: OrderEventHandlerObservables) =
-    with(handlerObservables) {
-        completionTriggers
-            .zipWith(changeEventHandlers)
-            .map { it.second }
-            .subscribeBy(onNext = { subscribeToOrderEvents(orderEvents = orderEvents, configuration = it) })
-
-        completionTriggers.accept(Unit)
+internal fun createEventsConfiguration(
+    order: IOrder,
+    eventHandlerParams: OrderEventHandlerParams
+) = ReaderApi
+    .ask<KForexUtils>()
+    .map {
+        OrderEventsConfiguration(
+            order = order,
+            handlers = eventHandlerParams.eventHandlers,
+            finishTypes = eventHandlerParams.eventData.finishEventTypes,
+            completionCall =
+            if (eventHandlerParams.eventData.handlerType == OrderEventHandlerType.CHANGE)
+            {
+                { it.handlerObservables.completionTriggers.accept(Unit) }
+            } else emptyAction
+        )
     }
+
+internal fun registerForEvents(
+    eventsConfiguration: OrderEventsConfiguration,
+    handlerType: OrderEventHandlerType
+) = ReaderApi
+    .ask<KForexUtils>()
+    .map {
+        if (handlerType == OrderEventHandlerType.CHANGE)
+            it.handlerObservables.changeEventHandlers.accept(eventsConfiguration)
+        else subscribeToOrderEvents(it.orderEvents, eventsConfiguration)
+    }
+

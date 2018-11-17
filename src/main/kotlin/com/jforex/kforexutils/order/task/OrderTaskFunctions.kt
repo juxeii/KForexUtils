@@ -12,28 +12,24 @@ import com.jforex.kforexutils.order.event.handler.registerEventHandlerParams
 internal fun runOrderTask(
     orderCallable: KCallable<IOrder>,
     taskParams: OrderTaskParams
-) = ReaderApi
-    .ask<KForexUtils>()
-    .map { createStrategyCallable(taskParams, orderCallable) }
-    .flatMap { run(taskParams.callHandlers, it) }
-
-private fun createStrategyCallable(
-    taskParams: OrderTaskParams,
-    orderCallable: KCallable<IOrder>
-) = {
-    val order = orderCallable()
-    registerEventHandlerParams(order, taskParams.eventHandlerParams)
-    order
-}
-
-private fun run(
-    callHandlers: OrderCallHandlers,
-    orderCallable: KCallable<IOrder>
-) = with(callHandlers) {
+) = with(taskParams.callHandlers) {
+    onStart()
     ReaderApi
         .ask<KForexUtils>()
-        .map { onStart() }
-        .flatMap { executeTaskOnStrategyThreadBlocking(orderCallable) }
-        .map { orderTry -> orderTry.fold({ onError(it) }, { onSuccess(it) }) }
+        .flatMap { extendCallableWithEventHandlerRegistration(taskParams.eventHandlerParams, orderCallable) }
+        .flatMap { executeTaskOnStrategyThreadBlocking(it) }
+        .map { taskTry -> taskTry.fold({ onError(it) }, { onSuccess(it) }) }
 }
 
+private fun extendCallableWithEventHandlerRegistration(
+    eventHandlerParams: OrderEventHandlerParams,
+    orderCallable: KCallable<IOrder>
+) = ReaderApi
+    .ask<KForexUtils>()
+    .map {
+        {
+            val order = orderCallable()
+            registerEventHandlerParams(order, eventHandlerParams)
+            order
+        }
+    }
