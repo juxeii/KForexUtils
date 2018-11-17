@@ -2,9 +2,10 @@ package com.jforex.kforexutils.order.extension
 
 import com.dukascopy.api.IOrder
 import com.dukascopy.api.OfferSide
-import com.jforex.kforexutils.order.changeOrder
+import com.jforex.kforexutils.order.changeToCallableCall
 import com.jforex.kforexutils.order.task.builders.OrderParamsBuilder
 import com.jforex.kforexutils.order.task.builders.SLEventParamsBuilder
+import com.jforex.kforexutils.order.task.runOrderTask
 import com.jforex.kforexutils.settings.TradingSettings
 
 fun IOrder.setSL(
@@ -12,18 +13,19 @@ fun IOrder.setSL(
     offerSide: OfferSide = OfferSide.BID,
     trailingStep: Double = TradingSettings.noTrailingStep,
     block: OrderParamsBuilder<SLEventParamsBuilder>.() -> Unit = {}
-) = changeOrder(
-    order = this,
-    changeCall =
-    {
-        setStopLossPrice(
-            slPrice,
-            offerSide,
-            trailingStep
-        )
-    },
-    taskParams = OrderParamsBuilder(SLEventParamsBuilder(), block)
 )
+{
+    runOrderTask(
+        orderCallable = changeToCallableCall(this) {
+            setStopLossPrice(
+                slPrice,
+                offerSide,
+                trailingStep
+            )
+        },
+        taskParams = OrderParamsBuilder(SLEventParamsBuilder(), block)
+    ).run(kForexUtils)
+}
 
 fun IOrder.removeSL(block: OrderParamsBuilder<SLEventParamsBuilder>.() -> Unit = {}) = setSL(
     TradingSettings.noSLPrice, OfferSide.BID,

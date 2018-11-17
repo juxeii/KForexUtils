@@ -1,15 +1,18 @@
 package com.jforex.kforexutils.order.extension
 
 import com.dukascopy.api.IOrder
-import com.jforex.kforexutils.order.changeOrder
+import com.jforex.kforexutils.order.changeToCallableCall
 import com.jforex.kforexutils.order.task.builders.CommentEventParamsBuilder
 import com.jforex.kforexutils.order.task.builders.OrderParamsBuilder
+import com.jforex.kforexutils.order.task.runOrderTask
 
 fun IOrder.setComment(
     comment: String,
     block: OrderParamsBuilder<CommentEventParamsBuilder>.() -> Unit = {}
-) = changeOrder(
-    order = this,
-    changeCall = { setComment(comment) },
-    taskParams = OrderParamsBuilder(CommentEventParamsBuilder(), block)
 )
+{
+    runOrderTask(
+        orderCallable = changeToCallableCall(this) { setComment(comment) },
+        taskParams = OrderParamsBuilder(CommentEventParamsBuilder(), block)
+    ).run(kForexUtils)
+}

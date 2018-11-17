@@ -2,8 +2,10 @@ package com.jforex.kforexutils.engine
 
 import com.dukascopy.api.IEngine
 import com.dukascopy.api.Instrument
+import com.jforex.kforexutils.order.changeToCallWithOrderInit
 import com.jforex.kforexutils.order.task.builders.OrderParamsBuilder
 import com.jforex.kforexutils.order.task.builders.SubmitEventParamsBuilder
+import com.jforex.kforexutils.order.task.runOrderTask
 import com.jforex.kforexutils.settings.TradingSettings
 
 fun IEngine.submit(
@@ -18,8 +20,9 @@ fun IEngine.submit(
     goodTillTime: Long = TradingSettings.defaultGTT,
     comment: String = TradingSettings.defaultComment,
     block: OrderParamsBuilder<SubmitEventParamsBuilder>.() -> Unit = {}
-) {
-    val orderCreationCall = {
+)
+{
+    val submitCall = {
         submitOrder(
             label,
             instrument,
@@ -33,8 +36,8 @@ fun IEngine.submit(
             comment
         )
     }
-    createOrder(
-        orderCreationCall = orderCreationCall,
+    runOrderTask(
+        orderCallable = changeToCallWithOrderInit(kForexUtils, submitCall),
         taskParams = OrderParamsBuilder(SubmitEventParamsBuilder(), block)
     ).run(kForexUtils)
 }
