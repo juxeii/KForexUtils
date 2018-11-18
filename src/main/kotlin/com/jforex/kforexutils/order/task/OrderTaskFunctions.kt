@@ -29,7 +29,7 @@ private fun extendCallableWithEventHandlerRegistration(
     .map {
         {
             val order = orderCallable()
-            registerEventHandlerParams(order, eventHandlerParams)
+            registerEventHandlerParams(order, eventHandlerParams).run(it)
             order
         }
     }

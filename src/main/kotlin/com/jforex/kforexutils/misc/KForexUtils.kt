@@ -33,16 +33,16 @@ class KForexUtils(val context: IContext) {
 
     init {
         engine.kForexUtils = this
-        subscribeToCompletionAndHandlers(handlerObservables)
+        subscribeToCompletionAndHandlers(this)
     }
 }
 
-internal fun subscribeToCompletionAndHandlers(handlerObservables: OrderEventHandlerObservables) =
-    with(handlerObservables) {
+internal fun subscribeToCompletionAndHandlers(kForexUtils: KForexUtils) =
+    with(kForexUtils.handlerObservables) {
         completionTriggers
             .zipWith(changeEventHandlers)
             .map { it.second }
-            .subscribeBy(onNext = { subscribeToOrderEvents(orderEvents = orderEvents, configuration = it) })
+            .subscribeBy(onNext = { subscribeToOrderEvents(configuration = it).run(kForexUtils) })
 
         completionTriggers.accept(Unit)
     }
