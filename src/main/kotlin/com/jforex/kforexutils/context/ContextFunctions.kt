@@ -11,10 +11,10 @@ internal fun <T> executeTaskOnStrategyThreadBlocking(callable: KCallable<T>) =
     ReaderApi
         .ask<KForexUtils>()
         .map { kForexUtils ->
-            with(kForexUtils.context) {
+            with(kForexUtils) {
                 Try {
-                    if (isStrategyThread(kForexUtils.platformSettings)) callable()
-                    else executeTask(callable).get()
+                    if (isStrategyThread(platformSettings)) callable()
+                    else context.executeTask(callable).get()
                 }
             }
         }

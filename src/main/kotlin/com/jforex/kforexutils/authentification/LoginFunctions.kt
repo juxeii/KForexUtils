@@ -8,7 +8,7 @@ internal fun createLoginData(
     type: LoginType,
     pinProvider: PinProvider,
     platformSettings: PlatformSettings
-): LoginData = LoginData(
+) = LoginData(
     credentials = credentials,
     jnlpAddress = jNLPAddressForLoginType(type, platformSettings),
     maybePin = pinForLoginType(type, pinProvider)
@@ -17,13 +17,12 @@ internal fun createLoginData(
 internal fun jNLPAddressForLoginType(
     type: LoginType,
     platformSettings: PlatformSettings
-) =
-    if (type == LoginType.DEMO) platformSettings.demoConnectURL()
-    else platformSettings.liveConnectURL()
+) = if (type == LoginType.DEMO) platformSettings.demoConnectURL()
+else platformSettings.liveConnectURL()
+
 
 internal fun pinForLoginType(
     type: LoginType,
     pinProvider: PinProvider
-) =
-    if (type == LoginType.DEMO) Option.empty()
-    else Option.just(pinProvider.pin)
+) = if (type == LoginType.DEMO) Option.empty()
+else Option.just(pinProvider.pin)
