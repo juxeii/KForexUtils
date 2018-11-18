@@ -14,10 +14,12 @@ class TPEventParamsBuilder : IParamsBuilder<TPEventParamsBuilder>
 
     private fun getEventHandlerParams() = OrderEventHandlerParams(
         eventData = ChangeEventData(OrderEventType.CHANGED_TP),
-        eventHandlers = mapOf(
-            OrderEventType.CHANGED_TP to onTPChange,
-            OrderEventType.CHANGE_REJECTED to onTPReject
-        )
+        eventHandlers = filterEventHandlers(createMap())
+    )
+
+    private fun createMap() = mapOf(
+        OrderEventType.CHANGED_TP to onTPChange,
+        OrderEventType.CHANGE_REJECTED to onTPReject
     )
 
     override fun build(block: TPEventParamsBuilder.() -> Unit) = apply(block).getEventHandlerParams()

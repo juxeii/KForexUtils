@@ -15,11 +15,13 @@ class CloseEventParamsBuilder : IParamsBuilder<CloseEventParamsBuilder>
 
     private fun getEventHandlerParams() = OrderEventHandlerParams(
         eventData = CloseEventData(),
-        eventHandlers = mapOf(
-            OrderEventType.CLOSE_OK to onClose,
-            OrderEventType.PARTIAL_CLOSE_OK to onPartialClose,
-            OrderEventType.CLOSE_REJECTED to onCloseReject
-        )
+        eventHandlers = filterEventHandlers(createMap())
+    )
+
+    private fun createMap() = mapOf(
+        OrderEventType.CLOSE_OK to onClose,
+        OrderEventType.PARTIAL_CLOSE_OK to onPartialClose,
+        OrderEventType.CLOSE_REJECTED to onCloseReject
     )
 
     override fun build(block: CloseEventParamsBuilder.() -> Unit) = apply(block).getEventHandlerParams()

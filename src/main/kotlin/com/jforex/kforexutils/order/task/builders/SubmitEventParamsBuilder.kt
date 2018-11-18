@@ -15,11 +15,13 @@ class SubmitEventParamsBuilder : IParamsBuilder<SubmitEventParamsBuilder>
 
     private fun getEventHandlerParams() = OrderEventHandlerParams(
         eventData = SubmitEventData(),
-        eventHandlers = mapOf(
-            OrderEventType.SUBMIT_OK to onSubmit,
-            OrderEventType.PARTIALLY_FILLED to onPartialFill,
-            OrderEventType.FULLY_FILLED to onFullFill
-        )
+        eventHandlers = filterEventHandlers(createMap())
+    )
+
+    private fun createMap() = mapOf(
+        OrderEventType.SUBMIT_OK to onSubmit,
+        OrderEventType.PARTIALLY_FILLED to onPartialFill,
+        OrderEventType.FULLY_FILLED to onFullFill
     )
 
     override fun build(block: SubmitEventParamsBuilder.() -> Unit) = apply(block).getEventHandlerParams()

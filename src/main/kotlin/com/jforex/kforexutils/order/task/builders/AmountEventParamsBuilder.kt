@@ -14,10 +14,12 @@ class AmountEventParamsBuilder : IParamsBuilder<AmountEventParamsBuilder>
 
     private fun getEventHandlerParams() = OrderEventHandlerParams(
         eventData = ChangeEventData(OrderEventType.CHANGED_AMOUNT),
-        eventHandlers = mapOf(
-            OrderEventType.CHANGED_AMOUNT to onAmountChange,
-            OrderEventType.CHANGE_REJECTED to onAmountReject
-        )
+        eventHandlers = filterEventHandlers(createMap())
+    )
+
+    private fun createMap() = mapOf(
+        OrderEventType.CHANGED_AMOUNT to onAmountChange,
+        OrderEventType.CHANGE_REJECTED to onAmountReject
     )
 
     override fun build(block: AmountEventParamsBuilder.() -> Unit) = apply(block).getEventHandlerParams()

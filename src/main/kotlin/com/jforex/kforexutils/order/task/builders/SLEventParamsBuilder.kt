@@ -14,10 +14,12 @@ class SLEventParamsBuilder : IParamsBuilder<SLEventParamsBuilder>
 
     private fun getEventHandlerParams() = OrderEventHandlerParams(
         eventData = ChangeEventData(OrderEventType.CHANGED_SL),
-        eventHandlers = mapOf(
-            OrderEventType.CHANGED_SL to onSLChange,
-            OrderEventType.CHANGE_REJECTED to onSLReject
-        )
+        eventHandlers = filterEventHandlers(createMap())
+    )
+
+    private fun createMap() = mapOf(
+        OrderEventType.CHANGED_SL to onSLChange,
+        OrderEventType.CHANGE_REJECTED to onSLReject
     )
 
     override fun build(block: SLEventParamsBuilder.() -> Unit) = apply(block).getEventHandlerParams()

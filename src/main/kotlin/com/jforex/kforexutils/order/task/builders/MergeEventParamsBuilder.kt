@@ -15,11 +15,13 @@ class MergeEventParamsBuilder : IParamsBuilder<MergeEventParamsBuilder>
 
     private fun getEventHandlerParams() = OrderEventHandlerParams(
         eventData = MergeEventData(),
-        eventHandlers = mapOf(
-            OrderEventType.MERGE_OK to onMerge,
-            OrderEventType.MERGE_CLOSE_OK to onMergeClose,
-            OrderEventType.MERGE_REJECTED to onMergeReject
-        )
+        eventHandlers = filterEventHandlers(createMap())
+    )
+
+    private fun createMap() = mapOf(
+        OrderEventType.MERGE_OK to onMerge,
+        OrderEventType.MERGE_CLOSE_OK to onMergeClose,
+        OrderEventType.MERGE_REJECTED to onMergeReject
     )
 
     override fun build(block: MergeEventParamsBuilder.() -> Unit) = apply(block).getEventHandlerParams()

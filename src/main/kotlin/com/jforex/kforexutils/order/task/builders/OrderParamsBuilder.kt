@@ -1,7 +1,9 @@
 package com.jforex.kforexutils.order.task.builders
 
+import com.jforex.kforexutils.misc.EventHandlers
 import com.jforex.kforexutils.misc.OrderDsl
 import com.jforex.kforexutils.misc.emptyCallHandlers
+import com.jforex.kforexutils.misc.emptyOrderEventConsumer
 import com.jforex.kforexutils.order.task.OrderTaskParams
 
 @OrderDsl
@@ -35,3 +37,5 @@ class OrderParamsBuilder<T>(private val params: IParamsBuilder<T>)
             .build()
     }
 }
+
+internal fun filterEventHandlers(handlers: EventHandlers) = handlers.filterValues { it != emptyOrderEventConsumer }

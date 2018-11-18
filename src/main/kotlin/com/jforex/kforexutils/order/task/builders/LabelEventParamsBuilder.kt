@@ -14,10 +14,12 @@ class LabelEventParamsBuilder : IParamsBuilder<LabelEventParamsBuilder>
 
     private fun getEventHandlerParams() = OrderEventHandlerParams(
         eventData = ChangeEventData(OrderEventType.CHANGED_LABEL),
-        eventHandlers = mapOf(
-            OrderEventType.CHANGED_LABEL to onLabelChange,
-            OrderEventType.CHANGE_REJECTED to onLabelReject
-        )
+        eventHandlers = filterEventHandlers(createMap())
+    )
+
+    private fun createMap() = mapOf(
+        OrderEventType.CHANGED_LABEL to onLabelChange,
+        OrderEventType.CHANGE_REJECTED to onLabelReject
     )
 
     override fun build(block: LabelEventParamsBuilder.() -> Unit) = apply(block).getEventHandlerParams()

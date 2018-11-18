@@ -14,10 +14,12 @@ class GTTEventParamsBuilder : IParamsBuilder<GTTEventParamsBuilder>
 
     private fun getEventHandlerParams() = OrderEventHandlerParams(
         eventData = ChangeEventData(OrderEventType.CHANGED_GTT),
-        eventHandlers = mapOf(
-            OrderEventType.CHANGED_GTT to onGTTChange,
-            OrderEventType.CHANGE_REJECTED to onGTTReject
-        )
+        eventHandlers = filterEventHandlers(createMap())
+    )
+
+    private fun createMap() = mapOf(
+        OrderEventType.CHANGED_GTT to onGTTChange,
+        OrderEventType.CHANGE_REJECTED to onGTTReject
     )
 
     override fun build(block: GTTEventParamsBuilder.() -> Unit) = apply(block).getEventHandlerParams()

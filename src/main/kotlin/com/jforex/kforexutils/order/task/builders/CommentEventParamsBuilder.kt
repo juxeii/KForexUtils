@@ -14,10 +14,12 @@ class CommentEventParamsBuilder : IParamsBuilder<CommentEventParamsBuilder>
 
     private fun getEventHandlerParams() = OrderEventHandlerParams(
         eventData = ChangeEventData(OrderEventType.CHANGED_COMMENT),
-        eventHandlers = mapOf(
-            OrderEventType.CHANGED_COMMENT to onCommentChange,
-            OrderEventType.CHANGE_REJECTED to onCommentReject
-        )
+        eventHandlers = filterEventHandlers(createMap())
+    )
+
+    private fun createMap() = mapOf(
+        OrderEventType.CHANGED_COMMENT to onCommentChange,
+        OrderEventType.CHANGE_REJECTED to onCommentReject
     )
 
     override fun build(block: CommentEventParamsBuilder.() -> Unit) = apply(block).getEventHandlerParams()

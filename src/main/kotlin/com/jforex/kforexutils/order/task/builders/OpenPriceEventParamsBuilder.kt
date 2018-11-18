@@ -14,10 +14,12 @@ class OpenPriceEventParamsBuilder : IParamsBuilder<OpenPriceEventParamsBuilder>
 
     private fun getEventHandlerParams() = OrderEventHandlerParams(
         eventData = ChangeEventData(OrderEventType.CHANGED_PRICE),
-        eventHandlers = mapOf(
-            OrderEventType.CHANGED_PRICE to onOpenPriceChange,
-            OrderEventType.CHANGE_REJECTED to onOpenPriceReject
-        )
+        eventHandlers = filterEventHandlers(createMap())
+    )
+
+    private fun createMap() = mapOf(
+        OrderEventType.CHANGED_PRICE to onOpenPriceChange,
+        OrderEventType.CHANGE_REJECTED to onOpenPriceReject
     )
 
     override fun build(block: OpenPriceEventParamsBuilder.() -> Unit) = apply(block).getEventHandlerParams()
