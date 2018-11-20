@@ -13,7 +13,8 @@ import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.rxkotlin.zipWith
 import org.aeonbits.owner.ConfigFactory
 
-class KForexUtils(val context: IContext) {
+class KForexUtils(val context: IContext)
+{
     val engine = context.engine
     private val messagePublisher: PublishRelay<IMessage> = PublishRelay.create()
     val messageGateway = MessageGateway(messagePublisher)
@@ -30,7 +31,8 @@ class KForexUtils(val context: IContext) {
     )
     val platformSettings: PlatformSettings = ConfigFactory.create(PlatformSettings::class.java)
 
-    init {
+    init
+    {
         engine.kForexUtils = this
         subscribeToCompletionAndHandlers(this)
     }

@@ -9,12 +9,13 @@ import com.jforex.kforexutils.order.event.handler.data.ChangeEventData
 import com.jforex.kforexutils.order.task.OrderTaskParams
 import com.jforex.kforexutils.order.task.builders.OrderCallHandlerBuilder
 import com.jforex.kforexutils.order.task.runOrderTask
-import io.reactivex.rxkotlin.cast
+import io.reactivex.Observable
 
+@Suppress("UNCHECKED_CAST")
 fun IOrder.setGTT(
     gtt: Long,
     block: OrderCallHandlerBuilder.() -> Unit = {}
 ) = runOrderTask(
     orderCallable = changeToCallableCall(this) { goodTillTime = gtt },
     taskParams = OrderTaskParams(OrderCallHandlerBuilder(block), ChangeEventData(OrderEventType.CHANGED_GTT))
-).run(kForexUtils).value().cast<OrderGTTEvent>()
+).run(kForexUtils).value() as Observable<OrderGTTEvent>

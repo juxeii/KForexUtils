@@ -45,17 +45,22 @@ private fun createCallable(
     .map { kForexUtils ->
         val callable = {
             val order = orderCallable()
-            val relay = PublishRelay.create<IOrderEvent>()
-            kForexUtils.handlerObservables.eventRelays.accept(relay)
-            val observable = relay
+            var observable: Observable<IOrderEvent>
+            if (eventData.handlerType != OrderEventHandlerType.CHANGE)
+            {
+                observable = kForexUtils.orderEvents
+            } else
+            {
+                val relay = PublishRelay.create<IOrderEvent>()
+                kForexUtils.handlerObservables.eventRelays.accept(relay)
+                observable = relay
+                    .doOnComplete { kForexUtils.handlerObservables.completionTriggers.accept(Unit) }
+            }
+            val observableExt = observable
                 .filter { orderEvent -> orderEvent.order == order }
                 .filter { orderEvent -> orderEvent.type in eventData.allEventTypes }
                 .takeUntil { orderEvent -> orderEvent.type in eventData.finishEventTypes }
-                .doOnComplete {
-                    if (eventData.handlerType == OrderEventHandlerType.CHANGE)
-                        kForexUtils.handlerObservables.completionTriggers.accept(Unit)
-                }
-            TaskCallResult(order, observable)
+            TaskCallResult(order, observableExt)
         }
         { executeTaskOnStrategyThreadBlocking(kForexUtils, callable) }
     }

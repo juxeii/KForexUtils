@@ -10,14 +10,15 @@ import com.jforex.kforexutils.order.task.OrderTaskParams
 import com.jforex.kforexutils.order.task.builders.OrderCallHandlerBuilder
 import com.jforex.kforexutils.order.task.runOrderTask
 import com.jforex.kforexutils.settings.TradingSettings
-import io.reactivex.rxkotlin.cast
+import io.reactivex.Observable
 
+@Suppress("UNCHECKED_CAST")
 fun IOrder.setTP(
     tpPrice: Double,
     block: OrderCallHandlerBuilder.() -> Unit = {}
 ) = runOrderTask(
     orderCallable = changeToCallableCall(this) { takeProfitPrice = tpPrice },
     taskParams = OrderTaskParams(OrderCallHandlerBuilder(block), ChangeEventData(OrderEventType.CHANGED_TP))
-).run(kForexUtils).value().cast<OrderTPEvent>()
+).run(kForexUtils).value() as Observable<OrderTPEvent>
 
 fun IOrder.removeTP(block: OrderCallHandlerBuilder.() -> Unit = {}) = setTP(TradingSettings.noTPPrice, block)

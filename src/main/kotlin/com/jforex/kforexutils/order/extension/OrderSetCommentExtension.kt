@@ -9,12 +9,13 @@ import com.jforex.kforexutils.order.event.handler.data.ChangeEventData
 import com.jforex.kforexutils.order.task.OrderTaskParams
 import com.jforex.kforexutils.order.task.builders.OrderCallHandlerBuilder
 import com.jforex.kforexutils.order.task.runOrderTask
-import io.reactivex.rxkotlin.cast
+import io.reactivex.Observable
 
+@Suppress("UNCHECKED_CAST")
 fun IOrder.setComment(
     comment: String,
     block: OrderCallHandlerBuilder.() -> Unit = {}
 ) = runOrderTask(
     orderCallable = changeToCallableCall(this) { setComment(comment) },
     taskParams = OrderTaskParams(OrderCallHandlerBuilder(block), ChangeEventData(OrderEventType.CHANGED_COMMENT))
-).run(kForexUtils).value().cast<OrderCommentEvent>()
+).run(kForexUtils).value() as Observable<OrderCommentEvent>

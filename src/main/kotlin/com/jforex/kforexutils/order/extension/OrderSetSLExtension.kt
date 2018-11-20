@@ -11,8 +11,9 @@ import com.jforex.kforexutils.order.task.OrderTaskParams
 import com.jforex.kforexutils.order.task.builders.OrderCallHandlerBuilder
 import com.jforex.kforexutils.order.task.runOrderTask
 import com.jforex.kforexutils.settings.TradingSettings
-import io.reactivex.rxkotlin.cast
+import io.reactivex.Observable
 
+@Suppress("UNCHECKED_CAST")
 fun IOrder.setSL(
     slPrice: Double,
     offerSide: OfferSide = OfferSide.BID,
@@ -27,7 +28,7 @@ fun IOrder.setSL(
         )
     },
     taskParams = OrderTaskParams(OrderCallHandlerBuilder(block), ChangeEventData(OrderEventType.CHANGED_SL))
-).run(kForexUtils).value().cast<OrderSLEvent>()
+).run(kForexUtils).value() as Observable<OrderSLEvent>
 
 fun IOrder.removeSL(block: OrderCallHandlerBuilder.() -> Unit = {}) = setSL(
     TradingSettings.noSLPrice, OfferSide.BID,

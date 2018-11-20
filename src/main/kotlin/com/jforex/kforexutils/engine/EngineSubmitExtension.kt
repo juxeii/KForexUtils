@@ -11,8 +11,8 @@ import com.jforex.kforexutils.order.task.builders.OrderCallHandlerBuilder
 import com.jforex.kforexutils.order.task.runOrderTask
 import com.jforex.kforexutils.settings.TradingSettings
 import io.reactivex.Observable
-import io.reactivex.rxkotlin.cast
 
+@Suppress("UNCHECKED_CAST")
 fun IEngine.submit(
     label: String,
     instrument: Instrument,
@@ -44,5 +44,5 @@ fun IEngine.submit(
     return runOrderTask(
         orderCallable = changeToCallWithOrderInit(kForexUtils, submitCall),
         taskParams = OrderTaskParams(OrderCallHandlerBuilder(block), SubmitEventData())
-    ).run(kForexUtils).value().cast<OrderSubmitEvent>()
+    ).run(kForexUtils).value() as Observable<OrderSubmitEvent>
 }
