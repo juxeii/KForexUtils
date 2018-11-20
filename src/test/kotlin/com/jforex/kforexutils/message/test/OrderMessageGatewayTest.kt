@@ -3,6 +3,7 @@ package com.jforex.kforexutils.message.test
 import com.dukascopy.api.IMessage
 import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.message.MessageToOrderEventType
+import com.jforex.kforexutils.order.event.IOrderEvent
 import com.jforex.kforexutils.order.event.OrderEvent
 import com.jforex.kforexutils.order.event.OrderEventGateway
 import com.jforex.kforexutils.order.event.OrderEventType
@@ -24,7 +25,7 @@ class OrderMessageGatewayTest : StringSpec() {
         .observable
         .test()
 
-    private fun subscribeAndPublishMessage(): TestObserver<OrderEvent> {
+    private fun subscribeAndPublishMessage(): TestObserver<IOrderEvent> {
         val testObserver = subscribe()
         messages.onNext(message)
         return testObserver

@@ -7,6 +7,5 @@ interface OrderEventData
 {
     val allEventTypes: Set<OrderEventType>
     val finishEventTypes: Set<OrderEventType>
-    val rejectEventTypes: Set<OrderEventType>
     val handlerType: OrderEventHandlerType
 }

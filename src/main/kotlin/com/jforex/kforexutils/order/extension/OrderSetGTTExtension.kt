@@ -1,18 +1,20 @@
 package com.jforex.kforexutils.order.extension
 
+import arrow.core.value
 import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.order.changeToCallableCall
-import com.jforex.kforexutils.order.task.builders.GTTEventParamsBuilder
-import com.jforex.kforexutils.order.task.builders.OrderParamsBuilder
+import com.jforex.kforexutils.order.event.OrderEventType
+import com.jforex.kforexutils.order.event.OrderGTTEvent
+import com.jforex.kforexutils.order.event.handler.data.ChangeEventData
+import com.jforex.kforexutils.order.task.OrderTaskParams
+import com.jforex.kforexutils.order.task.builders.OrderCallHandlerBuilder
 import com.jforex.kforexutils.order.task.runOrderTask
+import io.reactivex.Observable
 
 fun IOrder.setGTT(
     gtt: Long,
-    block: OrderParamsBuilder<GTTEventParamsBuilder>.() -> Unit = {}
-)
-{
-    runOrderTask(
-        orderCallable = changeToCallableCall(this) { goodTillTime = gtt },
-        taskParams = OrderParamsBuilder(GTTEventParamsBuilder(), block)
-    ).run(kForexUtils)
-}
+    block: OrderCallHandlerBuilder.() -> Unit = {}
+): Observable<in OrderGTTEvent> = runOrderTask(
+    orderCallable = changeToCallableCall(this) { goodTillTime = gtt },
+    taskParams = OrderTaskParams(OrderCallHandlerBuilder(block), ChangeEventData(OrderEventType.CHANGED_GTT))
+).run(kForexUtils).value()

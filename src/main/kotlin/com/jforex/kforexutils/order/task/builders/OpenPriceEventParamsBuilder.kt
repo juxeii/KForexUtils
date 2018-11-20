@@ -3,24 +3,21 @@ package com.jforex.kforexutils.order.task.builders
 import com.jforex.kforexutils.misc.OrderDsl
 import com.jforex.kforexutils.misc.emptyOrderEventConsumer
 import com.jforex.kforexutils.order.event.OrderEventType
-import com.jforex.kforexutils.order.event.handler.data.ChangeEventData
-import com.jforex.kforexutils.order.task.OrderEventHandlerParams
 
 @OrderDsl
-class OpenPriceEventParamsBuilder : IParamsBuilder<OpenPriceEventParamsBuilder>
+class OpenPriceEventParamsBuilder : CommonEventParamsBuilder()
 {
     var onOpenPriceChange = emptyOrderEventConsumer
     var onOpenPriceReject = emptyOrderEventConsumer
 
-    private fun getEventHandlerParams() = OrderEventHandlerParams(
-        eventData = ChangeEventData(OrderEventType.CHANGED_PRICE),
-        eventHandlers = filterEventHandlers(createMap())
-    )
-
-    private fun createMap() = mapOf(
+    override fun createMap() = mapOf(
         OrderEventType.CHANGED_PRICE to onOpenPriceChange,
         OrderEventType.CHANGE_REJECTED to onOpenPriceReject
     )
 
-    override fun build(block: OpenPriceEventParamsBuilder.() -> Unit) = apply(block).getEventHandlerParams()
+    companion object {
+        operator fun invoke(block: OpenPriceEventParamsBuilder.() -> Unit = {}) = OpenPriceEventParamsBuilder()
+            .apply(block)
+            .build()
+    }
 }

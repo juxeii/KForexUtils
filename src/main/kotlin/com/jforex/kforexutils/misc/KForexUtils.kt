@@ -41,8 +41,10 @@ internal fun subscribeToCompletionAndHandlers(kForexUtils: KForexUtils) =
         completionTriggers
             .zipWith(eventRelays)
             .map { it.second }
-            .subscribeBy(onNext = {
-                //subscribeToOrderEvents(configuration = it).run(kForexUtils)
+            .subscribeBy(onNext = { relay ->
+                kForexUtils
+                    .orderEvents
+                    .subscribeBy(onNext = { relay.accept(it) })
             })
 
         completionTriggers.accept(Unit)

@@ -9,15 +9,15 @@ import com.jakewharton.rxrelay2.PublishRelay
 import com.jforex.kforexutils.context.executeTaskOnStrategyThreadBlocking
 import com.jforex.kforexutils.misc.KCallable
 import com.jforex.kforexutils.misc.KForexUtils
-import com.jforex.kforexutils.order.event.OrderEvent
+import com.jforex.kforexutils.order.event.IOrderEvent
+import com.jforex.kforexutils.order.event.handler.OrderEventHandlerType
 import com.jforex.kforexutils.order.event.handler.data.OrderEventData
-import com.jforex.kforexutils.order.event.handler.registerEventRelay
 import io.reactivex.Observable
 import io.reactivex.Single
 
 internal data class TaskCallResult(
     val order: IOrder,
-    val observable: Observable<OrderEvent>
+    val observable: Observable<IOrderEvent>
 )
 
 internal fun runOrderTask(
@@ -45,13 +45,17 @@ private fun createCallable(
     .map { kForexUtils ->
         val callable = {
             val order = orderCallable()
-            val relay = PublishRelay.create<OrderEvent>()
+            val relay = PublishRelay.create<IOrderEvent>()
             val observable =
                 relay
                     .filter { orderEvent -> orderEvent.order == order }
                     .filter { orderEvent -> orderEvent.type in eventData.allEventTypes }
                     .takeUntil { orderEvent -> orderEvent.type in eventData.finishEventTypes }
-            registerEventRelay(relay).run(kForexUtils)
+                    .doOnComplete {
+                        if (eventData.handlerType == OrderEventHandlerType.CHANGE)
+                            kForexUtils.handlerObservables.completionTriggers.accept(Unit)
+                    }
+            kForexUtils.handlerObservables.eventRelays.accept(relay)
             TaskCallResult(order, observable)
         }
         { executeTaskOnStrategyThreadBlocking(kForexUtils, callable) }

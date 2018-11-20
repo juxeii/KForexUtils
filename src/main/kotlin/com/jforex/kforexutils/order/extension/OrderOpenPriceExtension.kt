@@ -1,20 +1,22 @@
 package com.jforex.kforexutils.order.extension
 
+import arrow.core.value
 import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.order.changeToCallableCall
-import com.jforex.kforexutils.order.task.builders.OpenPriceEventParamsBuilder
-import com.jforex.kforexutils.order.task.builders.OrderParamsBuilder
+import com.jforex.kforexutils.order.event.OrderEventType
+import com.jforex.kforexutils.order.event.OrderOpenPriceEvent
+import com.jforex.kforexutils.order.event.handler.data.ChangeEventData
+import com.jforex.kforexutils.order.task.OrderTaskParams
+import com.jforex.kforexutils.order.task.builders.OrderCallHandlerBuilder
 import com.jforex.kforexutils.order.task.runOrderTask
 import com.jforex.kforexutils.settings.TradingSettings
+import io.reactivex.Observable
 
 fun IOrder.setOpenPrice(
     openPrice: Double,
     slippage: Double = TradingSettings.defaultOpenPriceSlippage,
-    block: OrderParamsBuilder<OpenPriceEventParamsBuilder>.() -> Unit = {}
-)
-{
-    runOrderTask(
-        orderCallable = changeToCallableCall(this) { setOpenPrice(openPrice, slippage) },
-        taskParams = OrderParamsBuilder(OpenPriceEventParamsBuilder(), block)
-    ).run(kForexUtils)
-}
+    block: OrderCallHandlerBuilder.() -> Unit = {}
+): Observable<in OrderOpenPriceEvent> = runOrderTask(
+    orderCallable = changeToCallableCall(this) { setOpenPrice(openPrice, slippage) },
+    taskParams = OrderTaskParams(OrderCallHandlerBuilder(block), ChangeEventData(OrderEventType.CHANGED_PRICE))
+).run(kForexUtils).value()

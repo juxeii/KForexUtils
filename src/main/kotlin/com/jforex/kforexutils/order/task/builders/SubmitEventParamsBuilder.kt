@@ -3,26 +3,22 @@ package com.jforex.kforexutils.order.task.builders
 import com.jforex.kforexutils.misc.OrderDsl
 import com.jforex.kforexutils.misc.emptyOrderEventConsumer
 import com.jforex.kforexutils.order.event.OrderEventType
-import com.jforex.kforexutils.order.event.handler.data.SubmitEventData
-import com.jforex.kforexutils.order.task.OrderEventHandlerParams
 
 @OrderDsl
-class SubmitEventParamsBuilder : IParamsBuilder<SubmitEventParamsBuilder>
-{
+class SubmitEventParamsBuilder : CommonEventParamsBuilder() {
     var onSubmit = emptyOrderEventConsumer
     var onPartialFill = emptyOrderEventConsumer
     var onFullFill = emptyOrderEventConsumer
 
-    private fun getEventHandlerParams() = OrderEventHandlerParams(
-        eventData = SubmitEventData(),
-        eventHandlers = filterEventHandlers(createMap())
-    )
-
-    private fun createMap() = mapOf(
+    override fun createMap() = mapOf(
         OrderEventType.SUBMIT_OK to onSubmit,
         OrderEventType.PARTIALLY_FILLED to onPartialFill,
         OrderEventType.FULLY_FILLED to onFullFill
     )
 
-    override fun build(block: SubmitEventParamsBuilder.() -> Unit) = apply(block).getEventHandlerParams()
+    companion object {
+        operator fun invoke(block: SubmitEventParamsBuilder.() -> Unit = {}) = SubmitEventParamsBuilder()
+            .apply(block)
+            .build()
+    }
 }

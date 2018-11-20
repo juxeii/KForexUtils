@@ -9,6 +9,5 @@ class ChangeEventData(changedType: OrderEventType) : OrderEventData {
         OrderEventType.CHANGE_REJECTED
     )
     override val finishEventTypes = allEventTypes
-    override val rejectEventTypes = setOf(OrderEventType.CHANGE_REJECTED)
     override val handlerType = OrderEventHandlerType.CHANGE
 }
