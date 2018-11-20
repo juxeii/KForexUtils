@@ -11,13 +11,15 @@ import com.jforex.kforexutils.order.task.builders.OrderCallHandlerBuilder
 import com.jforex.kforexutils.order.task.runOrderTask
 import com.jforex.kforexutils.settings.TradingSettings
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 
 fun IEngine.merge(
     label: String,
     orders: Collection<IOrder>,
     comment: String = TradingSettings.defaultMergeComment,
     block: OrderCallHandlerBuilder.() -> Unit = {}
-): Observable<in OrderMergeEvent> {
+): Observable<OrderMergeEvent>
+{
     val mergeCall = {
         mergeOrders(
             label,
@@ -28,5 +30,5 @@ fun IEngine.merge(
     return runOrderTask(
         orderCallable = changeToCallWithOrderInit(kForexUtils, mergeCall),
         taskParams = OrderTaskParams(OrderCallHandlerBuilder(block), MergeEventData())
-    ).run(kForexUtils).value()
+    ).run(kForexUtils).value().cast<OrderMergeEvent>()
 }

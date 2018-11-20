@@ -10,13 +10,13 @@ import com.jforex.kforexutils.order.task.OrderTaskParams
 import com.jforex.kforexutils.order.task.builders.OrderCallHandlerBuilder
 import com.jforex.kforexutils.order.task.runOrderTask
 import com.jforex.kforexutils.settings.TradingSettings
-import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 
 fun IOrder.setOpenPrice(
     openPrice: Double,
     slippage: Double = TradingSettings.defaultOpenPriceSlippage,
     block: OrderCallHandlerBuilder.() -> Unit = {}
-): Observable<in OrderOpenPriceEvent> = runOrderTask(
+) = runOrderTask(
     orderCallable = changeToCallableCall(this) { setOpenPrice(openPrice, slippage) },
     taskParams = OrderTaskParams(OrderCallHandlerBuilder(block), ChangeEventData(OrderEventType.CHANGED_PRICE))
-).run(kForexUtils).value()
+).run(kForexUtils).value().cast<OrderOpenPriceEvent>()

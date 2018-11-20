@@ -5,11 +5,13 @@ import com.dukascopy.api.IOrder
 import com.dukascopy.api.OfferSide
 import com.jforex.kforexutils.order.changeToCallableCall
 import com.jforex.kforexutils.order.event.OrderEventType
+import com.jforex.kforexutils.order.event.OrderSLEvent
 import com.jforex.kforexutils.order.event.handler.data.ChangeEventData
 import com.jforex.kforexutils.order.task.OrderTaskParams
 import com.jforex.kforexutils.order.task.builders.OrderCallHandlerBuilder
 import com.jforex.kforexutils.order.task.runOrderTask
 import com.jforex.kforexutils.settings.TradingSettings
+import io.reactivex.rxkotlin.cast
 
 fun IOrder.setSL(
     slPrice: Double,
@@ -25,7 +27,7 @@ fun IOrder.setSL(
         )
     },
     taskParams = OrderTaskParams(OrderCallHandlerBuilder(block), ChangeEventData(OrderEventType.CHANGED_SL))
-).run(kForexUtils).value()
+).run(kForexUtils).value().cast<OrderSLEvent>()
 
 fun IOrder.removeSL(block: OrderCallHandlerBuilder.() -> Unit = {}) = setSL(
     TradingSettings.noSLPrice, OfferSide.BID,

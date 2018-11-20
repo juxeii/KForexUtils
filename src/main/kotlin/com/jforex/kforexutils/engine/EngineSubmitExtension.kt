@@ -11,6 +11,7 @@ import com.jforex.kforexutils.order.task.builders.OrderCallHandlerBuilder
 import com.jforex.kforexutils.order.task.runOrderTask
 import com.jforex.kforexutils.settings.TradingSettings
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 
 fun IEngine.submit(
     label: String,
@@ -24,7 +25,8 @@ fun IEngine.submit(
     goodTillTime: Long = TradingSettings.defaultGTT,
     comment: String = TradingSettings.defaultComment,
     block: OrderCallHandlerBuilder.() -> Unit = {}
-): Observable<in OrderSubmitEvent> {
+): Observable<OrderSubmitEvent>
+{
     val submitCall = {
         submitOrder(
             label,
@@ -42,5 +44,5 @@ fun IEngine.submit(
     return runOrderTask(
         orderCallable = changeToCallWithOrderInit(kForexUtils, submitCall),
         taskParams = OrderTaskParams(OrderCallHandlerBuilder(block), SubmitEventData())
-    ).run(kForexUtils).value()
+    ).run(kForexUtils).value().cast<OrderSubmitEvent>()
 }

@@ -9,12 +9,12 @@ import com.jforex.kforexutils.order.event.handler.data.ChangeEventData
 import com.jforex.kforexutils.order.task.OrderTaskParams
 import com.jforex.kforexutils.order.task.builders.OrderCallHandlerBuilder
 import com.jforex.kforexutils.order.task.runOrderTask
-import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 
 fun IOrder.setAmount(
     amount: Double,
     block: OrderCallHandlerBuilder.() -> Unit = {}
-): Observable<in OrderAmountEvent> = runOrderTask(
+) = runOrderTask(
     orderCallable = changeToCallableCall(this) { requestedAmount = amount },
     taskParams = OrderTaskParams(OrderCallHandlerBuilder(block), ChangeEventData(OrderEventType.CHANGED_AMOUNT))
-).run(kForexUtils).value()
+).run(kForexUtils).value().cast<OrderAmountEvent>()
