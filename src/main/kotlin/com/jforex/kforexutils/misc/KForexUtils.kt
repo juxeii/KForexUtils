@@ -8,7 +8,6 @@ import com.jforex.kforexutils.message.MessageGateway
 import com.jforex.kforexutils.message.MessageToOrderEventType
 import com.jforex.kforexutils.order.event.OrderEventGateway
 import com.jforex.kforexutils.order.event.handler.OrderEventHandlerObservables
-import com.jforex.kforexutils.order.event.subscribeToOrderEvents
 import com.jforex.kforexutils.settings.PlatformSettings
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.rxkotlin.zipWith
@@ -27,7 +26,7 @@ class KForexUtils(val context: IContext) {
     val handlerObservables = OrderEventHandlerObservables(
         orderEvents = orderEvents,
         completionTriggers = PublishRelay.create(),
-        changeEventHandlers = PublishRelay.create()
+        eventRelays = PublishRelay.create()
     )
     val platformSettings: PlatformSettings = ConfigFactory.create(PlatformSettings::class.java)
 
@@ -40,9 +39,11 @@ class KForexUtils(val context: IContext) {
 internal fun subscribeToCompletionAndHandlers(kForexUtils: KForexUtils) =
     with(kForexUtils.handlerObservables) {
         completionTriggers
-            .zipWith(changeEventHandlers)
+            .zipWith(eventRelays)
             .map { it.second }
-            .subscribeBy(onNext = { subscribeToOrderEvents(configuration = it).run(kForexUtils) })
+            .subscribeBy(onNext = {
+                //subscribeToOrderEvents(configuration = it).run(kForexUtils)
+            })
 
         completionTriggers.accept(Unit)
     }

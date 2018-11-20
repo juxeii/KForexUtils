@@ -1,6 +1,5 @@
 package com.jforex.kforexutils.context
 
-import arrow.core.Try
 import arrow.data.ReaderApi
 import arrow.data.map
 import com.jforex.kforexutils.misc.KCallable
@@ -12,9 +11,15 @@ internal fun <T> executeTaskOnStrategyThreadBlocking(callable: KCallable<T>) =
         .ask<KForexUtils>()
         .map { kForexUtils ->
             with(kForexUtils) {
-                Try {
-                    if (isStrategyThread(platformSettings)) callable()
-                    else context.executeTask(callable).get()
-                }
+                if (isStrategyThread(platformSettings)) callable()
+                else context.executeTask(callable).get()
             }
         }
+
+internal fun <T> executeTaskOnStrategyThreadBlocking(
+    kForexUtils: KForexUtils,
+    callable: KCallable<T>
+) = with(kForexUtils) {
+    if (isStrategyThread(platformSettings)) callable()
+    else context.executeTask(callable).get()
+}

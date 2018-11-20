@@ -1,35 +1,58 @@
 package com.jforex.kforexutils.order.task
 
+import arrow.data.Reader
 import arrow.data.ReaderApi
 import arrow.data.flatMap
 import arrow.data.map
 import com.dukascopy.api.IOrder
+import com.jakewharton.rxrelay2.PublishRelay
 import com.jforex.kforexutils.context.executeTaskOnStrategyThreadBlocking
 import com.jforex.kforexutils.misc.KCallable
 import com.jforex.kforexutils.misc.KForexUtils
-import com.jforex.kforexutils.order.event.handler.registerEventHandlerParams
+import com.jforex.kforexutils.order.event.OrderEvent
+import com.jforex.kforexutils.order.event.handler.data.OrderEventData
+import com.jforex.kforexutils.order.event.handler.registerEventRelay
+import io.reactivex.Observable
+import io.reactivex.Single
+
+internal data class TaskCallResult(
+    val order: IOrder,
+    val observable: Observable<OrderEvent>
+)
 
 internal fun runOrderTask(
     orderCallable: KCallable<IOrder>,
     taskParams: OrderTaskParams
 ) = with(taskParams.callHandlers) {
-    onStart()
     ReaderApi
         .ask<KForexUtils>()
-        .flatMap { extendCallableWithEventHandlerRegistration(taskParams.eventHandlerParams, orderCallable) }
-        .flatMap { executeTaskOnStrategyThreadBlocking(it) }
-        .map { taskTry -> taskTry.fold({ onError(it) }, { onSuccess(it) }) }
+        .flatMap { createCallable(taskParams.eventData, orderCallable) }
+        .map { callable ->
+            Single
+                .fromCallable(callable)
+                .doOnSubscribe { onStart() }
+                .doOnError { onError(it) }
+                .doOnSuccess { onSuccess(it.order) }
+                .flatMapObservable { it.observable }
+        }
 }
 
-private fun extendCallableWithEventHandlerRegistration(
-    eventHandlerParams: OrderEventHandlerParams,
+private fun createCallable(
+    eventData: OrderEventData,
     orderCallable: KCallable<IOrder>
-) = ReaderApi
+): Reader<KForexUtils, KCallable<TaskCallResult>> = ReaderApi
     .ask<KForexUtils>()
-    .map {
-        {
+    .map { kForexUtils ->
+        val callable = {
             val order = orderCallable()
-            registerEventHandlerParams(order, eventHandlerParams).run(it)
-            order
+            val relay = PublishRelay.create<OrderEvent>()
+            val observable =
+                relay
+                    .filter { orderEvent -> orderEvent.order == order }
+                    .filter { orderEvent -> orderEvent.type in eventData.allEventTypes }
+                    .takeUntil { orderEvent -> orderEvent.type in eventData.finishEventTypes }
+            registerEventRelay(relay).run(kForexUtils)
+            TaskCallResult(order, observable)
         }
+        { executeTaskOnStrategyThreadBlocking(kForexUtils, callable) }
     }
