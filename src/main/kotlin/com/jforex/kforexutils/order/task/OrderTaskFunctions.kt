@@ -49,6 +49,12 @@ private fun createCallable(
                 .filter { orderEvent -> orderEvent.order == order }
                 .filter { orderEvent -> orderEvent.type in eventData.allEventTypes }
                 .takeUntil { orderEvent -> orderEvent.type in eventData.finishEventTypes }
+                .doOnComplete {
+                    if (eventData.handlerType == OrderEventHandlerType.CHANGE)
+                    {
+                        kForexUtils.handlerObservables.completionTriggers.accept(Unit)
+                    }
+                }
             TaskCallResult(order, observable)
         }
         { executeTaskOnStrategyThreadBlocking(kForexUtils, callable) }
@@ -62,6 +68,6 @@ private fun createBaseObservable(eventData: OrderEventData) = ReaderApi
         {
             val relay = PublishRelay.create<IOrderEvent>()
             kForexUtils.handlerObservables.eventRelays.accept(relay)
-            relay.doOnComplete { kForexUtils.handlerObservables.completionTriggers.accept(Unit) }
+            relay
         }
     }
