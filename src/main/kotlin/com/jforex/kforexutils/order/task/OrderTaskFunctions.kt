@@ -1,8 +1,8 @@
 package com.jforex.kforexutils.order.task
 
+import arrow.core.value
 import arrow.data.Reader
 import arrow.data.ReaderApi
-import arrow.data.flatMap
 import arrow.data.map
 import com.dukascopy.api.IOrder
 import com.jakewharton.rxrelay2.PublishRelay
@@ -24,9 +24,7 @@ internal fun runOrderTask(
     orderCallable: KCallable<IOrder>,
     taskParams: OrderTaskParams
 ) = with(taskParams.callHandlers) {
-    ReaderApi
-        .ask<KForexUtils>()
-        .flatMap { createCallable(taskParams.eventData, orderCallable) }
+    createCallable(taskParams.eventData, orderCallable)
         .map { callable ->
             Single
                 .fromCallable(callable)
@@ -45,22 +43,25 @@ private fun createCallable(
     .map { kForexUtils ->
         val callable = {
             val order = orderCallable()
-            var observable: Observable<IOrderEvent>
-            if (eventData.handlerType != OrderEventHandlerType.CHANGE)
-            {
-                observable = kForexUtils.orderEvents
-            } else
-            {
-                val relay = PublishRelay.create<IOrderEvent>()
-                kForexUtils.handlerObservables.eventRelays.accept(relay)
-                observable = relay
-                    .doOnComplete { kForexUtils.handlerObservables.completionTriggers.accept(Unit) }
-            }
-            val observableExt = observable
+            val observable = createBaseObservable(eventData)
+                .run(kForexUtils)
+                .value()
                 .filter { orderEvent -> orderEvent.order == order }
                 .filter { orderEvent -> orderEvent.type in eventData.allEventTypes }
                 .takeUntil { orderEvent -> orderEvent.type in eventData.finishEventTypes }
-            TaskCallResult(order, observableExt)
+            TaskCallResult(order, observable)
         }
         { executeTaskOnStrategyThreadBlocking(kForexUtils, callable) }
+    }
+
+private fun createBaseObservable(eventData: OrderEventData) = ReaderApi
+    .ask<KForexUtils>()
+    .map { kForexUtils ->
+        if (eventData.handlerType != OrderEventHandlerType.CHANGE) kForexUtils.orderEvents
+        else
+        {
+            val relay = PublishRelay.create<IOrderEvent>()
+            kForexUtils.handlerObservables.eventRelays.accept(relay)
+            relay.doOnComplete { kForexUtils.handlerObservables.completionTriggers.accept(Unit) }
+        }
     }
