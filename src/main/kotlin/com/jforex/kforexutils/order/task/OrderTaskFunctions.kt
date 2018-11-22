@@ -14,17 +14,22 @@ import com.jforex.kforexutils.order.event.handler.data.OrderEventData
 import io.reactivex.Observable
 import io.reactivex.Single
 
-internal data class TaskCallResult(
+private data class TaskCallResult(
     val order: IOrder,
     val observable: Observable<IOrderEvent>
+)
+
+private data class ObservableParams(
+    val order: IOrder,
+    val eventData: OrderEventData
 )
 
 internal fun runOrderTask(
     orderCallable: KCallable<IOrder>,
     taskParams: OrderTaskParams
-) = with(taskParams.callHandlers) {
-    createStrategyCallable(taskParams.eventData, orderCallable)
-        .map { callable ->
+) = createStrategyCallable(taskParams.eventData, orderCallable)
+    .map { callable ->
+        with(taskParams.callHandlers) {
             Single
                 .fromCallable(callable)
                 .doOnSubscribe { onStart() }
@@ -32,7 +37,7 @@ internal fun runOrderTask(
                 .doOnSuccess { onSuccess(it.order) }
                 .flatMapObservable { it.observable }
         }
-}
+    }
 
 private fun createStrategyCallable(
     eventData: OrderEventData,
@@ -43,7 +48,7 @@ private fun createStrategyCallable(
         {
             executeTaskOnStrategyThreadBlocking {
                 val order = orderCallable()
-                createBaseObservable(eventData, order)
+                createBaseObservable(ObservableParams(order, eventData))
                     .map { TaskCallResult(order, it) }
                     .run(kForexUtils)
                     .value()
@@ -51,38 +56,28 @@ private fun createStrategyCallable(
         }
     }
 
-private fun createBaseObservable(
-    eventData: OrderEventData,
-    order: IOrder
-) =
-    if (eventData.handlerType != OrderEventHandlerType.CHANGE) observableForNonChange(order, eventData)
-    else observableForChange(order, eventData)
+private fun createBaseObservable(params: ObservableParams) =
+    if (params.eventData.handlerType != OrderEventHandlerType.CHANGE) observableForNonChange(params)
+    else observableForChange(params)
 
-private fun observableForNonChange(
-    order: IOrder,
-    eventData: OrderEventData
-) = ReaderApi
+private fun observableForNonChange(params: ObservableParams) = ReaderApi
     .ask<KForexUtils>()
-    .map { configureObservable(it.orderEvents, order, eventData) }
+    .map { configureObservable(it.orderEvents, params) }
 
-private fun observableForChange(
-    order: IOrder,
-    eventData: OrderEventData
-) = ReaderApi
+private fun observableForChange(params: ObservableParams) = ReaderApi
     .ask<KForexUtils>()
     .map {
         val relay = PublishRelay.create<IOrderEvent>()
         with(it.handlerObservables) {
             eventRelays.accept(relay)
-            configureObservable(relay, order, eventData).doOnComplete { completionTriggers.accept(Unit) }
+            configureObservable(relay, params).doOnComplete { completionTriggers.accept(Unit) }
         }
     }
 
 private fun configureObservable(
     baseObservable: Observable<IOrderEvent>,
-    order: IOrder,
-    eventData: OrderEventData
+    params: ObservableParams
 ) = baseObservable
-    .filter { orderEvent -> orderEvent.order == order }
-    .filter { orderEvent -> orderEvent.type in eventData.allEventTypes }
-    .takeUntil { orderEvent -> orderEvent.type in eventData.finishEventTypes }
+    .filter { orderEvent -> orderEvent.order == params.order }
+    .filter { orderEvent -> orderEvent.type in params.eventData.allEventTypes }
+    .takeUntil { orderEvent -> orderEvent.type in params.eventData.finishEventTypes }
