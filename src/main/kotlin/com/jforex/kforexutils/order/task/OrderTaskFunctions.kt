@@ -1,7 +1,6 @@
 package com.jforex.kforexutils.order.task
 
 import arrow.core.value
-import arrow.data.Reader
 import arrow.data.ReaderApi
 import arrow.data.map
 import com.dukascopy.api.IOrder
@@ -24,7 +23,7 @@ internal fun runOrderTask(
     orderCallable: KCallable<IOrder>,
     taskParams: OrderTaskParams
 ) = with(taskParams.callHandlers) {
-    createCallable(taskParams.eventData, orderCallable)
+    createStrategyCallable(taskParams.eventData, orderCallable)
         .map { callable ->
             Single
                 .fromCallable(callable)
@@ -35,39 +34,55 @@ internal fun runOrderTask(
         }
 }
 
-private fun createCallable(
+private fun createStrategyCallable(
     eventData: OrderEventData,
     orderCallable: KCallable<IOrder>
-): Reader<KForexUtils, KCallable<TaskCallResult>> = ReaderApi
+) = ReaderApi
     .ask<KForexUtils>()
     .map { kForexUtils ->
-        val callable = {
-            val order = orderCallable()
-            val observable = createBaseObservable(eventData)
-                .run(kForexUtils)
-                .value()
-                .filter { orderEvent -> orderEvent.order == order }
-                .filter { orderEvent -> orderEvent.type in eventData.allEventTypes }
-                .takeUntil { orderEvent -> orderEvent.type in eventData.finishEventTypes }
-                .doOnComplete {
-                    if (eventData.handlerType == OrderEventHandlerType.CHANGE)
-                    {
-                        kForexUtils.handlerObservables.completionTriggers.accept(Unit)
-                    }
-                }
-            TaskCallResult(order, observable)
+        {
+            executeTaskOnStrategyThreadBlocking {
+                val order = orderCallable()
+                createBaseObservable(eventData, order)
+                    .map { TaskCallResult(order, it) }
+                    .run(kForexUtils)
+                    .value()
+            }.run(kForexUtils).value()
         }
-        { executeTaskOnStrategyThreadBlocking(kForexUtils, callable) }
     }
 
-private fun createBaseObservable(eventData: OrderEventData) = ReaderApi
+private fun createBaseObservable(
+    eventData: OrderEventData,
+    order: IOrder
+) =
+    if (eventData.handlerType != OrderEventHandlerType.CHANGE) observableForNonChange(order, eventData)
+    else observableForChange(order, eventData)
+
+private fun observableForNonChange(
+    order: IOrder,
+    eventData: OrderEventData
+) = ReaderApi
     .ask<KForexUtils>()
-    .map { kForexUtils ->
-        if (eventData.handlerType != OrderEventHandlerType.CHANGE) kForexUtils.orderEvents
-        else
-        {
-            val relay = PublishRelay.create<IOrderEvent>()
-            kForexUtils.handlerObservables.eventRelays.accept(relay)
-            relay
+    .map { configureObservable(it.orderEvents, order, eventData) }
+
+private fun observableForChange(
+    order: IOrder,
+    eventData: OrderEventData
+) = ReaderApi
+    .ask<KForexUtils>()
+    .map {
+        val relay = PublishRelay.create<IOrderEvent>()
+        with(it.handlerObservables) {
+            eventRelays.accept(relay)
+            configureObservable(relay, order, eventData).doOnComplete { completionTriggers.accept(Unit) }
         }
     }
+
+private fun configureObservable(
+    baseObservable: Observable<IOrderEvent>,
+    order: IOrder,
+    eventData: OrderEventData
+) = baseObservable
+    .filter { orderEvent -> orderEvent.order == order }
+    .filter { orderEvent -> orderEvent.type in eventData.allEventTypes }
+    .takeUntil { orderEvent -> orderEvent.type in eventData.finishEventTypes }

@@ -15,11 +15,3 @@ internal fun <T> executeTaskOnStrategyThreadBlocking(callable: KCallable<T>) =
                 else context.executeTask(callable).get()
             }
         }
-
-internal fun <T> executeTaskOnStrategyThreadBlocking(
-    kForexUtils: KForexUtils,
-    callable: KCallable<T>
-) = with(kForexUtils) {
-    if (isStrategyThread(platformSettings)) callable()
-    else context.executeTask(callable).get()
-}
