@@ -18,7 +18,7 @@ repositories {
 val arrowVersion = "0.8.1"
 dependencies {
     compile(kotlin("stdlib-jdk8"))
-    compile("com.dukascopy.api:JForex-API:2.13.60")
+    compile("com.dukascopy.api:JForex-API:2.13.62")
     compile("io.reactivex.rxjava2:rxkotlin:2.3.0")
     compile("org.apache.logging.log4j:log4j-api:2.11.1")
     compile("org.apache.logging.log4j:log4j-core:2.11.1")
