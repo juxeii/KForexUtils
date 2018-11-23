@@ -1,49 +1,77 @@
 package com.jforex.kforexutils.client
 
+import arrow.core.value
+import arrow.data.ReaderApi
+import arrow.data.flatMap
+import arrow.data.map
 import com.dukascopy.api.system.IClient
-import com.jforex.kforexutils.authentification.LoginCredentials
-import com.jforex.kforexutils.authentification.LoginType
-import com.jforex.kforexutils.authentification.PinProvider
-import com.jforex.kforexutils.authentification.createLoginData
+import com.jforex.kforexutils.authentification.*
 import com.jforex.kforexutils.misc.FieldProperty
+import com.jforex.kforexutils.settings.PlatformSettings
 import com.jforex.kforexutils.system.ConnectionState
+import com.jforex.kforexutils.system.KSystemListener
 import io.reactivex.Completable
 
-internal var IClient.context: IClientContext by FieldProperty()
+internal var IClient.systemListener: KSystemListener by FieldProperty()
+internal var IClient.platformSettings: PlatformSettings by FieldProperty()
+internal var IClient.pinProvider: PinProvider by FieldProperty()
 
 fun IClient.login(
     credentials: LoginCredentials,
     type: LoginType = LoginType.DEMO
-): Completable
-{
-    val loginData = createLoginData(
-        type = type,
-        platformSettings = context.platformSettings,
-        pinProvider = PinProvider(this, context.platformSettings.liveConnectURL())
-    )
-    val username = credentials.username
-    val password = credentials.password
-    with(loginData) {
-        return Completable
-            .fromCallable {
+) = createLoginData(type)
+    .flatMap { login(it, credentials) }
+    .run(this)
+    .value()
+
+internal fun login(
+    loginData: LoginData,
+    credentials: LoginCredentials
+) = ReaderApi
+    .ask<IClient>()
+    .flatMap { connect(loginData, credentials) }
+    .flatMap { filterConnectionState(it, ConnectionState.CONNECTED) }
+
+internal fun connect(
+    loginData: LoginData,
+    credentials: LoginCredentials
+) = ReaderApi
+    .ask<IClient>()
+    .map { client ->
+        val username = credentials.username
+        val password = credentials.password
+        Completable.fromCallable {
+            with(loginData) {
                 maybePin.fold(
-                    { connect(jnlpAddress, username, password) },
-                    { pin -> connect(jnlpAddress, username, password, pin) })
-            }.andThen(filterConnectionState(ConnectionState.CONNECTED))
-    }
-}
-
-internal fun IClient.filterConnectionState(state: ConnectionState) =
-    context
-        .systemListener
-        .connectionState
-        .take(1)
-        .map {
-            if (it == state) state
-            else throw Exception("Connection state is not $state!")
+                    { client.connect(jnlpAddress, username, password) },
+                    { pin -> client.connect(jnlpAddress, username, password, pin) })
+            }
         }
-        .ignoreElements()
+    }
 
-fun IClient.logout() = Completable
-    .fromCallable { disconnect() }
-    .andThen(filterConnectionState(ConnectionState.DISCONNECTED))
+fun IClient.logout() = disconnectClient()
+    .flatMap { filterConnectionState(it, ConnectionState.DISCONNECTED) }
+    .run(this)
+    .value()
+
+internal fun disconnectClient() = ReaderApi
+    .ask<IClient>()
+    .map { Completable.fromCallable { it.disconnect() } }
+
+internal fun filterConnectionState(
+    completable: Completable,
+    state: ConnectionState
+) = ReaderApi
+    .ask<IClient>()
+    .map { client ->
+        val waitForState = client
+            .systemListener
+            .connectionState
+            .take(1)
+            .map {
+                if (it == state) state
+                else throw Exception("Connection state is not $state!")
+            }
+            .ignoreElements()
+        completable.andThen(waitForState)
+    }

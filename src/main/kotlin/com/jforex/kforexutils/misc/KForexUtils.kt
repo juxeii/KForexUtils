@@ -4,8 +4,10 @@ import com.dukascopy.api.IContext
 import com.dukascopy.api.IMessage
 import com.dukascopy.api.system.IClient
 import com.jakewharton.rxrelay2.PublishRelay
-import com.jforex.kforexutils.client.IClientContext
-import com.jforex.kforexutils.client.context
+import com.jforex.kforexutils.authentification.PinProvider
+import com.jforex.kforexutils.client.pinProvider
+import com.jforex.kforexutils.client.platformSettings
+import com.jforex.kforexutils.client.systemListener
 import com.jforex.kforexutils.engine.kForexUtils
 import com.jforex.kforexutils.message.MessageGateway
 import com.jforex.kforexutils.message.MessageToOrderEventType
@@ -19,8 +21,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.rxkotlin.zipWith
 import org.aeonbits.owner.ConfigFactory
 
-class KForexUtils(val context: IContext)
-{
+class KForexUtils(val context: IContext) {
     val engine = context.engine
     private val messagePublisher: PublishRelay<IMessage> = PublishRelay.create()
     val messageGateway = MessageGateway(messagePublisher)
@@ -39,31 +40,27 @@ class KForexUtils(val context: IContext)
     val barQuotes: PublishRelay<BarQuote> = PublishRelay.create()
     val tickQuotes: PublishRelay<TickQuote> = PublishRelay.create()
 
-    init
-    {
+    init {
         engine.kForexUtils = this
         subscribeToCompletionAndHandlers(this)
     }
 
-    fun onBarQuote(barQuote: BarQuote)
-    {
+    fun onBarQuote(barQuote: BarQuote) {
         barQuotes.accept(barQuote)
     }
 
-    fun onTickQuote(tickQuote: TickQuote)
-    {
+    fun onTickQuote(tickQuote: TickQuote) {
         tickQuotes.accept(tickQuote)
     }
 
-    companion object
-    {
-        fun initClientInstane(client: IClient)
-        {
+    companion object {
+        fun initClientInstane(client: IClient) {
             val systemListener = KSystemListener()
             val platformSettings: PlatformSettings = ConfigFactory.create(PlatformSettings::class.java)
-            val clientContext = IClientContext(systemListener, platformSettings)
+            client.systemListener = systemListener
+            client.platformSettings = platformSettings
+            client.pinProvider = PinProvider(client, platformSettings.liveConnectURL())
             client.setSystemListener(systemListener)
-            client.context = clientContext
         }
     }
 }

@@ -1,26 +1,25 @@
 package com.jforex.kforexutils.authentification
 
+import arrow.core.None
 import arrow.core.Option
-import com.jforex.kforexutils.settings.PlatformSettings
+import arrow.data.ReaderApi
+import arrow.data.map
+import com.dukascopy.api.system.IClient
+import com.jforex.kforexutils.client.pinProvider
+import com.jforex.kforexutils.client.platformSettings
 
-internal fun createLoginData(
-    type: LoginType,
-    pinProvider: PinProvider,
-    platformSettings: PlatformSettings
-) = LoginData(
-    jnlpAddress = jNLPAddressForLoginType(type, platformSettings),
-    maybePin = pinForLoginType(type, pinProvider)
-)
-
-internal fun jNLPAddressForLoginType(
-    type: LoginType,
-    platformSettings: PlatformSettings
-) = if (type == LoginType.DEMO) platformSettings.demoConnectURL()
-else platformSettings.liveConnectURL()
-
-
-internal fun pinForLoginType(
-    type: LoginType,
-    pinProvider: PinProvider
-) = if (type == LoginType.DEMO) Option.empty()
-else Option.just(pinProvider.pin)
+internal fun createLoginData(type: LoginType) = ReaderApi
+    .ask<IClient>()
+    .map {
+        with(it.platformSettings) {
+            if (type == LoginType.DEMO)
+                LoginData(
+                    jnlpAddress = demoConnectURL(),
+                    maybePin = None
+                )
+            else LoginData(
+                jnlpAddress = liveConnectURL(),
+                maybePin = Option.just(it.pinProvider.pin)
+            )
+        }
+    }

@@ -4,5 +4,5 @@ import arrow.core.Option
 
 data class LoginData(
     val jnlpAddress: String,
-    val maybePin: Option<String> = Option.empty()
+    val maybePin: Option<String>
 )
