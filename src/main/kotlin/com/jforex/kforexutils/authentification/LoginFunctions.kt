@@ -4,12 +4,10 @@ import arrow.core.Option
 import com.jforex.kforexutils.settings.PlatformSettings
 
 internal fun createLoginData(
-    credentials: LoginCredentials,
     type: LoginType,
     pinProvider: PinProvider,
     platformSettings: PlatformSettings
 ) = LoginData(
-    credentials = credentials,
     jnlpAddress = jNLPAddressForLoginType(type, platformSettings),
     maybePin = pinForLoginType(type, pinProvider)
 )

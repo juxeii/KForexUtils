@@ -2,13 +2,19 @@ package com.jforex.kforexutils.misc
 
 import com.dukascopy.api.IContext
 import com.dukascopy.api.IMessage
+import com.dukascopy.api.system.IClient
 import com.jakewharton.rxrelay2.PublishRelay
+import com.jforex.kforexutils.client.IClientContext
+import com.jforex.kforexutils.client.context
 import com.jforex.kforexutils.engine.kForexUtils
 import com.jforex.kforexutils.message.MessageGateway
 import com.jforex.kforexutils.message.MessageToOrderEventType
 import com.jforex.kforexutils.order.event.OrderEventGateway
 import com.jforex.kforexutils.order.event.handler.OrderEventHandlerObservables
+import com.jforex.kforexutils.price.BarQuote
+import com.jforex.kforexutils.price.TickQuote
 import com.jforex.kforexutils.settings.PlatformSettings
+import com.jforex.kforexutils.system.KSystemListener
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.rxkotlin.zipWith
 import org.aeonbits.owner.ConfigFactory
@@ -30,11 +36,35 @@ class KForexUtils(val context: IContext)
         eventRelays = PublishRelay.create()
     )
     val platformSettings: PlatformSettings = ConfigFactory.create(PlatformSettings::class.java)
+    val barQuotes: PublishRelay<BarQuote> = PublishRelay.create()
+    val tickQuotes: PublishRelay<TickQuote> = PublishRelay.create()
 
     init
     {
         engine.kForexUtils = this
         subscribeToCompletionAndHandlers(this)
+    }
+
+    fun onBarQuote(barQuote: BarQuote)
+    {
+        barQuotes.accept(barQuote)
+    }
+
+    fun onTickQuote(tickQuote: TickQuote)
+    {
+        tickQuotes.accept(tickQuote)
+    }
+
+    companion object
+    {
+        fun initClientInstane(client: IClient)
+        {
+            val systemListener = KSystemListener()
+            val platformSettings: PlatformSettings = ConfigFactory.create(PlatformSettings::class.java)
+            val clientContext = IClientContext(systemListener, platformSettings)
+            client.setSystemListener(systemListener)
+            client.context = clientContext
+        }
     }
 }
 

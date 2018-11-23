@@ -1,16 +1,15 @@
 package com.jforex.kforexutils.client
 
 import com.dukascopy.api.system.IClient
-import com.jforex.kforexutils.authentification.*
+import com.jforex.kforexutils.authentification.LoginCredentials
+import com.jforex.kforexutils.authentification.LoginType
+import com.jforex.kforexutils.authentification.PinProvider
+import com.jforex.kforexutils.authentification.createLoginData
 import com.jforex.kforexutils.misc.FieldProperty
-import com.jforex.kforexutils.settings.PlatformSettings
 import com.jforex.kforexutils.system.ConnectionState
 import io.reactivex.Completable
-import io.reactivex.Observable
 
-internal var IClient.connectionState: Observable<ConnectionState> by FieldProperty()
-internal var IClient.pinProvider: PinProvider by FieldProperty()
-internal var IClient.platformSettings: PlatformSettings by FieldProperty()
+internal var IClient.context: IClientContext by FieldProperty()
 
 fun IClient.login(
     credentials: LoginCredentials,
@@ -18,30 +17,26 @@ fun IClient.login(
 ): Completable
 {
     val loginData = createLoginData(
-        credentials = credentials,
         type = type,
-        platformSettings = platformSettings,
-        pinProvider = pinProvider
+        platformSettings = context.platformSettings,
+        pinProvider = PinProvider(this, context.platformSettings.liveConnectURL())
     )
-    return Completable
-        .fromCallable(login(loginData))
-        .andThen(filterConnectedState(ConnectionState.CONNECTED))
-}
-
-internal fun IClient.login(loginData: LoginData) = {
+    val username = credentials.username
+    val password = credentials.password
     with(loginData) {
-        val username = credentials.username
-        val password = credentials.password
-        Completable.fromCallable {
-            maybePin.fold(
-                { connect(jnlpAddress, username, password) },
-                { pin -> connect(jnlpAddress, username, password, pin) })
-        }
+        return Completable
+            .fromCallable {
+                maybePin.fold(
+                    { connect(jnlpAddress, username, password) },
+                    { pin -> connect(jnlpAddress, username, password, pin) })
+            }.andThen(filterConnectionState(ConnectionState.CONNECTED))
     }
 }
 
-internal fun IClient.filterConnectedState(state: ConnectionState) =
-    connectionState
+internal fun IClient.filterConnectionState(state: ConnectionState) =
+    context
+        .systemListener
+        .connectionState
         .take(1)
         .map {
             if (it == state) state
@@ -51,4 +46,4 @@ internal fun IClient.filterConnectedState(state: ConnectionState) =
 
 fun IClient.logout() = Completable
     .fromCallable { disconnect() }
-    .andThen(filterConnectedState(ConnectionState.DISCONNECTED))
+    .andThen(filterConnectionState(ConnectionState.DISCONNECTED))
