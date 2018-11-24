@@ -20,13 +20,9 @@ fun IClient.login(
     credentials: LoginCredentials,
     type: LoginType = LoginType.DEMO
 ) = createLoginData(credentials, type)
-    .flatMap { login(it) }
-    .runId(this)
-
-internal fun login(loginData: LoginData) = ReaderApi
-    .ask<IClient>()
-    .flatMap { connect(loginData) }
+    .flatMap { connect(it) }
     .flatMap { filterConnectionState(it, ConnectionState.CONNECTED) }
+    .runId(this)
 
 internal fun connect(loginData: LoginData) = ReaderApi
     .ask<IClient>()
