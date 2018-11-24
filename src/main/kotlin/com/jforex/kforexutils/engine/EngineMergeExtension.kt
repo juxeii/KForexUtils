@@ -1,6 +1,6 @@
 package com.jforex.kforexutils.engine
 
-import arrow.core.value
+import arrow.data.runId
 import com.dukascopy.api.IEngine
 import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.order.changeToCallWithOrderInit
@@ -30,5 +30,5 @@ fun IEngine.merge(
     return runOrderTask(
         orderCallable = changeToCallWithOrderInit(kForexUtils, mergeCall),
         taskParams = OrderTaskParams(OrderCallHandlerBuilder(block), MergeEventData())
-    ).run(kForexUtils).value() as Observable<OrderMergeEvent>
+    ).runId(kForexUtils) as Observable<OrderMergeEvent>
 }

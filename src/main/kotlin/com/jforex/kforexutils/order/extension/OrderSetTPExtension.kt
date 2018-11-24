@@ -1,6 +1,6 @@
 package com.jforex.kforexutils.order.extension
 
-import arrow.core.value
+import arrow.data.runId
 import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.order.changeToCallableCall
 import com.jforex.kforexutils.order.event.OrderEventType
@@ -19,6 +19,6 @@ fun IOrder.setTP(
 ) = runOrderTask(
     orderCallable = changeToCallableCall(this) { takeProfitPrice = tpPrice },
     taskParams = OrderTaskParams(OrderCallHandlerBuilder(block), ChangeEventData(OrderEventType.CHANGED_TP))
-).run(kForexUtils).value() as Observable<OrderTPEvent>
+).runId(kForexUtils) as Observable<OrderTPEvent>
 
 fun IOrder.removeTP(block: OrderCallHandlerBuilder.() -> Unit = {}) = setTP(TradingSettings.noTPPrice, block)

@@ -1,6 +1,6 @@
 package com.jforex.kforexutils.order.extension
 
-import arrow.core.value
+import arrow.data.runId
 import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.order.changeToCallableCall
 import com.jforex.kforexutils.order.event.OrderCommentEvent
@@ -18,4 +18,4 @@ fun IOrder.setComment(
 ) = runOrderTask(
     orderCallable = changeToCallableCall(this) { setComment(comment) },
     taskParams = OrderTaskParams(OrderCallHandlerBuilder(block), ChangeEventData(OrderEventType.CHANGED_COMMENT))
-).run(kForexUtils).value() as Observable<OrderCommentEvent>
+).runId(kForexUtils) as Observable<OrderCommentEvent>

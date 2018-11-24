@@ -1,6 +1,6 @@
 package com.jforex.kforexutils.order.extension
 
-import arrow.core.value
+import arrow.data.runId
 import com.dukascopy.api.IOrder
 import com.dukascopy.api.OfferSide
 import com.jforex.kforexutils.order.changeToCallableCall
@@ -28,7 +28,7 @@ fun IOrder.setSL(
         )
     },
     taskParams = OrderTaskParams(OrderCallHandlerBuilder(block), ChangeEventData(OrderEventType.CHANGED_SL))
-).run(kForexUtils).value() as Observable<OrderSLEvent>
+).runId(kForexUtils) as Observable<OrderSLEvent>
 
 fun IOrder.removeSL(block: OrderCallHandlerBuilder.() -> Unit = {}) = setSL(
     TradingSettings.noSLPrice, OfferSide.BID,

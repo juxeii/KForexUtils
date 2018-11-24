@@ -1,6 +1,6 @@
 package com.jforex.kforexutils.order.extension
 
-import arrow.core.value
+import arrow.data.runId
 import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.order.changeToCallableCall
 import com.jforex.kforexutils.order.event.OrderAmountEvent
@@ -18,4 +18,4 @@ fun IOrder.setAmount(
 ) = runOrderTask(
     orderCallable = changeToCallableCall(this) { requestedAmount = amount },
     taskParams = OrderTaskParams(OrderCallHandlerBuilder(block), ChangeEventData(OrderEventType.CHANGED_AMOUNT))
-).run(kForexUtils).value() as Observable<OrderAmountEvent>
+).runId(kForexUtils) as Observable<OrderAmountEvent>

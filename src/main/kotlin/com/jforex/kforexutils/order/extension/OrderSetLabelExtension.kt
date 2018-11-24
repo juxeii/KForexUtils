@@ -1,6 +1,6 @@
 package com.jforex.kforexutils.order.extension
 
-import arrow.core.value
+import arrow.data.runId
 import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.order.changeToCallableCall
 import com.jforex.kforexutils.order.event.OrderEventType
@@ -18,4 +18,4 @@ fun IOrder.setLabel(
 ) = runOrderTask(
     orderCallable = changeToCallableCall(this) { setLabel(label) },
     taskParams = OrderTaskParams(OrderCallHandlerBuilder(block), ChangeEventData(OrderEventType.CHANGED_LABEL))
-).run(kForexUtils).value() as Observable<OrderLabelEvent>
+).runId(kForexUtils) as Observable<OrderLabelEvent>

@@ -1,8 +1,8 @@
 package com.jforex.kforexutils.order.task
 
-import arrow.core.value
 import arrow.data.ReaderApi
 import arrow.data.map
+import arrow.data.runId
 import com.dukascopy.api.IOrder
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jforex.kforexutils.context.executeTaskOnStrategyThreadBlocking
@@ -50,9 +50,8 @@ private fun createStrategyCallable(
                 val order = orderCallable()
                 createBaseObservable(ObservableParams(order, eventData))
                     .map { TaskCallResult(order, it) }
-                    .run(kForexUtils)
-                    .value()
-            }.run(kForexUtils).value()
+                    .runId(kForexUtils)
+            }.runId(kForexUtils)
         }
     }
 

@@ -10,7 +10,7 @@ import com.dukascopy.api.system.IClient
 import com.jforex.kforexutils.client.pinProvider
 import com.jforex.kforexutils.client.platformSettings
 
-internal fun ibne(type: LoginType) = ReaderApi
+internal fun createLoginData(type: LoginType) = ReaderApi
     .applicative<IClient>()
     .tupled(jNLPAddressForLoginType(type), pinForLoginType(type))
     .fix()

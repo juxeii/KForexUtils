@@ -4,6 +4,7 @@ import arrow.core.value
 import arrow.data.ReaderApi
 import arrow.data.flatMap
 import arrow.data.map
+import arrow.data.runId
 import com.dukascopy.api.system.IClient
 import com.jforex.kforexutils.authentification.*
 import com.jforex.kforexutils.misc.FieldProperty
@@ -21,8 +22,7 @@ fun IClient.login(
     type: LoginType = LoginType.DEMO
 ) = createLoginData(type)
     .flatMap { login(it, credentials) }
-    .run(this)
-    .value()
+    .runId(this)
 
 internal fun login(
     loginData: LoginData,

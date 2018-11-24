@@ -1,6 +1,6 @@
 package com.jforex.kforexutils.order.extension
 
-import arrow.core.value
+import arrow.data.runId
 import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.order.changeToCallableCall
 import com.jforex.kforexutils.order.event.OrderEventType
@@ -20,4 +20,4 @@ fun IOrder.setOpenPrice(
 ) = runOrderTask(
     orderCallable = changeToCallableCall(this) { setOpenPrice(openPrice, slippage) },
     taskParams = OrderTaskParams(OrderCallHandlerBuilder(block), ChangeEventData(OrderEventType.CHANGED_PRICE))
-).run(kForexUtils).value() as Observable<OrderOpenPriceEvent>
+).runId(kForexUtils) as Observable<OrderOpenPriceEvent>

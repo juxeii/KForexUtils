@@ -1,6 +1,6 @@
 package com.jforex.kforexutils.order.extension
 
-import arrow.core.value
+import arrow.data.runId
 import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.order.changeToCallableCall
 import com.jforex.kforexutils.order.event.OrderCloseEvent
@@ -20,4 +20,4 @@ fun IOrder.close(
 ) = runOrderTask(
     orderCallable = changeToCallableCall(this) { close(amount, price, slippage) },
     taskParams = OrderTaskParams(OrderCallHandlerBuilder(block), CloseEventData())
-).run(kForexUtils).value() as Observable<OrderCloseEvent>
+).runId(kForexUtils) as Observable<OrderCloseEvent>
