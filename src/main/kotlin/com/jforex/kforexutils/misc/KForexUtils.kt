@@ -2,12 +2,7 @@ package com.jforex.kforexutils.misc
 
 import com.dukascopy.api.IContext
 import com.dukascopy.api.IMessage
-import com.dukascopy.api.system.IClient
 import com.jakewharton.rxrelay2.PublishRelay
-import com.jforex.kforexutils.authentification.PinProvider
-import com.jforex.kforexutils.client.pinProvider
-import com.jforex.kforexutils.client.platformSettings
-import com.jforex.kforexutils.client.systemListener
 import com.jforex.kforexutils.engine.kForexUtils
 import com.jforex.kforexutils.message.MessageGateway
 import com.jforex.kforexutils.message.MessageToOrderEventType
@@ -16,7 +11,6 @@ import com.jforex.kforexutils.order.event.handler.OrderEventHandlerObservables
 import com.jforex.kforexutils.price.BarQuote
 import com.jforex.kforexutils.price.TickQuote
 import com.jforex.kforexutils.settings.PlatformSettings
-import com.jforex.kforexutils.system.KSystemListener
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.rxkotlin.zipWith
 import org.aeonbits.owner.ConfigFactory
@@ -51,17 +45,6 @@ class KForexUtils(val context: IContext) {
 
     fun onTickQuote(tickQuote: TickQuote) {
         tickQuotes.accept(tickQuote)
-    }
-
-    companion object {
-        fun initClientInstane(client: IClient) {
-            val systemListener = KSystemListener()
-            val platformSettings: PlatformSettings = ConfigFactory.create(PlatformSettings::class.java)
-            client.systemListener = systemListener
-            client.platformSettings = platformSettings
-            client.pinProvider = PinProvider(client, platformSettings.liveConnectURL())
-            client.setSystemListener(systemListener)
-        }
     }
 }
 
