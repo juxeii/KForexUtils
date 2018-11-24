@@ -10,11 +10,20 @@ import com.dukascopy.api.system.IClient
 import com.jforex.kforexutils.client.pinProvider
 import com.jforex.kforexutils.client.platformSettings
 
-internal fun createLoginData(type: LoginType) = ReaderApi
+internal fun createLoginData(
+    credentials: LoginCredentials,
+    type: LoginType
+) = ReaderApi
     .applicative<IClient>()
     .tupled(jNLPAddressForLoginType(type), pinForLoginType(type))
     .fix()
-    .map { LoginData(jnlpAddress = it.a, maybePin = it.b) }
+    .map {
+        LoginData(
+            credentials = credentials,
+            jnlpAddress = it.a,
+            maybePin = it.b
+        )
+    }
 
 internal fun jNLPAddressForLoginType(type: LoginType) = ReaderApi
     .ask<IClient>()

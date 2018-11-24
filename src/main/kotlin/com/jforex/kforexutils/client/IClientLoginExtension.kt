@@ -1,6 +1,5 @@
 package com.jforex.kforexutils.client
 
-import arrow.core.value
 import arrow.data.ReaderApi
 import arrow.data.flatMap
 import arrow.data.map
@@ -20,26 +19,20 @@ internal var IClient.pinProvider: PinProvider by FieldProperty()
 fun IClient.login(
     credentials: LoginCredentials,
     type: LoginType = LoginType.DEMO
-) = createLoginData(type)
-    .flatMap { login(it, credentials) }
+) = createLoginData(credentials, type)
+    .flatMap { login(it) }
     .runId(this)
 
-internal fun login(
-    loginData: LoginData,
-    credentials: LoginCredentials
-) = ReaderApi
+internal fun login(loginData: LoginData) = ReaderApi
     .ask<IClient>()
-    .flatMap { connect(loginData, credentials) }
+    .flatMap { connect(loginData) }
     .flatMap { filterConnectionState(it, ConnectionState.CONNECTED) }
 
-internal fun connect(
-    loginData: LoginData,
-    credentials: LoginCredentials
-) = ReaderApi
+internal fun connect(loginData: LoginData) = ReaderApi
     .ask<IClient>()
     .map { client ->
-        val username = credentials.username
-        val password = credentials.password
+        val username = loginData.credentials.username
+        val password = loginData.credentials.password
         Completable.fromCallable {
             with(loginData) {
                 maybePin.fold(
@@ -51,8 +44,7 @@ internal fun connect(
 
 fun IClient.logout() = disconnectClient()
     .flatMap { filterConnectionState(it, ConnectionState.DISCONNECTED) }
-    .run(this)
-    .value()
+    .runId(this)
 
 internal fun disconnectClient() = ReaderApi
     .ask<IClient>()
