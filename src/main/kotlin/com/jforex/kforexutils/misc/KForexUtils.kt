@@ -15,7 +15,8 @@ import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.rxkotlin.zipWith
 import org.aeonbits.owner.ConfigFactory
 
-class KForexUtils(val context: IContext) {
+class KForexUtils(val context: IContext)
+{
     val engine = context.engine
     private val messagePublisher: PublishRelay<IMessage> = PublishRelay.create()
     val messageGateway = MessageGateway(messagePublisher)
@@ -34,18 +35,15 @@ class KForexUtils(val context: IContext) {
     val barQuotes: PublishRelay<BarQuote> = PublishRelay.create()
     val tickQuotes: PublishRelay<TickQuote> = PublishRelay.create()
 
-    init {
+    init
+    {
         engine.kForexUtils = this
         subscribeToCompletionAndHandlers(this)
     }
 
-    fun onBarQuote(barQuote: BarQuote) {
-        barQuotes.accept(barQuote)
-    }
+    fun onBarQuote(barQuote: BarQuote) = barQuotes.accept(barQuote)
 
-    fun onTickQuote(tickQuote: TickQuote) {
-        tickQuotes.accept(tickQuote)
-    }
+    fun onTickQuote(tickQuote: TickQuote) = tickQuotes.accept(tickQuote)
 }
 
 internal fun subscribeToCompletionAndHandlers(kForexUtils: KForexUtils) =

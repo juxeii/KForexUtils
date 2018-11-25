@@ -1,20 +1,21 @@
 package com.jforex.kforexutils.currency
 
+import arrow.core.None
 import arrow.core.Option
-import arrow.core.toOption
+import arrow.core.Some
 import com.dukascopy.api.ICurrency
 import com.dukascopy.api.Instrument
 import com.dukascopy.api.JFCurrency
 
-object KCurrency
+object CurrencyFactory
 {
     fun instanceFromName(currencyName: String): ICurrency = JFCurrency.getInstance(currencyName.toUpperCase())
 
     fun fromName(currencyName: String): Option<ICurrency>
     {
         val instance = instanceFromName(currencyName)
-        return if (instance.isIsoCurrency()) instance.toOption()
-        else Option.empty()
+        return if (instance.isIsoCurrency()) Some(instance)
+        else None
     }
 
     fun fromNames(currencyNames: Collection<String>) = currencyNames

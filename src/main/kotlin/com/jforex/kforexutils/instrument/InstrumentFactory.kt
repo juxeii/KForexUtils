@@ -5,10 +5,10 @@ import arrow.core.toOption
 import arrow.syntax.function.memoize
 import com.dukascopy.api.ICurrency
 import com.dukascopy.api.Instrument
-import com.jforex.kforexutils.currency.KCurrency
+import com.jforex.kforexutils.currency.CurrencyFactory
 import com.jforex.kforexutils.misc.MathUtil
 
-object KInstrument
+object InstrumentFactory
 {
     private val memoizeFromCurrencies = { currencyA: ICurrency, currencyB: ICurrency ->
         if (currencyA.equals(currencyB)) None
@@ -36,7 +36,7 @@ object KInstrument
         .toSet()
 
     fun fromCombinedCurrencyNames(currencyNames: Collection<String>) = fromCombinedCurrencies(currencyNames
-        .map(KCurrency::fromName)
+        .map(CurrencyFactory::fromName)
         .flatMap { it.toList() }
         .toSet())
 
