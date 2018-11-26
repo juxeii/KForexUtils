@@ -1,5 +1,6 @@
 package com.jforex.kforexutils.order.task
 
+import arrow.core.Eval
 import arrow.data.ReaderApi
 import arrow.data.map
 import arrow.data.runId
@@ -31,7 +32,7 @@ internal fun runOrderTask(
     .map { callable ->
         with(taskParams.callHandlers) {
             Single
-                .fromCallable(callable)
+                .fromCallable { callable.value() }
                 .doOnSubscribe { onStart() }
                 .doOnError { onError(it) }
                 .doOnSuccess { onSuccess(it.order) }
@@ -45,14 +46,13 @@ private fun createStrategyCallable(
 ) = ReaderApi
     .ask<KForexUtils>()
     .map { kForexUtils ->
-        {
-            executeTaskOnStrategyThreadBlocking {
-                val order = orderCallable()
-                createBaseObservable(ObservableParams(order, eventData))
-                    .map { TaskCallResult(order, it) }
-                    .runId(kForexUtils)
-            }.runId(kForexUtils)
+        val extendedCallable = Eval.always {
+            val order = orderCallable()
+            createBaseObservable(ObservableParams(order, eventData))
+                .map { TaskCallResult(order, it) }
+                .runId(kForexUtils)
         }
+        Eval.always { executeTaskOnStrategyThreadBlocking { extendedCallable.value() }.runId(kForexUtils) }
     }
 
 private fun createBaseObservable(params: ObservableParams) =
