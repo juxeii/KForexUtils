@@ -1,9 +1,7 @@
 package com.jforex.kforexutils.misc
 
-import com.google.common.collect.Sets.newHashSet
 import org.paukov.combinatorics3.Generator
 import java.util.stream.Collectors
-
 
 object MathUtil
 {
@@ -14,6 +12,6 @@ object MathUtil
         .combination(sourceSet)
         .simple(setSize)
         .stream()
-        .map { newHashSet<T>(it) }
+        .map { HashSet(it) }
         .collect(Collectors.toSet())
 }

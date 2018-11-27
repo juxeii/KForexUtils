@@ -22,7 +22,6 @@ dependencies {
     compile("io.reactivex.rxjava2:rxkotlin:2.3.0")
     compile("org.apache.logging.log4j:log4j-api:2.11.1")
     compile("org.apache.logging.log4j:log4j-core:2.11.1")
-    compile("com.google.guava:guava:26.0-jre")
     compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.0.0")
     compile("org.aeonbits.owner:owner:1.0.10")
     compile("com.jakewharton.rxrelay2:rxrelay:2.1.0")
