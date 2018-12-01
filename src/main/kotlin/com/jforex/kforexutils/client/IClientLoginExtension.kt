@@ -38,14 +38,6 @@ internal fun connect(loginData: LoginData) = ReaderApi
         }
     }
 
-fun IClient.logout() = disconnectClient()
-    .flatMap { filterConnectionState(it, ConnectionState.DISCONNECTED) }
-    .runId(this)
-
-internal fun disconnectClient() = ReaderApi
-    .ask<IClient>()
-    .map { Completable.fromCallable { it.disconnect() } }
-
 internal fun filterConnectionState(
     completable: Completable,
     state: ConnectionState
