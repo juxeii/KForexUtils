@@ -1,17 +1,24 @@
 package com.jforex.kforexutils.strategy
 
 import com.dukascopy.api.*
+import com.jakewharton.rxrelay2.BehaviorRelay
 import com.jforex.kforexutils.misc.KForexUtils
 import com.jforex.kforexutils.price.BarQuote
 import com.jforex.kforexutils.price.TickQuote
+import io.reactivex.Observable
+
 
 class KForexUtilsStrategy : IStrategy
 {
-    lateinit var kForexUtils: KForexUtils
+    private val relay: BehaviorRelay<KForexUtils> = BehaviorRelay.create()
+    private lateinit var kForexUtils: KForexUtils
+
+    fun kForexUtilsSingle(): Observable<KForexUtils> = relay
 
     override fun onStart(context: IContext)
     {
         kForexUtils = KForexUtils(context)
+        relay.accept(kForexUtils)
     }
 
     override fun onMessage(message: IMessage)
