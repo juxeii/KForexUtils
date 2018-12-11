@@ -1,16 +1,25 @@
 package com.jforex.kforexutils.client
 
-import arrow.data.ReaderApi
-import arrow.data.flatMap
-import arrow.data.map
-import arrow.data.runId
+import arrow.core.None
+import arrow.core.Option
+import arrow.core.some
+import arrow.data.ReaderT
+import arrow.data.fix
+import arrow.effects.ForIO
+import arrow.effects.IO
+import arrow.effects.fix
+import arrow.effects.instances.io.monad.monad
+import arrow.instances.kleisli.monad.monad
+import arrow.typeclasses.binding
+import com.dukascopy.api.JFException
 import com.dukascopy.api.system.IClient
-import com.jforex.kforexutils.authentification.*
+import com.jforex.kforexutils.authentification.LoginCredentials
+import com.jforex.kforexutils.authentification.LoginType
+import com.jforex.kforexutils.authentification.PinProvider
 import com.jforex.kforexutils.misc.FieldProperty
 import com.jforex.kforexutils.settings.PlatformSettings
 import com.jforex.kforexutils.system.ConnectionState
 import com.jforex.kforexutils.system.KSystemListener
-import io.reactivex.Completable
 
 internal var IClient.systemListener: KSystemListener by FieldProperty()
 internal var IClient.platformSettings: PlatformSettings by FieldProperty()
@@ -19,39 +28,44 @@ internal var IClient.pinProvider: PinProvider by FieldProperty()
 fun IClient.login(
     credentials: LoginCredentials,
     type: LoginType = LoginType.DEMO
-) = createLoginData(credentials, type)
-    .flatMap { connect(it) }
-    .flatMap { filterConnectionState(it, ConnectionState.CONNECTED) }
-    .runId(this)
+) = ReaderT.monad<ForIO, IClient>(IO.monad()).binding {
+    if (type == LoginType.DEMO) connect(credentials).bind()
+    else
+    {
+        val pin = getPinFromDialog.bind()
+        connect(credentials, pin.some()).bind()
+    }
+    waitForConnectState.bind()
+}.fix().run(this).fix()
 
-internal fun connect(loginData: LoginData) = ReaderApi
-    .ask<IClient>()
-    .map { client ->
-        val username = loginData.credentials.username
-        val password = loginData.credentials.password
-        Completable.fromCallable {
-            with(loginData) {
-                maybePin.fold(
-                    { client.connect(jnlpAddress, username, password) },
-                    { pin -> client.connect(jnlpAddress, username, password, pin) })
-            }
+internal fun connect(
+    credentials: LoginCredentials,
+    maybePin: Option<String> = None
+) = ReaderT { client: IClient ->
+    IO {
+        val username = credentials.username
+        val password = credentials.password
+        with(client) {
+            maybePin.fold({ connect(platformSettings.demoConnectURL(), username, password) })
+            { pin -> connect(platformSettings.liveConnectURL(), username, password, pin) }
         }
     }
+}
 
-internal fun filterConnectionState(
-    completable: Completable,
-    state: ConnectionState
-) = ReaderApi
-    .ask<IClient>()
-    .map { client ->
-        val waitForState = client
+internal val waitForConnectState = ReaderT { client: IClient ->
+    IO {
+        client
             .systemListener
             .connectionState
             .take(1)
-            .map {
-                if (it == state) state
-                else throw Exception("Connection state is not $state!")
+            .map { state ->
+                if (state == ConnectionState.CONNECTED) Unit
+                else throw JFException("Wrong connection state $state after login!")
             }
-            .ignoreElements()
-        completable.andThen(waitForState)
+            .blockingFirst()
     }
+}
+
+internal val getPinFromDialog = ReaderT { client: IClient ->
+    IO { client.pinProvider.pin }
+}

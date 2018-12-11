@@ -33,6 +33,7 @@ dependencies {
     compile("io.arrow-kt:arrow-instances-core:$arrowVersion")
     compile("io.arrow-kt:arrow-instances-data:$arrowVersion")
     compile("io.arrow-kt:arrow-effects:$arrowVersion")
+    compile("io.arrow-kt:arrow-effects-instances:$arrowVersion")
     compile("io.arrow-kt:arrow-effects-rx2:$arrowVersion")
     compile("io.arrow-kt:arrow-effects-kotlinx-coroutines:$arrowVersion")
     compile("io.arrow-kt:arrow-optics:$arrowVersion")
