@@ -20,6 +20,7 @@ import com.jforex.kforexutils.misc.FieldProperty
 import com.jforex.kforexutils.settings.PlatformSettings
 import com.jforex.kforexutils.system.ConnectionState
 import com.jforex.kforexutils.system.KSystemListener
+import io.reactivex.Observable
 
 internal var IClient.systemListener: KSystemListener by FieldProperty()
 internal var IClient.platformSettings: PlatformSettings by FieldProperty()
@@ -29,11 +30,17 @@ fun IClient.login(
     credentials: LoginCredentials,
     type: LoginType = LoginType.DEMO
 ) = ReaderT.monad<ForIO, IClient>(IO.monad()).binding {
-    val maybePin = if (type == LoginType.DEMO) None
-    else getPinFromDialog.bind().some()
+    val maybePin =
+        if (type == LoginType.DEMO) None
+        else getPinFromDialog
+            .local<IClient> { pinProvider }
+            .bind()
+            .some()
 
     connect(credentials, maybePin).bind()
-    waitForConnectState.bind()
+    waitForConnectState
+        .local<IClient> { systemListener.connectionState }
+        .bind()
 }.fix().run(this).fix()
 
 internal fun connect(
@@ -50,11 +57,9 @@ internal fun connect(
     }
 }
 
-internal val waitForConnectState = ReaderT { client: IClient ->
+internal val waitForConnectState = ReaderT { connectionState: Observable<ConnectionState> ->
     IO {
-        client
-            .systemListener
-            .connectionState
+        connectionState
             .take(1)
             .map { state ->
                 if (state == ConnectionState.CONNECTED) Unit
@@ -64,6 +69,6 @@ internal val waitForConnectState = ReaderT { client: IClient ->
     }
 }
 
-internal val getPinFromDialog = ReaderT { client: IClient ->
-    IO { client.pinProvider.pin }
+internal val getPinFromDialog = ReaderT { pinProvider: PinProvider ->
+    IO { pinProvider.pin }
 }
