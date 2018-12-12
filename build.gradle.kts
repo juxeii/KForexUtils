@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 group = "com.jforex"
 
 plugins {
-    kotlin("jvm") version "1.3.10"
+    kotlin("jvm") version "1.3.11"
     jacoco
     `maven-publish`
     id("com.github.johnrengelman.shadow") version "4.0.1"
@@ -22,7 +22,7 @@ dependencies {
     compile("io.reactivex.rxjava2:rxkotlin:2.3.0")
     compile("org.apache.logging.log4j:log4j-api:2.11.1")
     compile("org.apache.logging.log4j:log4j-core:2.11.1")
-    compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.0.0")
+    compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.0.1")
     compile("org.aeonbits.owner:owner:1.0.10")
     compile("com.jakewharton.rxrelay2:rxrelay:2.1.0")
     compile("com.github.dpaukov:combinatoricslib3:3.3.0")
