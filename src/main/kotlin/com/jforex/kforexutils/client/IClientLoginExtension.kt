@@ -29,18 +29,16 @@ fun IClient.login(
     credentials: LoginCredentials,
     type: LoginType = LoginType.DEMO
 ) = ReaderT.monad<ForIO, IClient>(IO.monad()).binding {
-    if (type == LoginType.DEMO) connect(credentials).bind()
-    else
-    {
-        val pin = getPinFromDialog.bind()
-        connect(credentials, pin.some()).bind()
-    }
+    val maybePin = if (type == LoginType.DEMO) None
+    else getPinFromDialog.bind().some()
+
+    connect(credentials, maybePin).bind()
     waitForConnectState.bind()
 }.fix().run(this).fix()
 
 internal fun connect(
     credentials: LoginCredentials,
-    maybePin: Option<String> = None
+    maybePin: Option<String>
 ) = ReaderT { client: IClient ->
     IO {
         val username = credentials.username
