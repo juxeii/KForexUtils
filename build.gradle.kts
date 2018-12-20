@@ -35,9 +35,11 @@ dependencies {
     compile("io.arrow-kt:arrow-effects:$arrowVersion")
     compile("io.arrow-kt:arrow-effects-instances:$arrowVersion")
     compile("io.arrow-kt:arrow-effects-rx2:$arrowVersion")
+    compile("io.arrow-kt:arrow-effects-rx2-instances:$arrowVersion")
     compile("io.arrow-kt:arrow-effects-kotlinx-coroutines:$arrowVersion")
     compile("io.arrow-kt:arrow-optics:$arrowVersion")
     compile("io.arrow-kt:arrow-recursion:$arrowVersion")
+    compile("io.arrow-kt:arrow-mtl:$arrowVersion")
     compile("org.jetbrains.kotlin:kotlin-reflect:1.3.0")
 
     kapt("io.arrow-kt:arrow-annotations-processor:$arrowVersion")
