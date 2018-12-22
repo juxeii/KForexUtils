@@ -4,7 +4,7 @@ import arrow.data.runId
 import com.dukascopy.api.IEngine
 import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.order.changeToCallWithOrderInit
-import com.jforex.kforexutils.order.event.OrderMergeEvent
+import com.jforex.kforexutils.order.event.OrderEvent
 import com.jforex.kforexutils.order.event.handler.data.MergeEventData
 import com.jforex.kforexutils.order.task.OrderTaskParams
 import com.jforex.kforexutils.order.task.builders.OrderCallHandlerBuilder
@@ -18,7 +18,7 @@ fun IEngine.merge(
     orders: Collection<IOrder>,
     comment: String = TradingSettings.defaultMergeComment,
     block: OrderCallHandlerBuilder.() -> Unit = {}
-): Observable<OrderMergeEvent>
+): Observable<OrderEvent>
 {
     val mergeCall = {
         mergeOrders(
@@ -30,5 +30,5 @@ fun IEngine.merge(
     return runOrderTask(
         orderCallable = changeToCallWithOrderInit(kForexUtils, mergeCall),
         taskParams = OrderTaskParams(OrderCallHandlerBuilder(block), MergeEventData())
-    ).runId(kForexUtils) as Observable<OrderMergeEvent>
+    ).runId(kForexUtils)
 }

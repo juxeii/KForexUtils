@@ -9,7 +9,7 @@ import com.jakewharton.rxrelay2.PublishRelay
 import com.jforex.kforexutils.context.executeTaskOnStrategyThreadBlocking
 import com.jforex.kforexutils.misc.KCallable
 import com.jforex.kforexutils.misc.KForexUtils
-import com.jforex.kforexutils.order.event.IOrderEvent
+import com.jforex.kforexutils.order.event.OrderEvent
 import com.jforex.kforexutils.order.event.handler.OrderEventHandlerType
 import com.jforex.kforexutils.order.event.handler.data.OrderEventData
 import io.reactivex.Observable
@@ -17,7 +17,7 @@ import io.reactivex.Single
 
 private data class TaskCallResult(
     val order: IOrder,
-    val observable: Observable<IOrderEvent>
+    val observable: Observable<OrderEvent>
 )
 
 private data class ObservableParams(
@@ -66,7 +66,7 @@ private fun observableForNonChange(params: ObservableParams) = ReaderApi
 private fun observableForChange(params: ObservableParams) = ReaderApi
     .ask<KForexUtils>()
     .map {
-        val relay = PublishRelay.create<IOrderEvent>()
+        val relay = PublishRelay.create<OrderEvent>()
         with(it.handlerObservables) {
             eventRelays.accept(relay)
             configureObservable(relay, params).doOnComplete { completionTriggers.accept(Unit) }
@@ -74,7 +74,7 @@ private fun observableForChange(params: ObservableParams) = ReaderApi
     }
 
 private fun configureObservable(
-    baseObservable: Observable<IOrderEvent>,
+    baseObservable: Observable<OrderEvent>,
     params: ObservableParams
 ) = baseObservable
     .filter { orderEvent -> orderEvent.order == params.order }

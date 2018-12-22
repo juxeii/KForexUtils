@@ -2,7 +2,6 @@ package com.jforex.kforexutils.message
 
 import com.dukascopy.api.IMessage
 import com.dukascopy.api.IOrder
-import com.jforex.kforexutils.order.event.IOrderEvent
 import com.jforex.kforexutils.order.event.OrderEvent
 import com.jforex.kforexutils.order.event.OrderEventType
 import com.jforex.kforexutils.order.extension.isFilled
@@ -26,7 +25,7 @@ class MessageToOrderEventType {
         IMessage.Reason.ORDER_CLOSED_BY_MERGE to OrderEventType.CLOSED_BY_MERGE
     )
 
-    fun get(orderMessage: IMessage): IOrderEvent = OrderEvent(orderMessage.order, getType(orderMessage))
+    fun get(orderMessage: IMessage): OrderEvent = OrderEvent(orderMessage.order, getType(orderMessage))
 
     private fun getType(orderMessage: IMessage): OrderEventType =
         when (orderMessage.type) {

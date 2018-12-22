@@ -10,7 +10,7 @@ class OrderEventGateway(
     private val messageConverter: MessageToOrderEventType
 )
 {
-    val observable: Observable<IOrderEvent> by lazy {
+    val observable: Observable<OrderEvent> by lazy {
         messages
             .filter(MessageFilter.ORDER::isMatch)
             .map(messageConverter::get)

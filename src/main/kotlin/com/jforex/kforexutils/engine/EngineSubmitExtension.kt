@@ -4,7 +4,7 @@ import arrow.data.runId
 import com.dukascopy.api.IEngine
 import com.dukascopy.api.Instrument
 import com.jforex.kforexutils.order.changeToCallWithOrderInit
-import com.jforex.kforexutils.order.event.OrderSubmitEvent
+import com.jforex.kforexutils.order.event.OrderEvent
 import com.jforex.kforexutils.order.event.handler.data.SubmitEventData
 import com.jforex.kforexutils.order.task.OrderTaskParams
 import com.jforex.kforexutils.order.task.builders.OrderCallHandlerBuilder
@@ -25,7 +25,7 @@ fun IEngine.submit(
     goodTillTime: Long = TradingSettings.defaultGTT,
     comment: String = TradingSettings.defaultComment,
     block: OrderCallHandlerBuilder.() -> Unit = {}
-): Observable<OrderSubmitEvent>
+): Observable<OrderEvent>
 {
     val submitCall = {
         submitOrder(
@@ -44,5 +44,5 @@ fun IEngine.submit(
     return runOrderTask(
         orderCallable = changeToCallWithOrderInit(kForexUtils, submitCall),
         taskParams = OrderTaskParams(OrderCallHandlerBuilder(block), SubmitEventData())
-    ).runId(kForexUtils) as Observable<OrderSubmitEvent>
+    ).runId(kForexUtils)
 }

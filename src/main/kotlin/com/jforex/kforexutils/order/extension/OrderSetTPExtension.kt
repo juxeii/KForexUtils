@@ -4,13 +4,11 @@ import arrow.data.runId
 import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.order.changeToCallableCall
 import com.jforex.kforexutils.order.event.OrderEventType
-import com.jforex.kforexutils.order.event.OrderTPEvent
 import com.jforex.kforexutils.order.event.handler.data.ChangeEventData
 import com.jforex.kforexutils.order.task.OrderTaskParams
 import com.jforex.kforexutils.order.task.builders.OrderCallHandlerBuilder
 import com.jforex.kforexutils.order.task.runOrderTask
 import com.jforex.kforexutils.settings.TradingSettings
-import io.reactivex.Observable
 
 @Suppress("UNCHECKED_CAST")
 fun IOrder.setTP(
@@ -19,6 +17,6 @@ fun IOrder.setTP(
 ) = runOrderTask(
     orderCallable = changeToCallableCall(this) { takeProfitPrice = tpPrice },
     taskParams = OrderTaskParams(OrderCallHandlerBuilder(block), ChangeEventData(OrderEventType.CHANGED_TP))
-).runId(kForexUtils) as Observable<OrderTPEvent>
+).runId(kForexUtils)
 
 fun IOrder.removeTP(block: OrderCallHandlerBuilder.() -> Unit = {}) = setTP(TradingSettings.noTPPrice, block)
