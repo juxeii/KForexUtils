@@ -3,7 +3,6 @@ package com.jforex.kforexutils.message.test
 import com.dukascopy.api.IMessage
 import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.message.MessageFilter
-import com.jforex.kforexutils.order.extension.setSL
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import io.mockk.every
@@ -28,12 +27,6 @@ class MessageFilterTest : StringSpec({
         MessageFilter
             .values()
             .forEach { assertMessageMatch(it, it == filter) }
-
-        order.setSL(1.32) {
-            onError = {}
-        }.subscribeForSL {
-
-        }
     }
 
     fun assertForNoOrderFilter(type: IMessage.Type, filter: MessageFilter)
