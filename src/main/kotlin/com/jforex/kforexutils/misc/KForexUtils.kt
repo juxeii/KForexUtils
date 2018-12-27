@@ -15,6 +15,13 @@ import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.rxkotlin.zipWith
 import org.aeonbits.owner.ConfigFactory
 
+lateinit var kForexUtils: KForexUtils
+
+fun initKForexUtils(context: IContext)
+{
+    kForexUtils = KForexUtils(context)
+}
+
 class KForexUtils(val context: IContext)
 {
     val engine = context.engine

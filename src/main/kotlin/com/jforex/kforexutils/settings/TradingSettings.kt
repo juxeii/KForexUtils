@@ -9,6 +9,8 @@ object TradingSettings {
     const val defaultComment = ""
 
     const val defaultCloseSlippage = 5.0
+    const val noPreferredClosePrice = 0.0
+    val noCloseSlippage = Double.NaN
     const val noTrailingStep = 0.0
     const val defaultOpenPriceSlippage = -1.0
 

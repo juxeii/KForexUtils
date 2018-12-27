@@ -2,6 +2,7 @@ package com.jforex.kforexutils.order.extension
 
 import arrow.data.runId
 import com.dukascopy.api.IOrder
+import com.jforex.kforexutils.misc.kForexUtils
 import com.jforex.kforexutils.order.changeToCallableCall
 import com.jforex.kforexutils.order.event.OrderEventType
 import com.jforex.kforexutils.order.event.handler.data.ChangeEventData
@@ -10,7 +11,6 @@ import com.jforex.kforexutils.order.task.builders.OrderCallHandlerBuilder
 import com.jforex.kforexutils.order.task.runOrderTask
 import com.jforex.kforexutils.settings.TradingSettings
 
-@Suppress("UNCHECKED_CAST")
 fun IOrder.setOpenPrice(
     openPrice: Double,
     slippage: Double = TradingSettings.defaultOpenPriceSlippage,

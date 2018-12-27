@@ -1,6 +1,8 @@
 package com.jforex.kforexutils.misc
 
+import com.dukascopy.api.Instrument
 import com.jforex.kforexutils.order.task.OrderCallHandlers
+import com.jforex.kforexutils.price.Price
 import java.math.BigDecimal
 
 @DslMarker
@@ -16,3 +18,5 @@ fun Double.toAmount() =
     BigDecimal(this)
         .setScale(2, BigDecimal.ROUND_HALF_UP)
         .toDouble()
+
+fun Double.asPrice(instrument: Instrument) = Price(instrument, this).toDouble()

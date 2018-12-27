@@ -12,7 +12,6 @@ import com.jforex.kforexutils.order.task.runOrderTask
 import com.jforex.kforexutils.settings.TradingSettings
 import io.reactivex.Observable
 
-@Suppress("UNCHECKED_CAST")
 fun IEngine.merge(
     label: String,
     orders: Collection<IOrder>,

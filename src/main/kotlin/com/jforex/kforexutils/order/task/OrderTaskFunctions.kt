@@ -14,6 +14,10 @@ import com.jforex.kforexutils.order.event.handler.OrderEventHandlerType
 import com.jforex.kforexutils.order.event.handler.data.OrderEventData
 import io.reactivex.Observable
 import io.reactivex.Single
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
+
+val logger: Logger = LogManager.getLogger()
 
 private data class TaskCallResult(
     val order: IOrder,

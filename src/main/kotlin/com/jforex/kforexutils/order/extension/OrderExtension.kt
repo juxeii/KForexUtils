@@ -1,10 +1,6 @@
 package com.jforex.kforexutils.order.extension
 
 import com.dukascopy.api.IOrder
-import com.jforex.kforexutils.misc.FieldProperty
-import com.jforex.kforexutils.misc.KForexUtils
-
-internal var IOrder.kForexUtils: KForexUtils by FieldProperty()
 
 val IOrder.isOpened
     get() = state == IOrder.State.OPENED

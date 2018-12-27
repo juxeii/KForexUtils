@@ -4,7 +4,6 @@ import com.dukascopy.api.IOrder
 import com.jforex.kforexutils.misc.KCallable
 import com.jforex.kforexutils.misc.KForexUtils
 import com.jforex.kforexutils.misc.KRunnable
-import com.jforex.kforexutils.order.extension.kForexUtils
 
 internal fun changeToCallableCall(
     order: IOrder,
@@ -19,6 +18,5 @@ internal fun changeToCallWithOrderInit(
     orderCreationCall: KCallable<IOrder>
 ) = {
     val order = orderCreationCall()
-    order.kForexUtils = kForexUtils
     order
 }
