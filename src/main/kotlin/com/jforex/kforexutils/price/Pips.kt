@@ -9,6 +9,8 @@ data class Pips(private val doubleValue: Double) {
 
     operator fun minus(pips: Pips) = genericAdd(pips, value::subtract)
 
+    fun toDouble() = value.toDouble()
+
     private fun genericAdd(
         pips: Pips,
         adder: (BigDecimal) -> BigDecimal

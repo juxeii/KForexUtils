@@ -19,4 +19,9 @@ fun Double.toAmount() =
         .setScale(2, BigDecimal.ROUND_HALF_UP)
         .toDouble()
 
+fun Double.round(decimalPlaces: Int) =
+    BigDecimal(this).setScale(decimalPlaces, BigDecimal.ROUND_HALF_DOWN).toDouble()
+
 fun Double.asPrice(instrument: Instrument) = Price(instrument, this).toDouble()
+
+fun Double.asCost() = round(4)
