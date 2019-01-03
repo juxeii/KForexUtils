@@ -41,7 +41,7 @@ fun IEngine.submit(
         )
     }
     return runOrderTask(
-        orderCallable = changeToCallWithOrderInit(kForexUtils, submitCall),
+        orderCallable = changeToCallWithOrderInit(submitCall),
         taskParams = OrderTaskParams(OrderCallHandlerBuilder(block), SubmitEventData())
     ).runId(kForexUtils)
 }

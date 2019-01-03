@@ -1,7 +1,6 @@
 package com.jforex.kforexutils.client
 
 import arrow.Kind
-import arrow.typeclasses.bindingCatch
 import com.dukascopy.api.JFException
 import com.jforex.kforexutils.authentification.LoginCredentials
 import com.jforex.kforexutils.authentification.LoginType

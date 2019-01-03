@@ -6,9 +6,11 @@ import com.dukascopy.api.Instrument
 import com.dukascopy.api.JFException
 import com.jforex.kforexutils.price.TickQuote
 
-fun IHistory.latestQuote(instrument: Instrument): Try<TickQuote> =
+fun IHistory.tryLatestQuote(instrument: Instrument): Try<TickQuote> =
     Try {
         val tick = getLastTick(instrument)
         if (tick == null) throw(JFException("Latest tick from history for $instrument returned null!"))
         else TickQuote(instrument, tick)
     }
+
+fun IHistory.latestQuote(instrument: Instrument): TickQuote = tryLatestQuote(instrument).fold({ throw it }) { it }

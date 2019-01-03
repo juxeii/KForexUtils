@@ -15,7 +15,7 @@ repositories {
     maven(url = "https://www.dukascopy.com/client/jforexlib/publicrepo")
 }
 
-val arrowVersion = "0.8.1"
+val arrowVersion = "0.8.2"
 dependencies {
     compile(kotlin("stdlib-jdk8"))
     compile("com.dukascopy.api:JForex-API:2.13.62")

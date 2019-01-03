@@ -2,6 +2,8 @@ package com.jforex.kforexutils.misc
 
 import com.dukascopy.api.IContext
 import com.dukascopy.api.IMessage
+import com.dukascopy.api.Instrument
+import com.jakewharton.rxrelay2.BehaviorRelay
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jforex.kforexutils.engine.kForexUtils
 import com.jforex.kforexutils.message.MessageGateway
@@ -21,6 +23,8 @@ fun initKForexUtils(context: IContext)
 {
     kForexUtils = KForexUtils(context)
 }
+
+typealias Quotes = Map<Instrument, TickQuote>
 
 class KForexUtils(val context: IContext)
 {
@@ -42,15 +46,27 @@ class KForexUtils(val context: IContext)
     val barQuotes: PublishRelay<BarQuote> = PublishRelay.create()
     val tickQuotes: PublishRelay<TickQuote> = PublishRelay.create()
 
+    val quotesMap: BehaviorRelay<Quotes> = BehaviorRelay.createDefault(emptyMap())
+
     init
     {
         engine.kForexUtils = this
         subscribeToCompletionAndHandlers(this)
+        tickQuotes.subscribeBy(onNext = { saveQuote(it) })
     }
 
-    fun onBarQuote(barQuote: BarQuote) = barQuotes.accept(barQuote)
+    fun getQuotes() = quotesMap.value!!
+
+    fun updateQuotes(quote: TickQuote) = getQuotes().plus(Pair(quote.instrument, quote))
+
+    fun saveQuote(quote: TickQuote)
+    {
+        quotesMap.accept(updateQuotes(quote))
+    }
 
     fun onTickQuote(tickQuote: TickQuote) = tickQuotes.accept(tickQuote)
+
+    fun onBarQuote(barQuote: BarQuote) = barQuotes.accept(barQuote)
 }
 
 internal fun subscribeToCompletionAndHandlers(kForexUtils: KForexUtils) =

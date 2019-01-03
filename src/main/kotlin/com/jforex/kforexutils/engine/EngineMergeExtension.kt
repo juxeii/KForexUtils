@@ -27,7 +27,7 @@ fun IEngine.merge(
         )
     }
     return runOrderTask(
-        orderCallable = changeToCallWithOrderInit(kForexUtils, mergeCall),
+        orderCallable = changeToCallWithOrderInit(mergeCall),
         taskParams = OrderTaskParams(OrderCallHandlerBuilder(block), MergeEventData())
     ).runId(kForexUtils)
 }
