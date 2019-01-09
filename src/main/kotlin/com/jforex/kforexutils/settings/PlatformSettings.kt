@@ -16,4 +16,12 @@ interface PlatformSettings : Config {
     @Config.Key("connection.liveurl")
     @Config.DefaultValue("http://platform.dukascopy.com/live_3/jforex_3.jnlp")
     fun liveConnectURL(): String
+
+    @Config.Key("history.access.retries")
+    @Config.DefaultValue("10")
+    fun historyAccessRetries(): Long
+
+    @Config.Key("history.access.retrydelay")
+    @Config.DefaultValue("1000")
+    fun historyAccessRetryDelay(): Long
 }
