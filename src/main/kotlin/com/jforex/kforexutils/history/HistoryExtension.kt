@@ -1,10 +1,13 @@
 package com.jforex.kforexutils.history
 
+import arrow.core.Failure
+import arrow.core.Success
 import arrow.core.Try
 import com.dukascopy.api.IHistory
 import com.dukascopy.api.Instrument
 import com.dukascopy.api.JFException
 import com.jforex.kforexutils.client.platformSettings
+import com.jforex.kforexutils.order.extension.logger
 import com.jforex.kforexutils.price.TickQuote
 import io.reactivex.Observable
 
@@ -21,6 +24,13 @@ fun <D> IHistory.historyRetry(historyCall: IHistory.() -> D) =
         java.util.concurrent.TimeUnit.MILLISECONDS
     )
         .take(platformSettings.historyAccessRetries())
-        .map { Try { historyCall.invoke(this) } }
+        .map { tryNumber ->
+            Try { historyCall.invoke(this) }
+                .fold({
+                    logger.debug("History call no $tryNumber failed with $it")
+                    Failure(it)
+                })
+                { Success(it) }
+        }
         .takeUntil { it.isSuccess() }
         .blockingFirst()
