@@ -12,12 +12,12 @@ import com.jforex.kforexutils.price.TickQuote
 import io.reactivex.Observable
 
 internal fun IHistory.latestQuote(instrument: Instrument) =
-    historyRetry { latestTick(instrument) }.fold({ throw it }) { TickQuote(instrument, it) }
+    TickQuote(instrument, retry { latestTick(instrument) })
 
 fun IHistory.latestTick(instrument: Instrument) =
     getLastTick(instrument) ?: throw(JFException("Latest tick from history for $instrument returned null!"))
 
-fun <D> IHistory.historyRetry(historyCall: IHistory.() -> D) =
+fun <D> IHistory.retry(historyCall: IHistory.() -> D) =
     Observable.interval(
         0,
         platformSettings.historyAccessRetryDelay(),
@@ -33,4 +33,5 @@ fun <D> IHistory.historyRetry(historyCall: IHistory.() -> D) =
                 { Success(it) }
         }
         .takeUntil { it.isSuccess() }
+        .map { tickTry -> tickTry.fold({ throw it }) { it } }
         .blockingFirst()
