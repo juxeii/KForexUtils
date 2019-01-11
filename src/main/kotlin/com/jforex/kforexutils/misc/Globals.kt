@@ -3,7 +3,10 @@ package com.jforex.kforexutils.misc
 import com.dukascopy.api.Instrument
 import com.jforex.kforexutils.order.task.OrderCallHandlers
 import com.jforex.kforexutils.price.Price
+import io.reactivex.Observable
+import io.reactivex.rxkotlin.Observables
 import java.math.BigDecimal
+import java.util.concurrent.TimeUnit
 
 @DslMarker
 annotation class OrderDsl
@@ -25,3 +28,18 @@ fun Double.round(decimalPlaces: Int) =
 fun Double.asPrice(instrument: Instrument) = Price(instrument, this).toDouble()
 
 fun Double.asCost() = round(4)
+
+fun <T> Observable<T>.retry(
+    predicate: (Throwable) -> Boolean = { true },
+    maxRetry: Long,
+    delayBeforeRetry: Long,
+    logMsg: (p: Pair<Throwable, Long>) -> Unit = { }
+): Observable<T> = retryWhen { obs ->
+    Observables.zip(
+        obs.map { error -> if (predicate(error)) error else throw error },
+        Observable.interval(delayBeforeRetry, TimeUnit.MILLISECONDS)
+    ).map { pair ->
+        logMsg(pair)
+        if (pair.second >= maxRetry) throw pair.first
+    }
+}
