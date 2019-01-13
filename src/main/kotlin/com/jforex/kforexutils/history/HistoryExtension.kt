@@ -23,5 +23,5 @@ fun <D> IHistory.retry(historyCall: IHistory.() -> D) =
     }.retry(
         maxRetry = platformSettings.historyAccessRetries(),
         delayBeforeRetry = platformSettings.historyAccessRetryDelay(),
-        logMsg = { logger.debug("History call no ${it.second} failed with ${it.first}") }
+        doOnRetry = { logger.debug("History call no ${it.second} failed with ${it.first}") }
     ).blockingFirst()

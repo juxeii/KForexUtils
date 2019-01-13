@@ -45,14 +45,17 @@ class KForexUtils(val context: IContext)
     val platformSettings: PlatformSettings = ConfigFactory.create(PlatformSettings::class.java)
     val barQuotes: PublishRelay<BarQuote> = PublishRelay.create()
     val tickQuotes: PublishRelay<TickQuote> = PublishRelay.create()
-
     val quotesMap: BehaviorRelay<Quotes> = BehaviorRelay.createDefault(emptyMap())
+
+    val isStrategyStarted = BehaviorRelay.createDefault(true)
 
     init
     {
         engine.kForexUtils = this
         subscribeToCompletionAndHandlers(this)
-        tickQuotes.subscribeBy(onNext = { saveQuote(it) })
+        tickQuotes
+            .takeUntil { isStrategyStarted.value == false }
+            .subscribeBy(onNext = { saveQuote(it) })
     }
 
     fun getQuotes() = quotesMap.value!!
@@ -67,6 +70,11 @@ class KForexUtils(val context: IContext)
     fun onTickQuote(tickQuote: TickQuote) = tickQuotes.accept(tickQuote)
 
     fun onBarQuote(barQuote: BarQuote) = barQuotes.accept(barQuote)
+
+    fun onStop()
+    {
+        isStrategyStarted.accept(false)
+    }
 }
 
 internal fun subscribeToCompletionAndHandlers(kForexUtils: KForexUtils) =

@@ -33,13 +33,13 @@ fun <T> Observable<T>.retry(
     predicate: (Throwable) -> Boolean = { true },
     maxRetry: Long,
     delayBeforeRetry: Long,
-    logMsg: (p: Pair<Throwable, Long>) -> Unit = { }
+    doOnRetry: (p: Pair<Throwable, Long>) -> Unit = { }
 ): Observable<T> = retryWhen { obs ->
     Observables.zip(
         obs.map { error -> if (predicate(error)) error else throw error },
         Observable.interval(delayBeforeRetry, TimeUnit.MILLISECONDS)
     ).map { pair ->
-        logMsg(pair)
+        doOnRetry(pair)
         if (pair.second >= maxRetry) throw pair.first
     }
 }
