@@ -15,15 +15,13 @@ import org.apache.logging.log4j.LogManager
 
 private val logger = LogManager.getLogger()
 
-interface LoginDependencies<F> : MonadDefer<F>
-{
+interface LoginDependencies<F> : MonadDefer<F> {
     val client: IClient
     val platformSettings: PlatformSettings
     val pinProvider: PinProvider
     val connectionState: Observable<ConnectionState>
 
-    companion object
-    {
+    companion object {
         operator fun <F> invoke(
             MD: MonadDefer<F>,
             client: IClient,
@@ -31,8 +29,7 @@ interface LoginDependencies<F> : MonadDefer<F>
             pinProvider: PinProvider,
             connectionState: Observable<ConnectionState>
         ): LoginDependencies<F> =
-            object : LoginDependencies<F>, MonadDefer<F> by MD
-            {
+            object : LoginDependencies<F>, MonadDefer<F> by MD {
                 override val client = client
                 override val platformSettings = platformSettings
                 override val pinProvider = pinProvider
@@ -43,10 +40,10 @@ interface LoginDependencies<F> : MonadDefer<F>
 
 fun <F> IClient.login(
     credentials: LoginCredentials,
-    type: LoginType = LoginType.DEMO,
+    type: LoginType,
+    usePin: Boolean,
     MD: MonadDefer<F>
-): Kind<F, Unit>
-{
+): Kind<F, Unit> {
     val deps = LoginDependencies(
         MD,
         this,
@@ -57,7 +54,7 @@ fun <F> IClient.login(
 
     return with(deps) {
         defer {
-            login(credentials, type)
+            login(credentials, type, usePin)
             waitForConnect()
         }
     }

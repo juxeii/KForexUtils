@@ -10,14 +10,17 @@ internal object LoginApi
 {
     fun <F> LoginDependencies<F>.login(
         credentials: LoginCredentials,
-        type: LoginType = LoginType.DEMO
+        type: LoginType,
+        usePin: Boolean
     ): Kind<F, Unit> = catch {
         val username = credentials.username
         val password = credentials.password
+        val connectUrl = if (type == LoginType.DEMO) platformSettings.demoConnectURL()
+        else platformSettings.liveConnectURL()
 
         with(client) {
-            if (type == LoginType.DEMO) connect(platformSettings.demoConnectURL(), username, password)
-            else connect(platformSettings.liveConnectURL(), username, password, pinProvider.pin)
+            if (usePin) connect(connectUrl, username, password, pinProvider.pin)
+            else connect(connectUrl, username, password)
         }
     }
 
