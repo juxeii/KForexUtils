@@ -5,6 +5,9 @@ import com.dukascopy.api.JFException
 import com.jforex.kforexutils.authentification.LoginCredentials
 import com.jforex.kforexutils.authentification.LoginType
 import com.jforex.kforexutils.system.ConnectionState
+import org.apache.logging.log4j.LogManager
+
+private val logger = LogManager.getLogger()
 
 internal object LoginApi
 {
@@ -25,7 +28,7 @@ internal object LoginApi
     }
 
     fun <F> LoginDependencies<F>.waitForConnect(): Kind<F, Unit> =
-        bindingCatch {
+        catch {
             connectionState
                 .take(1)
                 .map { state ->
